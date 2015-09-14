@@ -8,7 +8,7 @@ provides:
 3. searching given pattern from a given range, e.g. right after last command entered
 '''
 
-class term(object)
+class term(object):
     '''
     streamOut:  string of Software/Device's output, __init__ will set it to ''
     idxSearch:  number, based on 0, default is 0, it's the index of streamOut, and point to where to find the pattern
@@ -31,6 +31,12 @@ class term(object)
         attr:       a dict, the attributes of term
         logpath:    string, the path of the log file for this ter
         '''
+        import os
+        if not logpath:
+            logpath = os.getcwd()
+        log = os.path.abspath(logpath)
+        log= '%s%s%s'%(log,os.path.sep,'%s.log'%name)
+        self.logfile = open(log, "wb")
     def Send(self, cmd):
         '''send a command to Software/Device, add a line end
         move idxSearch to the end of streamOut
