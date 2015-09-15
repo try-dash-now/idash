@@ -4,9 +4,8 @@ __author__ = 'Sean Yu'
 from telnetlib import Telnet as spawn
 from term import term
 import threading
-class winTelnet(term, spawn):
-    sock =None
-    lenRawq=0
+class winTelnet(term, spawn):#, spawn
+
     def __init__(self, name, attr =None, logpath= None):
         term.__init__(self, name,attr,logpath)
 
@@ -23,19 +22,28 @@ class winTelnet(term, spawn):
         elif m2:
             host= m2.groups(1)[0]
             port= m2.groups(2)[0]
-        import socket
-        timeout = 30
-        self.sock = socket.create_connection((host, port), timeout)
+        #import socket
+        #timeout = 30
+        #self.sock = socket.create_connection((host, port), timeout)
         spawn.__init__(self, str(host), port)
         th =threading.Thread(target=self.ReadDataFromSocket)
         th.start()
 
     def ReadDataFromSocket(self):
         while 1:
-            self.fill_rawq()
-            len = self.rawq.__len__()
-            if len > self.lenRawq:
-                self.logfile.write(self.rawq[self.lenRawq:])
+            try:
+                self.fill_rawq()
+                self.process_rawq()
+                print self.cookedq
+                self.logfile.write(self.cookedq)
+                self.logfile.flush()
+            except Exception, e:
+                import traceback
+                traceback
+                print e.message
+
+
+
 
     def Send(self, cmd):
         '''send a command to Software/Device, add a line end
