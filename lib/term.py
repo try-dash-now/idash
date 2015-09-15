@@ -18,12 +18,26 @@ class term(object):
     idxUpdate:  number, 0-based, default is 0, point to index of streamOut, when the last call of function Print
                 function Prind will move it to the end of streamOut
     attr     :  the attributes gave by caller
-    logfile  :  the log file, which named as name.log'''
+    logfile  :  the log file, which named as name.log
+    Connect2SUTDone:
+                bool, initial value is False, means didn't complete the process of Device log-in, after log-in, it should be set to True
+    attribute   :
+                dict, initial is None, and assigned in __init__ as {} or set to the given variable attr
+    SessionAlive:
+                bool, initial is True, when session is closing, set it to False
+    '''
     streamOut   = None
     idxSearch   =   0
     idxUpdate   =   0
     attr        = None
     logfile     = None
+    Connect2DUTDone = False
+    attribute   =None
+    SessionAlive = True
+
+    def __del__(self):
+        self.SessionAlive=False
+
     def __init__(self, name, attr =None, logpath= None):
         '''
         initializing the term
@@ -31,6 +45,10 @@ class term(object):
         attr:       a dict, the attributes of term
         logpath:    string, the path of the log file for this ter
         '''
+        if attr:
+            self.attribute =attr
+        else:
+            self.attribute = {}
         import os
         if not logpath:
             logpath = os.getcwd()

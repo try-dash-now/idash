@@ -14,8 +14,8 @@ class Test_winTerm(unittest.TestCase):
     def setUpClass(cls):
         from winTelnet import winTelnet
         name= 'e7-20'
-        cmd = 'telnet 192.168.1.111'
-        cmd = 'telnet cdc-dash'
+        cmd = 'telnet 192.168.1.113'
+        #cmd = 'telnet cdc-dash'
         #cmd = 'telnet 10.245.48.20'#great wall e7-20
         #cmd = 'telnet 10.245.69.106'#ryi
         attr={'TIMEOUT':180,'LOGIN': 'e7support,assword:,30\nadmin,>,30','CMD':cmd, 'LINEEND':'\r\n', 'EXP':'name:' }
@@ -40,17 +40,32 @@ class Test_winTerm(unittest.TestCase):
 
     def setUp(self):
         pass
-    def test_Send(self):
-        baseS.Send('')
+    def test_Login(self):
+        baseS.Find('ogin:', 30)
+        baseS.Send('syu')
+        baseS.Find('assword', 30)
+        baseS.Send('yxw123')
+        baseS.Find('~', 30)
+        baseS.Send('ping localhost')
         import time
-        time.sleep(10)
+        c = 30
+        while c:
+            print(baseS.Print())
+            c-=1
+            time.sleep(0.1)
+        baseS.Find('.*')
+
+        baseS.Send('c',Ctrl=True)
+
+        assert baseS.Find('abc', 0.01)
+
 
     @classmethod
     def tearDownClass(cls):
-
+        baseS.__del__()
         del cls.baseS
 
-        #cls._connection.destroy()
+
 
 
 
