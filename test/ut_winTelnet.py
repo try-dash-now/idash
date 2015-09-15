@@ -57,7 +57,8 @@ class Test_winTerm(unittest.TestCase):
 
         baseS.Send('c',Ctrl=True)
 
-        assert baseS.Find('abc', 0.01)
+        self.assertRaises(Exception, baseS.Find, 'abc', 0.01)
+        print 'done'
 
 
     @classmethod
