@@ -82,6 +82,9 @@ class term(object):
         '''
 
         pass
+    def CallFun(self,functionName,args=[], kwargs={}):
+        functionName(*args, **kwargs)
+
     def formatMsg(self, msg):
         import datetime
         now =datetime.datetime.now()
