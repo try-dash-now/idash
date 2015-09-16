@@ -24,7 +24,7 @@ class Test_winTerm(unittest.TestCase):
         logpath='./tmp1'
 
         import shutil
-        global logpaht
+        global logpath
         if os.path.exists(logpath):
             shutil.rmtree(logpath)
 
@@ -32,7 +32,19 @@ class Test_winTerm(unittest.TestCase):
         if not os.path.exists(logpath):
             os.mkdir('tmp1')
         cls.logpath = logpath
-        cls.baseS = winTelnet(name,attr,logpath)
+
+        import logging
+        logfile = logpath+os.sep+"tc.log"
+        logging.basicConfig( level = logging.DEBUG, format = '%(asctime)s   -%(levelname)s: %(message)s' )
+        #from common import CLogger
+        #self.logger = CLogger(self.Name)
+        logger = logging.Logger(name,logging.DEBUG)
+        hdrlog = logging.FileHandler(logfile)
+        logger.setLevel(logging.DEBUG)
+        hdrlog .setFormatter(logging.Formatter('%(asctime)s -%(levelname)s:    %(message)s'))
+        logger.addHandler(hdrlog )
+
+        cls.baseS = winTelnet(name,attr,logger , logpath)
         global  baseS
         baseS = cls.baseS
 
@@ -46,6 +58,10 @@ class Test_winTerm(unittest.TestCase):
         baseS.Find('assword', 30)
         baseS.Send('yxw123')
         baseS.Find('~', 30)
+
+        baseS.info('login done')
+        baseS.debug('this is a test debug message')
+        baseS.error('error message example')
         baseS.Send('ping localhost')
         import time
         c = 30
@@ -58,6 +74,7 @@ class Test_winTerm(unittest.TestCase):
         baseS.Send('c',Ctrl=True)
 
         self.assertRaises(Exception, baseS.Find, 'abc', 0.01)
+
         print 'done'
 
 

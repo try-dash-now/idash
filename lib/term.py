@@ -26,25 +26,30 @@ class term(object):
     SessionAlive:
                 bool, initial is True, when session is closing, set it to False
     '''
-    streamOut   = None
+    streamOut   =   None
     idxSearch   =   0
     idxUpdate   =   0
-    attr        = None
-    logfile     = None
+    attr        =   None
+    logfile     =   None
     Connect2DUTDone = False
-    attribute   =None
-    SessionAlive = True
+    attribute   =   None
+    SessionAlive =  True
+    name         =  None #the term name, string
+    logger       =  None #parent logger, passed to term, default is logger,no logger needed
 
     def __del__(self):
         self.SessionAlive=False
 
-    def __init__(self, name, attr =None, logpath= None):
+    def __init__(self, name, attr =None,logger=None, logpath= None):
         '''
         initializing the term
         name:       string, the term's name
         attr:       a dict, the attributes of term
+        logger:     a logger instance, allow this term pass message to parent object
         logpath:    string, the path of the log file for this ter
         '''
+        self.name       =   name
+        self.logger     =   logger
         if attr:
             self.attribute =attr
         else:
@@ -77,7 +82,34 @@ class term(object):
         '''
 
         pass
+    def formatMsg(self, msg):
+        import datetime
+        now =datetime.datetime.now()
+        msg = '%s\t%s\t%s'%(now.isoformat().replace("T", ' '), self.name, msg)
+        print(msg)
+        return msg
+    def info(self, msg):
+        '''
+        add info message to logger
+        '''
+        msg = self.formatMsg(msg)
+        if self.logger:
+            self.logger.info(msg)
 
+    def error(self, msg):
+        '''
+        add error message to logger
+        '''
+        msg = self.formatMsg(msg)
+        if self.logger:
+            self.logger.error(msg)
+    def debug(self, msg):
+        '''
+        add error message to logger
+        '''
+        msg = self.formatMsg(msg)
+        if self.logger:
+            self.logger.debug(msg)
 
 
 

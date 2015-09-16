@@ -98,8 +98,11 @@ import threading
 import os
 class winTelnet(term):#, spawn
     streamOutLock =None
-    def __init__(self, name, attr =None, logpath= None):
-        term.__init__(self, name,attr,logpath)
+    def __del__(self):
+        if self.sock:
+            self.sock.close()
+    def __init__(self, name, attr =None,logger=None,  logpath= None):
+        term.__init__(self, name,attr,logger, logpath)
 
         host=""
         port=23
@@ -305,11 +308,7 @@ class winTelnet(term):#, spawn
             except Exception, e:
                 import traceback
                 msg = traceback.format_exc()
-                self.logfile.write('ERROR::%s'%msg)
-                print msg
-
-
-
+                self.info(msg)
 
     def Send(self, cmd, Ctrl=False):
         '''send a command to Software/Device, add a line end
