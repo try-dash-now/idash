@@ -54,12 +54,23 @@ class term(object):
             self.attribute =attr
         else:
             self.attribute = {}
+        self.openLogfile(logpath)
+    def openLogfile(self, logpath):
+        '''
+        logpath, a folder path, where log to be find
+        '''
         import os
         if not logpath:
             logpath = os.getcwd()
         log = os.path.abspath(logpath)
-        log= '%s%s%s'%(log,os.path.sep,'%s.log'%name)
+        log= '%s%s%s'%(log,os.path.sep,'%s.log'%self.name)
+        if self.logfile:
+            tmplog = self.logfile
+            self.logfile=None
+            tmplog.close()
         self.logfile = open(log, "wb")
+
+
     def Send(self, cmd):
         '''send a command to Software/Device, add a line end
         move idxSearch to the end of streamOut

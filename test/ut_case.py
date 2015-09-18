@@ -1,5 +1,9 @@
+# -*- coding:  UTF-8 -*-
 __author__ = 'Sean Yu'
-'''created @2015/9/14''' 
+__mail__ = 'try.dash.now@gmail.com'
+'''
+created 2015/9/18 
+'''
 import unittest
 import os
 import sys
@@ -7,8 +11,7 @@ pardir =os.path.dirname(os.path.realpath(os.getcwd()))
 #pardir= os.path.sep.join(pardir.split(os.path.sep)[:-1])
 sys.path.append(os.path.sep.join([pardir,'lib']))
 
-
-
+cs =None
 class Test_winTerm(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -24,15 +27,12 @@ class Test_winTerm(unittest.TestCase):
         logpath='./tmp1'
 
         import shutil
-        global logpath
         if os.path.exists(logpath):
             shutil.rmtree(logpath)
-            shutil.rmtree('tmp2')
 
 
         if not os.path.exists(logpath):
             os.mkdir('tmp1')
-            os.mkdir('tmp2')
         cls.logpath = logpath
 
         import logging
@@ -45,47 +45,38 @@ class Test_winTerm(unittest.TestCase):
         logger.setLevel(logging.DEBUG)
         hdrlog .setFormatter(logging.Formatter('%(asctime)s -%(levelname)s:    %(message)s'))
         logger.addHandler(hdrlog )
+
         cls.baseS = winTelnet(name,attr,logger , logpath)
-        global  baseS
+        global  baseS, cs
         baseS = cls.baseS
 
 
 
     def setUp(self):
         pass
-    def test_Login(self):
-        baseS.Find('ogin:', 30)
-        baseS.Send('syu')
-        baseS.Find('assword', 30)
-        baseS.Send('yxw123')
-        baseS.Find('~', 30)
-
-        baseS.info('login done')
-        baseS.debug('this is a test debug message')
-        baseS.error('error message example')
-        baseS.Send('ping localhost')
-        import time
-        c = 30
-        while c:
-            print(baseS.Print())
-            c-=1
-            time.sleep(0.1)
-        baseS.Find('.*')
-
-        newpath= './tmp2'
-        if not os.path.exists('./tmp2'):
-
-            os.mkdir( newpath)
-
-        baseS.openLogfile(newpath)
-
-        baseS.Send('c',Ctrl=True)
-
-        self.assertRaises(Exception, baseS.Find, 'abc', 0.01)
-
-        print 'done'
-
-
+    def test_Init(self):
+        from case import  case
+        setup =[]
+        run =[]
+        teardown=[]
+        duts = {'winTel': baseS}
+        mode = 'full'
+        global cs
+        cs = case('testcase', duts, setup, run, teardown, mode, './tmp1' )
+    def test_run(self):
+        from case import  case
+        setup =[]
+        run =[]
+        teardown=[]
+        duts = {'winTel': baseS}
+        mode = 'full'
+        cs = case('testcase', duts, setup, run, teardown, mode, './tmp1' )
+        cs.myrunner(cs.runcase, [mode])
+        cs.runcase()
+        cs.runcase('s')
+        cs.runcase('r')
+        cs.runcase('t')
+        self.assertRaises(Exception, cs.run, 'b')
     @classmethod
     def tearDownClass(cls):
         baseS.__del__()

@@ -300,11 +300,13 @@ class winTelnet(term):#, spawn
                 self.cookedq=''
                 self.process_rawq()
                 self.streamOut+=self.cookedq
-                self.logfile.write(self.cookedq)
+                if self.logfile:
+                    self.logfile.write(self.cookedq)
                 self.lockStreamOut.release()
-                self.logfile.flush()
+                if self.logfile:
+                    self.logfile.flush()
                 import time
-                time.sleep(0.01)
+                time.sleep(0.02)
             except Exception, e:
                 import traceback
                 msg = traceback.format_exc()
