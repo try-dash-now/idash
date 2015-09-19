@@ -40,6 +40,7 @@ class term(object):
     def __del__(self):
         self.SessionAlive=False
 
+
     def __init__(self, name, attr =None,logger=None, logpath= None):
         '''
         initializing the term

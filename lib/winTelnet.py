@@ -197,6 +197,7 @@ class winTelnet(term):#, spawn
             self.irawq = 0
         # The buffer size should be fairly small so as to avoid quadratic
         # behavior in process_rawq() above
+        self.sock
         buf = self.sock.recv(50)
         self.msg("recv %r", buf)
         self.eof = (not buf)
@@ -311,6 +312,7 @@ class winTelnet(term):#, spawn
                 import traceback
                 msg = traceback.format_exc()
                 self.info(msg)
+        self.sock.close()
 
     def Send(self, cmd, Ctrl=False):
         '''send a command to Software/Device, add a line end

@@ -12,7 +12,7 @@ pardir =os.path.dirname(os.path.realpath(os.getcwd()))
 sys.path.append(os.path.sep.join([pardir,'lib']))
 
 cs =None
-class Test_winTerm(unittest.TestCase):
+class test_case(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         from winTelnet import winTelnet
@@ -63,7 +63,7 @@ class Test_winTerm(unittest.TestCase):
         mode = 'full'
         global cs
         cs = case('testcase', duts, setup, run, teardown, mode, './tmp1' )
-    def test_run(self):
+    def test_execute(self):
         from case import  case
         setup =[]
         run =[]
@@ -71,12 +71,12 @@ class Test_winTerm(unittest.TestCase):
         duts = {'winTel': baseS}
         mode = 'full'
         cs = case('testcase', duts, setup, run, teardown, mode, './tmp1' )
-        cs.myrunner(cs.runcase, [mode])
-        cs.runcase()
-        cs.runcase('s')
-        cs.runcase('r')
-        cs.runcase('t')
-        self.assertRaises(Exception, cs.run, 'b')
+        #cs.myrunner(cs.runcase, [mode])
+        rsp = self.assertRaises(Exception, cs.execute, 'xxx')
+        rsp = cs.execute('s')
+        rsp = cs.execute('r')
+        rsp = cs.execute('t')
+        rsp = self.assertRaises(Exception, cs.run, 'b')
     @classmethod
     def tearDownClass(cls):
         baseS.__del__()

@@ -5,7 +5,28 @@ __mail__ = 'try.dash.now@gmail.com'
 created 2015/9/18 
 '''
 import traceback
+log=''
+def logCall(logger, fun):
+    def inner(*arg, **kwargs):
+        logger += str(arg)
+        logger += str(kwargs)
+        return fun(*arg, **kwargs)
+    return inner
+CASE_MODE = set(['full', 'f',
+                 'setup', 's',
+                 'run', 'r',
+                 'tear', 't', 'teardown',
+                 'nosetup', 'ns',
+                 'norun', 'nr',
+                 'notear', 'noteardown', 'nt',
+                 ])
 
+def error(msg,  logger=None, casefail=True):
+    print(msg)
+    if logger:
+        logger.error(msg)
+    if casefail:
+        raise ValueError(msg)
 class case(object):
     '''
     a case is a sequence operation
@@ -18,12 +39,7 @@ class case(object):
     logpath     = None # the case folder path
     mode        = None # string, case mode, one of {full,run, setup, tear, r,s, t, norun, nosetup, notear, nr, ns,nt}
     duts        = None # dict of DUTs
-    def myrunner(self, fun, args=[], kwargs={}):
-        print('runner start')
 
-        fun(*args, **kwargs)
-
-        print('runner end')
     def __init__(self,name, duts, setup=[], run=[], tear=[], mode='full',logpath='./'):
         '''
             name: string, the case's name, just letter, number and _, -, max length is 80
@@ -82,22 +98,47 @@ class case(object):
             self.logger.info("DUT %s redirected to case folder"%dut_name)
     def error(self,msg,  casefail=True):
         print(msg)
-        self.logger.error(msg)
+        if self.logger:
+            self.logger.error(msg)
         if casefail:
             raise ValueError(msg)
-    def runcase(self, mode =None):
+    def logAction(fun):
+        def inner(*arg, **kwargs):
+            CaseFail=True
+            try:
+                msg ='fun: %s\narg: %s\nkwargs: %s'%(str(fun), str(arg), str(kwargs))
+                print(msg)
+                response = fun(*arg, **kwargs)
+                return  (not CaseFail,response)
+            except Exception as e:
+                msg = traceback.format_exc()
+                msg +='\tfun: %s\n\targ: %s\n\tkwargs: %s'%(str(fun), str(arg), str(kwargs))
+                return (CaseFail,msg)
+            return inner
+        return inner
+    @logAction
+    def __run(self, mode):
+        global  CASE_MODE
+
+        if mode not in CASE_MODE:
+            raise ValueError('case mode is wrong, should be one of %s'%(str(CASE_MODE)))
+        if mode in {'full', 'setup', 'norun', 'notear', 's', 'nr', 'nt', 'f'}:
+            for dut, cmd,expect , due in self.setup:
+                print dut, cmd, expect, due
+        if mode in {'full', 'run', 'nosetup', 'notear', 'r', 'ns', 'nt', 'f'}:
+            for dut, cmd,expect , due in self.run:
+                print dut, cmd, expect, due
+        if mode in {'full', 'tear', 'norun', 'nosetup', 't', 'nr', 'ns', 'f'}:
+            for dut, cmd,expect , due in self.teardown:
+                print dut, cmd, expect, due
+        return None
+
+    def execute(self, mode =None):
         m =self.mode
         if mode :
             m =str(mode).lower()
-            #m =mode.lower()
-        if m in {'full', 'setup', 'norun', 'notear', 's', 'nr', 'nt', 'f'}:
-            for dut, cmd,expect , due in self.setup:
-                print dut, cmd, expect, due
-        if m in {'full', 'run', 'nosetup', 'notear', 'r', 'ns', 'nt', 'f'}:
-            for dut, cmd,expect , due in self.run:
-                print dut, cmd, expect, due
-        if m in {'full', 'tear', 'norun', 'nosetup', 't', 'nr', 'ns', 'f'}:
-            for dut, cmd,expect , due in self.teardown:
-                print dut, cmd, expect, due
 
+        CaseFail, response = self.__run(m)
+        if CaseFail:
+            self.error(response, True)
 
