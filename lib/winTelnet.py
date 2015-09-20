@@ -100,6 +100,8 @@ class winTelnet(term):#, spawn
     streamOutLock =None
     def __del__(self):
         self.SessionAlive= False
+        import time
+        time.sleep(0.1)
         if self.sock:
             self.sock.close()
     def __init__(self, name, attr =None,logger=None,  logpath= None):
@@ -198,11 +200,12 @@ class winTelnet(term):#, spawn
             self.irawq = 0
         # The buffer size should be fairly small so as to avoid quadratic
         # behavior in process_rawq() above
-        #self.timeout=1
+
         buf = self.sock.recv(50)
         self.msg("recv %r", buf)
         self.eof = (not buf)
         self.rawq = self.rawq + buf
+
 
     def process_rawq(self):
         """Transfer from raw queue to cooked queue.
@@ -294,6 +297,8 @@ class winTelnet(term):#, spawn
     def ReadDataFromSocket(self):
         while self.SessionAlive:
             try:
+                if not self.SessionAlive:
+                    break
                 self.lockStreamOut.acquire()
                 #self.rawq=''
                 #self.irawq = 0
@@ -312,8 +317,8 @@ class winTelnet(term):#, spawn
             except Exception, e:
                 import traceback
                 msg = traceback.format_exc()
+                print(msg)
                 self.info(msg)
-        self.sock.close()
 
     def Send(self, cmd, Ctrl=False):
         '''send a command to Software/Device, add a line end
