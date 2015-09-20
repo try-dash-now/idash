@@ -8,7 +8,7 @@ pardir =os.path.dirname(os.path.realpath(os.getcwd()))
 sys.path.append(os.path.sep.join([pardir,'lib']))
 
 
-
+logpath = './tmp1'
 class Test_winTerm(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -20,11 +20,11 @@ class Test_winTerm(unittest.TestCase):
         #cmd = 'telnet 10.245.69.106'#ryi
         attr={'TIMEOUT':180,'LOGIN': 'e7support,assword:,30\nadmin,>,30','CMD':cmd, 'LINEEND':'\r\n', 'EXP':'name:' }
         logger=None
-        global  logpath
+        global logpath
         logpath='./tmp1'
 
         import shutil
-        global logpath
+
         if os.path.exists(logpath):
             shutil.rmtree(logpath)
             shutil.rmtree('tmp2')
@@ -83,12 +83,12 @@ class Test_winTerm(unittest.TestCase):
 
         self.assertRaises(Exception, baseS.Find, 'abc', 0.01)
 
+        baseS.SessionAlive=False
         print 'done'
 
 
     @classmethod
     def tearDownClass(cls):
-        baseS.__del__()
         del cls.baseS
 
 

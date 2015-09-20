@@ -99,6 +99,7 @@ import os
 class winTelnet(term):#, spawn
     streamOutLock =None
     def __del__(self):
+        self.SessionAlive= False
         if self.sock:
             self.sock.close()
     def __init__(self, name, attr =None,logger=None,  logpath= None):
@@ -123,7 +124,7 @@ class winTelnet(term):#, spawn
         self.debuglevel = DEBUGLEVEL
         self.host = host
         self.port = port
-        timeout=30
+        timeout=1
         self.timeout = timeout
         self.sock = None
         self.rawq = ''
@@ -197,7 +198,7 @@ class winTelnet(term):#, spawn
             self.irawq = 0
         # The buffer size should be fairly small so as to avoid quadratic
         # behavior in process_rawq() above
-        self.sock
+        #self.timeout=1
         buf = self.sock.recv(50)
         self.msg("recv %r", buf)
         self.eof = (not buf)
