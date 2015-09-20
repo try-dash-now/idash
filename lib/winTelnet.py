@@ -297,8 +297,6 @@ class winTelnet(term):#, spawn
     def ReadDataFromSocket(self):
         while self.SessionAlive:
             try:
-                if not self.SessionAlive:
-                    break
                 self.lockStreamOut.acquire()
                 #self.rawq=''
                 #self.irawq = 0
