@@ -27,6 +27,7 @@ class Test_winTerm(unittest.TestCase):
 
         if os.path.exists(logpath):
             shutil.rmtree(logpath)
+        if os.path.exists('./tmp2'):
             shutil.rmtree('tmp2')
 
 

@@ -76,10 +76,11 @@ class test_case(unittest.TestCase):
         rsp = cs.execute('s')
         rsp = cs.execute('r')
         rsp = cs.execute('t')
-        rsp = self.assertRaises(Exception, cs.run, 'b')
+
+
     @classmethod
     def tearDownClass(cls):
-        baseS.__del__()
+        cls.baseS.SessionAlive = False
         del cls.baseS
 
 
