@@ -67,6 +67,7 @@ def csvstring2array(csvstring):
     return a
 def csvfile2array(csvfile, Delimiter = ',', Newline = '', Quoting=csv.QUOTE_ALL):
     a=[]
+    import os
     if os.name!='nt':
         f= open(csvfile, 'r', newline= Newline )
     else:
@@ -80,3 +81,16 @@ def array2csvfile(array, csvfile, Newline = ''):
         writer = csv.writer(f)
         for row in array:
             writer.writerow(row)
+
+def FunctionArgParser(stringOfArgs):
+    def GetFunArg(*argvs, **kwargs):
+        Argvs =[]
+        Kwargvs ={}
+        for arg in argvs:
+            Argvs.append(arg)
+        for k in kwargs.keys():
+            Kwargvs.update({k:kwargs[k]})
+        return Argvs, Kwargvs
+    print('stringOfArgs:', stringOfArgs)
+    args, kw = eval('GetFunArg(%s)'%stringOfArgs)
+    return args, kw

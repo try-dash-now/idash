@@ -54,7 +54,7 @@ class test_case(unittest.TestCase):
 
     def setUp(self):
         pass
-    def test_Init(self):
+    def tes1t_Init(self):
         from case import  case
         setup =[]
         run =[]
@@ -63,7 +63,7 @@ class test_case(unittest.TestCase):
         mode = 'full'
         global cs
         cs = case('testcase', duts, setup, run, teardown, mode, './tmp1' )
-    def test_execute(self):
+    def tes1t_execute(self):
         from case import  case
         setup =[]
         run =[]
@@ -77,7 +77,22 @@ class test_case(unittest.TestCase):
         rsp = cs.execute('r')
         rsp = cs.execute('t')
 
-
+    def test_loadCsvCase(self):
+        from case import  case
+        setup =[]
+        run =[]
+        teardown=[]
+        duts = {'winTel': baseS}
+        mode = 'full'
+        cs = case('testcase', duts, setup, run, teardown, mode, './tmp1' )
+        arg =[]
+        casefail, resp =cs.load('./case1.csv')
+        dutname, varlist,setup, run, tear = resp
+        print(dutname)
+        print(varlist)
+        print(setup)
+        print(run)
+        print(tear)
     @classmethod
     def tearDownClass(cls):
         cls.baseS.SessionAlive = False

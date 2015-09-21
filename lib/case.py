@@ -40,7 +40,7 @@ class case(object):
     logpath     = None # the case folder path
     mode        = None # string, case mode, one of {full,run, setup, tear, r,s, t, norun, nosetup, notear, nr, ns,nt}
     duts        = None # dict of DUTs
-    state = ('searchingVAR', 'searchingSetup','searchingRun', 'searchingTeardown', 'searchingEnd' )
+
     def __init__(self,name, duts, setup=[], run=[], tear=[], mode='full',logpath='./'):
         '''
             name: string, the case's name, just letter, number and _, -, max length is 80
@@ -143,91 +143,116 @@ class case(object):
         if CaseFail:
             self.error(response, True)
 
-    def __csvAddVar(self, listOfLine):
-        lline = len(listOfLine)
-        var = {}
-        if lline==0:
-            pass
-        elif lline==1:
-            if len(listOfLine[0].strip()):
-                var = {listOfLine[0]:''}
-        else:
-            if len(listOfLine[0].strip()):
-                var =  {listOfLine[0]:listOfLine[1]}
-
-        self.dicVar.update(var)
-    def __csvAddCmd(self, lineNo, listCmd, stage):
-        lcmd = len(listCmd)
-        def proceedCmd(previousDUT,  cmd, target):
-            lenOfCmd =len(listCmd)
-            if lenOfCmd  ==0:
-                pass
-            elif lenOfCmd == 1:
-                if len(cmd[0].strip())>0:
-                    target.append([cmd[0], '', '.*', 1])
-            elif lenOfCmd ==2:
-                if len(cmd[0].strip())>0:
-                    target.append([cmd[0], '', '.*', 1])
-
-        if stage == self.state.index('searchingRun'):
-            #add command to seqSetup
-        elif  stage == self.state.index('searchingTeardown'):
-            #add command to seqRun
-        elif stage == self.state.index('searchingEnd'):
-            #add command to seqTeardown
 
     def __loadCsv(self, filename):
-        lsut    =   []
+        sdut    =  set( [])
         lvar    =   {}
         lsetup  =   []
         lrun    =   []
         ltear   =   []
-        import re as sre
-        reCaseEnd   = sre.compile("^[\s]*#[\s]*!---[\s]*",sre.I)
-        reVar       = sre.compile("^[\s]*#[\s]*VAR[\s]*",sre.I)
-        reSetup     = sre.compile("^[\s]*#[\s]*SETUP[\s]*",sre.I)
-        reRun       = sre.compile("^[\s]*#[\s]*RUN[\s]*",sre.I)
-        reTeardown  = sre.compile("^[\s]*#[\s]*TEARDOWN[\s]*",sre.I)
-        reOnFail    = sre.compile("^[\s]*#[\s]*ONFAIL[\s]*",sre.I)
-        reComment    = sre.compile("^[\s]*#[\s]*[\S]*",sre.I)
+        state = ('begin','var', 'setup','run', 'teardown', 'end' )
+        def addVar(csv, varlist):
+            lc = len(csv)
+            if lc ==0:#nothing to do
+                pass
+            elif lc == 1:
+                varname = csv[0].strip()
+                if varname=='':
+                    pass
+                else:
+                    varlist.append([varname, ''])
+            else:
+                varname = csv[0].strip()
+                varlist.update({varname: csv[1]})
+        def add2Segment(lineno, previousDut, csv, seg ,dutset):
+            lc = len(csv)
+            cmd =''
+            exp ='.*'
+            wait= 1
+            if lc == 0:
+                pass
+            else :
+                dut= csv[0].strip()
+                if dut=='':
+                    dut=previousDut.strip()
+                    if dut=='':
+                        raise ValueError('Line %d:no Dut assgined, it should be one of dut name used in this case')
+                if lc==1:
+                    pass
+                elif lc ==2:
+                    cmd= csv[1]
+                elif lc ==3:
+                    cmd= csv[1]
+                    exp = csv[2]
+                else:
+                    cmd= csv[1]
+                    exp = csv[2]
+                    if csv[3].strip()!='':
+                        wait = float(csv[3])
+            dutset.add(dut)
+            seg.append([dut, cmd, exp, wait])
+            return  dut
+        def segTest(lineno,previousDut, curseg , csv, var,setup, run, teardown, dutset):
+            seg = curseg
+            curdut=previousDut
+            import re as sre
+            reCaseEnd   = sre.compile("^[\s]*#[\s]*END[\s]*",sre.I)
+            reVar       = sre.compile("^[\s]*#[\s]*VAR[\s]*",sre.I)
+            reSetup     = sre.compile("^[\s]*#[\s]*SETUP[\s]*",sre.I)
+            reRun       = sre.compile("^[\s]*#[\s]*RUN[\s]*",sre.I)
+            reTeardown  = sre.compile("^[\s]*#[\s]*TEARDOWN[\s]*",sre.I)
+            #reOnFail    = sre.compile("^[\s]*#[\s]*ONFAIL[\s]*",sre.I)
+            reComment    = sre.compile("^[\s]*#[\s]*[\S]*",sre.I)
+
+            strcsv = ','.join(csv)
+
+            if sre.match(reCaseEnd, strcsv):
+                seg =  state.index('end')
+            elif sre.match(reVar, strcsv):
+                seg = state.index('var')
+            elif sre.match(reSetup, strcsv):
+                seg = state.index('setup')
+            elif sre.match(reRun, strcsv):
+                seg = state.index('run')
+            elif sre.match(reTeardown, strcsv):
+                seg = state.index('teardown')
+            elif sre.match(reComment, strcsv):
+                pass
+            else:
+                if seg == state.index('begin'):
+                    pass
+                elif seg == state.index('var'):
+                    addVar(csv , var)
+                elif seg == state.index('setup'):
+                    curdut = add2Segment(lineno, previousDut, csv, setup, dutset)
+                elif seg == state.index('run'):
+                    curdut = add2Segment(lineno, previousDut, csv, run, dutset)
+                elif seg == state.index('teardown'):
+                    curdut = add2Segment(lineno, previousDut, csv, teardown, dutset)
+                elif seg == state.index('end'):
+                    pass
+                else:
+                    raise ValueError('unknown state(%d) in CSV file, it should be one of %s'%(seg, str(state)))
+            return seg, curdut
 
         from common import csvfile2array
         lines = csvfile2array(filename)
-        state = self.state #('searchingVAR', 'searchingSetup','searchingRun', 'searchingTeardown', 'searchingEnd' )
-        stage = 0
         LineNo =0
-
+        dutname =None
+        import re as sre
+        reComment    = sre.compile("^[\s]*#[\s]*[\S]*",sre.I)
+        cstate = 0
+        predut = ''
         for line in lines:
             LineNo +=1
             col1 = line[0]
-            if sre.match(reComment):#ignore comment line
-                continue
+            cstate, predut = segTest(LineNo,predut, cstate, line, lvar, lsetup,lrun, ltear,sdut)
+            if cstate ==state.index('end'):
+                break
 
+        return sdut, lvar, lsetup, lrun, ltear
 
-            if not sre.match(reVar, col1):#not find "#var", continue searching segment VAR
-                continue
-            else:#find '#VAR', start to find one of #setup, #run, #teardown
-                if stage<state.index('searchingSetup'):# just find #VAR
-                    stage+=1
-                else:# found VAR, searching end of segment VAR
-                    ms = sre.match(reSetup, col1)
-                    mr = sre.match(reRun, col1)
-                    mt = sre.match(reTeardown, col1)
-                    if not ( ms or mr or mt ):#
-                        self.__csvAddVar(line)
-                    else:# find the end of VAR
-                        if stage ==state.index('searchingSetup'):
-                            if ms:
-                                stage = state.index('searchingRun')
-                            elif mr:
-                                stage = state.index('searchingTeardown')
-                            elif mt:
-                                stage = state.index('searchingEnd')
-                        else:#searching next stage
-                            if stage==
-
-
-
+    @logAction
     def load(self, filename, filetype='csv'):
         '''
         read a file, and create a case, setup,run, teardown
@@ -235,9 +260,10 @@ class case(object):
         file could be CSV file, now only CSV supported, future, it could be a url, database ...
 
         '''
-
+        sdut, lvar, lsetup, lrun, ltear=None,None,None, None, None
         if filetype.lower() =='csv':
-            self.__loadCsv(filename)
+            sdut, lvar, lsetup, lrun, ltear=  self.__loadCsv(filename)
+        return  sdut, lvar, lsetup, lrun, ltear
 
 
 
