@@ -55,23 +55,23 @@ class Test_winTerm(unittest.TestCase):
     def setUp(self):
         pass
     def test_Login(self):
-        baseS.Find('ogin:', 30)
-        baseS.Send('syu')
-        baseS.Find('assword', 30)
-        baseS.Send('yxw123')
-        baseS.Find('~', 30)
+        baseS.find('ogin:', 30)
+        baseS.send('syu')
+        baseS.find('assword', 30)
+        baseS.send('yxw123')
+        baseS.find('~', 30)
 
         baseS.info('login done')
         baseS.debug('this is a test debug message')
         baseS.error('error message example')
-        baseS.Send('ping localhost')
+        baseS.send('ping localhost')
         import time
         c = 30
         while c:
-            print(baseS.Print())
+            print(baseS.show())
             c-=1
             time.sleep(0.1)
-        baseS.Find('.*')
+        baseS.find('.*')
 
         newpath= './tmp2'
         if not os.path.exists('./tmp2'):
@@ -80,9 +80,9 @@ class Test_winTerm(unittest.TestCase):
 
         baseS.openLogfile(newpath)
 
-        baseS.Send('c',Ctrl=True)
+        baseS.send('c',Ctrl=True)
 
-        self.assertRaises(Exception, baseS.Find, 'abc', 0.01)
+        self.assertRaises(Exception, baseS.find, 'abc', 0.01)
 
         baseS.SessionAlive=False
         print 'done'

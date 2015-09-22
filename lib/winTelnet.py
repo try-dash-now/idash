@@ -53,19 +53,19 @@ NAOLFD = chr(16) # negotiate about output LF disposition
 XASCII = chr(17) # extended ascii character set
 LOGOUT = chr(18) # force logout
 BM = chr(19) # byte macro
-DET = chr(20) # data entry terminal
+DET = chr(20) # data entry dutinal
 SUPDUP = chr(21) # supdup protocol
 SUPDUPOUTPUT = chr(22) # supdup output
 SNDLOC = chr(23) # send location
-TTYPE = chr(24) # terminal type
+TTYPE = chr(24) # dutinal type
 EOR = chr(25) # end or record
 TUID = chr(26) # TACACS user identification
 OUTMRK = chr(27) # output marking
-TTYLOC = chr(28) # terminal location number
+TTYLOC = chr(28) # dutinal location number
 VT3270REGIME = chr(29) # 3270 regime
 X3PAD = chr(30) # X.3 PAD
 NAWS = chr(31) # window size
-TSPEED = chr(32) # terminal speed
+TSPEED = chr(32) # dutinal speed
 LFLOW = chr(33) # remote flow control
 LINEMODE = chr(34) # Linemode option
 XDISPLOC = chr(35) # X Display Location
@@ -93,10 +93,10 @@ PRAGMA_HEARTBEAT = chr(140) # TELOPT PRAGMA HEARTBEAT
 EXOPL = chr(255) # Extended-Options-List
 NOOPT = chr(0)
 
-from term import term
+from dut import dut
 import threading
 import os
-class winTelnet(term):#, spawn
+class winTelnet(dut):#, spawn
     streamOutLock =None
     def __del__(self):
         self.SessionAlive= False
@@ -105,7 +105,7 @@ class winTelnet(term):#, spawn
         if self.sock:
             self.sock.close()
     def __init__(self, name, attr =None,logger=None,  logpath= None):
-        term.__init__(self, name,attr,logger, logpath)
+        dut.__init__(self, name,attr,logger, logpath)
 
         host=""
         port=23
@@ -318,7 +318,7 @@ class winTelnet(term):#, spawn
                 print(msg)
                 self.info(msg)
 
-    def Send(self, cmd, Ctrl=False):
+    def send(self, cmd, Ctrl=False):
         '''send a command to Software/Device, add a line end
         move idxSearch to the end of streamOut
         Ctrl, bool, default is False, if it's True, then send a key combination: Ctrl+first_char_of_cmd
@@ -335,7 +335,7 @@ class winTelnet(term):#, spawn
         if self.attribute.get("LINESEP") and self.Connect2SUTDone ==True:
             self.write(os.linesep)
         self.idxSearch =self.streamOut.__len__() #move the Search window to the end of streamOut
-    def Find(self, pattern, timeout = 1.0, flags=0x18):
+    def find(self, pattern, timeout = 1.0, flags=0x18):
         '''find a given patten within given time(timeout)
         if pattern found, move idxSearch to index where is right after the pattern in streamOut
         return the content which matched the pattern
@@ -374,7 +374,7 @@ class winTelnet(term):#, spawn
 
 
 
-    def Print(self):
+    def show(self):
         '''return the delta of streamOut from last call of function Print,
         and move idxUpdate to end of streamOut'''
         newIndex = self.streamOut.__len__()

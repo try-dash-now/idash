@@ -8,7 +8,7 @@ provides:
 3. searching given pattern from a given range, e.g. right after last command entered
 '''
 
-class term(object):
+class dut(object):
     '''
     streamOut:  string of Software/Device's output, __init__ will set it to ''
     idxSearch:  number, based on 0, default is 0, it's the index of streamOut, and point to where to find the pattern
@@ -72,30 +72,33 @@ class term(object):
         self.logfile = open(log, "wb")
 
 
-    def Send(self, cmd):
+    def send(self, cmd):
         '''send a command to Software/Device, add a line end
         move idxSearch to the end of streamOut
         '''
         pass
-    def Find(self, pattern, timeout = 1.0):
+    def find(self, pattern, timeout = 1.0):
         '''find a given patten within given time(timeout)
         if pattern found, move idxSearch to index where is right after the pattern in streamOut
         return the content which matched the pattern
         otherwise return None
         '''
         pass
-    def Print(self):
+    def show(self):
         '''return the delta of streamOut from last call of function Print,
         and move idxUpdate to end of streamOut'''
         pass
-    def Save2File(self, data, filename=None):
+    def write2file(self, data, filename=None):
         '''write the data to a given file
         if filename is None, the create a term_name.txt under current path of term logfile
         '''
 
-        pass
-    def CallFun(self,functionName,args=[], kwargs={}):
-        functionName(*args, **kwargs)
+        if filename:
+            f =open(filename, 'wb')
+            f.write(data)
+            f.flush()
+        else:
+            self.info(data)
 
     def formatMsg(self, msg):
         import datetime
@@ -123,8 +126,40 @@ class term(object):
         add error message to logger
         '''
         msg = self.formatMsg(msg)
+
         if self.logger:
             self.logger.debug(msg)
 
+    def call(self, funName, *args, **kwargs):
+
+        fun = self.__getattribute__(funName)
+        try:
+            return fun(*args, **kwargs)
+        except:
+            import inspect
+            (arg, varargs, keywords, defaults) =inspect.getargspec(fun)
+            msg ='''
+call function(%s)
+    input args:
+        %s
+    input Kwargs:
+        %s.
+    define args:
+        %s
+    define varargs:
+        %s
+    define keywords:
+        %s
+    define defaults:
+        %s'''%(
+            funName,
+            str(args),
+            str(kwargs),
+            str(arg),
+            str(varargs),
+            str(keywords),
+            str(defaults)
+        )
+            raise ValueError(msg)
 
 

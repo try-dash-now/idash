@@ -32,10 +32,14 @@ class case(object):
     a case is a sequence operation
     '''
     name        = None # case name
-    dicVar          = None #dict of Variable
-    seqSetup       = None #steps in setup section
-    seqRun         = None #steps in setup section
-    seqTeardown    = None #steps in setup section
+    lstVar          = None #dict of Variable, list of variables,, after substitude()
+    seqSetup       = None #steps in setup section, the steps could be executed, after substitude()
+    seqRun         = None #steps in setup section, the steps could be executed, after substitude()
+    seqTeardown    = None #steps in setup section, the steps could be executed, after substitude()
+    dicRawVar      = None #raw steps in setup section, filled by load()
+    seqRawSetup    = None #raw steps in setup section, filled by load()
+    seqRawRun      = None #raw steps in setup section, filled by load()
+    seqRawTeardown = None #raw steps in setup section, filled by load()
     logger      = None # logger of case, named as case_name.log
     logpath     = None # the case folder path
     mode        = None # string, case mode, one of {full,run, setup, tear, r,s, t, norun, nosetup, notear, nr, ns,nt}
@@ -146,7 +150,7 @@ class case(object):
 
     def __loadCsv(self, filename):
         sdut    =  set( [])
-        lvar    =   {}
+        lvar    =   []
         lsetup  =   []
         lrun    =   []
         ltear   =   []
@@ -163,7 +167,7 @@ class case(object):
                     varlist.append([varname, ''])
             else:
                 varname = csv[0].strip()
-                varlist.update({varname: csv[1]})
+                lvar.append([varname, csv[1]])
         def add2Segment(lineno, previousDut, csv, seg ,dutset):
             lc = len(csv)
             cmd =''
@@ -191,7 +195,7 @@ class case(object):
                         wait = float(csv[3])
             dutset.add(dut)
             seg.append([dut, cmd, exp, wait])
-            return  dut
+            return  dut#current dut
         def segTest(lineno,previousDut, curseg , csv, var,setup, run, teardown, dutset):
             seg = curseg
             curdut=previousDut
@@ -264,6 +268,34 @@ class case(object):
         if filetype.lower() =='csv':
             sdut, lvar, lsetup, lrun, ltear=  self.__loadCsv(filename)
         return  sdut, lvar, lsetup, lrun, ltear
+
+    def substitute(self, global_vars, local_vars):
+        '''
+        substitute all variables in segments which are filled by load(), e.g. var table, setup, run teardown
+        global_vars:
+            list of value, all value is string, come from global cli inputs, var_name should be 1,2,3,4...
+        local_vars:
+            list of [var_name, value], all value is string, come from #var segment in case
+
+        '''
+        tmp =[]
+        import re
+        index =0
+
+        newVar =[]
+        for localVar, localValue in self.lstVar:
+
+            index =1
+            for value in global_vars:
+                var =re.sub('${\s*%d\s*}'%index, value,localVar)
+                val =re.sub('${\s*%d\s*}'%index, value,localValue)
+                newVar.append([var,val])
+
+        newsetup =[]
+        for dut,cmd, exp, wait in self.seqRawSetup:
+
+
+
 
 
 
