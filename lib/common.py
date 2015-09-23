@@ -94,3 +94,34 @@ def FunctionArgParser(stringOfArgs):
     print('stringOfArgs:', stringOfArgs)
     args, kw = eval('GetFunArg(%s)'%stringOfArgs)
     return args, kw
+
+def DumpDict(dicts):
+    import operator
+    d = {}
+    s=''
+
+    key =dicts.keys()
+    key = sorted(key)
+    for k in key:
+        n = k
+        o= dicts[k]
+        if k!='__builtins__':
+            s+='\t%s: %s\n'%(repr(n),repr(o).replace('\\\\', '\\'))
+    return s
+import inspect
+import sys, traceback
+
+def DumpStack(e):
+
+    exc_type, exc_value, exc_traceback = sys.exc_info()
+    str = traceback.format_exception(exc_type, exc_value,exc_traceback)
+    str = ''.join(str)
+    str=str.replace('\n', '\n*\t')
+
+    trace= inspect.trace()
+    lastframe = trace[-1][0]
+
+    locals=  DumpDict(lastframe.f_locals).replace('\n','\n*\t')
+    globals= DumpDict(lastframe.f_globals).replace('\n','\n*\t')
+
+    return '%s\n*\t%s\n*\tglobals=> \n\t%s\n*\tlocals => \n\t%s\n*%s\n%s'%('*'*80,e.__str__().replace('\n','\n*\t'), globals,locals,str,'*'*80)

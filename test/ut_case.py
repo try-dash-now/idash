@@ -86,8 +86,38 @@ class test_case(unittest.TestCase):
         mode = 'full'
         cs = case('testcase', duts, setup, run, teardown, mode, './tmp1' )
         arg =[]
-        casefail, resp =cs.load('./case1.csv')
+        gvars =['gv1', 'gv2', 'gv3',]
+
+        resp =cs.load('./case2-novar.csv',gvars )
         dutname, varlist,setup, run, tear = resp
+        print(dutname)
+        print(varlist)
+        print(setup)
+        print(run)
+        print(tear)
+
+
+        resp =cs.load('./case1.csv',gvars )
+        dutname, varlist,setup, run, tear = resp
+        print(dutname)
+        print(varlist)
+        print(setup)
+        print(run)
+        print(tear)
+
+    def test_execute2(self):
+        from case import  case
+        setup =[]
+        run =[]
+        teardown=[]
+        duts = {'winTel': baseS}
+        mode = 'full'
+        cs = case('testcase', duts, setup, run, teardown, mode, './tmp1' )
+        arg =[]
+        gvars =['winTel', 'whoami', 'ls','pwd']
+        resp =cs.load('./case3.csv',gvars )
+        dutname, varlist,setup, run, tear = resp
+        cs.execute('full')
         print(dutname)
         print(varlist)
         print(setup)

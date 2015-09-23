@@ -36,10 +36,6 @@ class case(object):
     seqSetup       = None #steps in setup section, the steps could be executed, after substitude()
     seqRun         = None #steps in setup section, the steps could be executed, after substitude()
     seqTeardown    = None #steps in setup section, the steps could be executed, after substitude()
-    dicRawVar      = None #raw steps in setup section, filled by load()
-    seqRawSetup    = None #raw steps in setup section, filled by load()
-    seqRawRun      = None #raw steps in setup section, filled by load()
-    seqRawTeardown = None #raw steps in setup section, filled by load()
     logger      = None # logger of case, named as case_name.log
     logpath     = None # the case folder path
     mode        = None # string, case mode, one of {full,run, setup, tear, r,s, t, norun, nosetup, notear, nr, ns,nt}
@@ -109,16 +105,19 @@ class case(object):
             raise ValueError(msg)
     def logAction(fun):
         def inner(*arg, **kwargs):
-            CaseFail=True
             try:
                 msg ='fun: %s\narg: %s\nkwargs: %s'%(str(fun), str(arg), str(kwargs))
                 print(msg)
                 response = fun(*arg, **kwargs)
-                return  (not CaseFail,response)
+                return  response
             except Exception as e:
-                msg = traceback.format_exc()
-                msg +='\tfun: %s\n\targ: %s\n\tkwargs: %s'%(str(fun), str(arg), str(kwargs))
-                return (CaseFail,msg)
+                msg ='\tFunction Name: \t\t%s\n\tArguments: \t\t%s\n\tKeyword Arguments: \t\t%s'%(str(fun), str(arg), str(kwargs))
+                from common import DumpStack
+                msg ='\n'*8+DumpStack(e)+'\n'+msg
+                print(msg)
+                import os
+                with open(os.getcwd()+'/error.txt','a+') as errorfile:
+                    errorfile.write(msg)
             return inner
         return inner
     @logAction
@@ -128,34 +127,31 @@ class case(object):
         if mode not in CASE_MODE:
             raise ValueError('case mode is wrong, should be one of %s'%(str(CASE_MODE)))
         if mode in {'full', 'setup', 'norun', 'notear', 's', 'nr', 'nt', 'f'}:
-            for dut, cmd,expect , due in self.seqSetup:
-                print dut, cmd, expect, due
+            for dut, cmd,expect , due, lineno in self.seqSetup:
+                print lineno ,dut, cmd, expect, due
         if mode in {'full', 'run', 'nosetup', 'notear', 'r', 'ns', 'nt', 'f'}:
-            for dut, cmd,expect , due in self.seqRun:
-                print dut, cmd, expect, due
+            for dut, cmd,expect , due, lineno  in self.seqRun:
+                print lineno , dut, cmd, expect, due
         if mode in {'full', 'tear', 'norun', 'nosetup', 't', 'nr', 'ns', 'f'}:
-            for dut, cmd,expect , due in self.seqTeardown:
-                print dut, cmd, expect, due
+            for dut, cmd,expect , due , lineno in self.seqTeardown:
+                print lineno , dut, cmd, expect, due
         return None
 
     def execute(self, mode =None):
         m =self.mode
         if mode :
             m =str(mode).lower()
+        response = self.__run(m)
 
-        CaseFail, response = self.__run(m)
-        if CaseFail:
-            self.error(response, True)
-
-
-    def __loadCsv(self, filename):
+    @logAction
+    def __loadCsv(self, filename, global_vars):
         sdut    =  set( [])
         lvar    =   []
         lsetup  =   []
         lrun    =   []
         ltear   =   []
         state = ('begin','var', 'setup','run', 'teardown', 'end' )
-        def addVar(csv, varlist):
+        def addVar(csv, varlist, lineno):
             lc = len(csv)
             if lc ==0:#nothing to do
                 pass
@@ -164,10 +160,10 @@ class case(object):
                 if varname=='':
                     pass
                 else:
-                    varlist.append([varname, ''])
+                    varlist.append([varname, '', lineno])
             else:
                 varname = csv[0].strip()
-                lvar.append([varname, csv[1]])
+                lvar.append([varname, csv[1], lineno])
         def add2Segment(lineno, previousDut, csv, seg ,dutset):
             lc = len(csv)
             cmd =''
@@ -194,9 +190,19 @@ class case(object):
                     if csv[3].strip()!='':
                         wait = float(csv[3])
             dutset.add(dut)
-            seg.append([dut, cmd, exp, wait])
+            seg.append([dut, cmd, exp, wait, lineno])
             return  dut#current dut
-        def segTest(lineno,previousDut, curseg , csv, var,setup, run, teardown, dutset):
+        def segTest(lineno,global_vars, previousDut, curseg , linestring, var,setup, run, teardown, dutset):
+            import re
+            def substitude(global_var, local_vars, linestring):
+                index = 0
+                tmpline = linestring
+                for gv in global_vars:
+                    tmpline = re.sub('\$\s*\{\s*%d\s*\}'%index, gv, tmpline)
+                    index+=1
+                for ln, lv, no in local_vars:
+                    tmpline = re.sub('\$\s*\{\s*%s\s*\}'%(ln), lv, tmpline)
+                return tmpline
             seg = curseg
             curdut=previousDut
             import re as sre
@@ -207,8 +213,10 @@ class case(object):
             reTeardown  = sre.compile("^[\s]*#[\s]*TEARDOWN[\s]*",sre.I)
             #reOnFail    = sre.compile("^[\s]*#[\s]*ONFAIL[\s]*",sre.I)
             reComment    = sre.compile("^[\s]*#[\s]*[\S]*",sre.I)
-
-            strcsv = ','.join(csv)
+            from common import csvstring2array
+            strcsv = substitude(global_vars,var,linestring)
+            csv = csvstring2array(strcsv)[0]
+            strcsv =linestring # ','.join(csv)
 
             if sre.match(reCaseEnd, strcsv):
                 seg =  state.index('end')
@@ -226,7 +234,7 @@ class case(object):
                 if seg == state.index('begin'):
                     pass
                 elif seg == state.index('var'):
-                    addVar(csv , var)
+                    addVar(csv , var,lineno)
                 elif seg == state.index('setup'):
                     curdut = add2Segment(lineno, previousDut, csv, setup, dutset)
                 elif seg == state.index('run'):
@@ -240,65 +248,37 @@ class case(object):
             return seg, curdut
 
         from common import csvfile2array
-        lines = csvfile2array(filename)
-        LineNo =0
-        dutname =None
-        import re as sre
-        reComment    = sre.compile("^[\s]*#[\s]*[\S]*",sre.I)
-        cstate = 0
-        predut = ''
-        for line in lines:
-            LineNo +=1
-            col1 = line[0]
-            cstate, predut = segTest(LineNo,predut, cstate, line, lvar, lsetup,lrun, ltear,sdut)
-            if cstate ==state.index('end'):
-                break
+        with open(filename, 'r') as csvfile:
+            LineNo =0
+            dutname =None
+            import re as sre
+            reComment    = sre.compile("^[\s]*#[\s]*[\S]*",sre.I)
+            cstate = 0
+            predut = ''
+            for line in csvfile.readlines():
+                LineNo +=1
+                cstate, predut = segTest(LineNo,global_vars, predut, cstate, line, lvar, lsetup,lrun, ltear,sdut)
+                if cstate ==state.index('end'):
+                    break
 
         return sdut, lvar, lsetup, lrun, ltear
 
-    @logAction
-    def load(self, filename, filetype='csv'):
+
+    def load(self, filename, global_vars=[], filetype='csv'):
         '''
         read a file, and create a case, setup,run, teardown
         and record the relation between LineNumber of file and IndexOfList(setup, run,teardown
         file could be CSV file, now only CSV supported, future, it could be a url, database ...
 
         '''
+        response =[]
         sdut, lvar, lsetup, lrun, ltear=None,None,None, None, None
         if filetype.lower() =='csv':
-            sdut, lvar, lsetup, lrun, ltear=  self.__loadCsv(filename)
+            sdut, lvar, lsetup, lrun, ltear=  self.__loadCsv(filename, global_vars)
+        self.seqSetup=lsetup
+        self.seqRun = lrun
+        self.seqTeardown= ltear
+        self.duts = sdut
+
         return  sdut, lvar, lsetup, lrun, ltear
-
-    def substitute(self, global_vars, local_vars):
-        '''
-        substitute all variables in segments which are filled by load(), e.g. var table, setup, run teardown
-        global_vars:
-            list of value, all value is string, come from global cli inputs, var_name should be 1,2,3,4...
-        local_vars:
-            list of [var_name, value], all value is string, come from #var segment in case
-
-        '''
-        tmp =[]
-        import re
-        index =0
-
-        newVar =[]
-        for localVar, localValue in self.lstVar:
-
-            index =1
-            for value in global_vars:
-                var =re.sub('${\s*%d\s*}'%index, value,localVar)
-                val =re.sub('${\s*%d\s*}'%index, value,localValue)
-                newVar.append([var,val])
-
-        newsetup =[]
-        for dut,cmd, exp, wait in self.seqRawSetup:
-
-
-
-
-
-
-
-
 
