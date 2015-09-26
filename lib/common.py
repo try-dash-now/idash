@@ -95,6 +95,15 @@ def FunctionArgParser(stringOfArgs):
     args, kw = eval('GetFunArg(%s)'%stringOfArgs)
     return args, kw
 
+def GetFunctionbyName(classobj, functionName):
+    import inspect,re
+    members = inspect.getmembers(classobj)
+    objFun = None
+    for item in members:
+        if re.match(item[0],functionName, re.I)
+            objFun =classobj.__getattribute__(item[0])
+            break
+    return  objFun
 def DumpDict(dicts):
     import operator
     d = {}

@@ -123,6 +123,11 @@ class case(object):
     @logAction
     def __run(self, mode):
         global  CASE_MODE
+        def analyzeStep(dut, commnad, expect, wait):
+            funName = dut.defaultFunction
+            pass
+
+
 
         if mode not in CASE_MODE:
             raise ValueError('case mode is wrong, should be one of %s'%(str(CASE_MODE)))
@@ -188,7 +193,9 @@ class case(object):
                     cmd= csv[1]
                     exp = csv[2]
                     if csv[3].strip()!='':
-                        wait = float(csv[3])
+                        wait = csv[3].strip()
+                    else:
+                        wait = '0'
             dutset.add(dut)
             seg.append([dut, cmd, exp, wait, lineno])
             return  dut#current dut

@@ -128,10 +128,5 @@ class test_case(unittest.TestCase):
         cls.baseS.SessionAlive = False
         del cls.baseS
 
-
-
-
-
-
 if __name__ == '__main__':
     unittest.main()

@@ -36,6 +36,7 @@ class dut(object):
     SessionAlive =  True
     name         =  None #the term name, string
     logger       =  None #parent logger, passed to term, default is logger,no logger needed
+    defaultHandler= 'stepCheck' # the default handler for each action in sequences e.g. setup, run ,teardown
 
     def __del__(self):
         self.SessionAlive=False
@@ -161,5 +162,89 @@ call function(%s)
             str(defaults)
         )
             raise ValueError(msg)
+    def sleep(self, wait):
+        import time
+        time.sleep(float(wait))
+
+
+
+    def stepCheck(self, cmd, expect, wait):
+        def  analyzeStep(command, expect, wait):
+            import re
+            reRetry         = re.compile("^\s*try\s+([0-9]+)\s*:(.*)", re.I)
+            reFunction      = re.compile('\s*FUN\s*:\s*(.+?)\s*\(\s*(.*)\s*\)|\s*(.+?)\s*\(\s*(.*)\s*\)\s*$',re.IGNORECASE)
+            reCtrl          = re.compile("^\s*ctrl\s*:(.*)", re.I)
+            reNoWait        = re.compile("[\s]*NOWAIT[\s]*:([\s\S]*)",re.IGNORECASE)
+            reNo            = re.compile("^\s*NO\s*:(.*)", re.I)
+
+            NewCommand  = command
+            NewExpect = expect
+            FunName     = None
+            ListArg     = None
+            DicArg      = None
+            IsCtrl      = False
+            Retry       = 0
+            IsNoWait    = False
+            IsNo        = False
+
+            if wait.strip() =='0':
+                IsNo    = True
+
+            mTry = re.match(reRetry, command)
+            if mTry:
+                Retry       = mTry.group(1)
+                NewCommand  = mTry.group(2)
+
+            mFun    = re.match(reFunction, NewCommand)
+            from common import GetFunctionbyName
+            if mFun:
+                from common import FunctionArgParser
+                if mFun.group(1) !=None:
+                    FunName = mFun.group(1)
+                    ListArg, DicArg = FunctionArgParser(mFun.group(2))
+                else:
+                    FunName = mFun.group(3)
+                    ListArg, DicArg = FunctionArgParser(mFun.group(4))
+            else:
+
+                mCtrl = re.match(reCtrl, NewCommand)
+                if mCtrl:
+                    IsCtrl=True
+                    NewCommand = mCtrl.group(1)
+
+                mNo = re.match(reNo, expect)
+                if mNo:
+                    IsNo    = True
+                    NewExpect = mNo.group(1)
+                mNoWait = re.match(reNoWait, NewExpect)
+                if mNoWait:
+                    IsNoWait=True
+                    NewExpect = mNoWait.group(1)
+
+            return NewCommand, NewExpect, wait,  FunName, ListArg, DicArg, IsCtrl, IsNo, IsNoWait
+
+        def singleStep(self, cmd, expect, wait):
+            self.send(cmd)
+            self.find(expect, wait)
+        def noPattern(exp, wait):
+            try:
+                self.find(exp, wait)
+            except Exception as e:
+                raise ValueError('found pattern(%s) within %s'%(exp, wait))
+        def retry(maxtry, fun, arg, kwarg):
+            maxtry+=1
+            IsFail= True
+            counter =0
+            while(maxtry):
+                maxtry-=1
+                counter +=1
+                try:
+                    fun(arg, kwarg)
+                    IsFail=False
+                    break
+                except Exception as e:
+                    continue
+            if IsFail:
+                raise ValueError('tried %d time, failed in function(%s), arg( %s) kwarg (%s)'%(counter, str(fun), str(arg), str(kwarg)))
 
 
