@@ -32,7 +32,7 @@ class test_case(unittest.TestCase):
 
 
         if not os.path.exists(logpath):
-            os.mkdir('tmp1')
+            os.mkdir('./tmp1')
         cls.logpath = logpath
 
         import logging
@@ -47,8 +47,14 @@ class test_case(unittest.TestCase):
         logger.addHandler(hdrlog )
 
         cls.baseS = winTelnet(name,attr,logger , logpath)
+
         global  baseS, cs
         baseS = cls.baseS
+        baseS.find('ogin:', 30)
+        baseS.send('syu')
+        baseS.find('assword', 30)
+        baseS.send('yxw123')
+        baseS.find('~', 30)
 
 
 
@@ -77,7 +83,7 @@ class test_case(unittest.TestCase):
         rsp = cs.execute('r')
         rsp = cs.execute('t')
 
-    def test_loadCsvCase(self):
+    def tes1t_loadCsvCase(self):
         from case import  case
         setup =[]
         run =[]
@@ -106,6 +112,7 @@ class test_case(unittest.TestCase):
         print(tear)
 
     def test_execute2(self):
+        global  baseS
         from case import  case
         setup =[]
         run =[]
@@ -117,6 +124,9 @@ class test_case(unittest.TestCase):
         gvars =['winTel', 'whoami', 'ls','pwd']
         resp =cs.load('./case3.csv',gvars )
         dutname, varlist,setup, run, tear = resp
+        cs.requestDUTs(duts)
+        baseS.send('ls')
+        baseS.find('git', 30)
         cs.execute('full')
         print(dutname)
         print(varlist)

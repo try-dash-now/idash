@@ -310,6 +310,7 @@ class winTelnet(dut):#, spawn
                 self.lockStreamOut.release()
                 if self.logfile:
                     self.logfile.flush()
+                    print (self.logfile.name)
                 import time
                 time.sleep(0.02)
             except Exception, e:
@@ -318,12 +319,16 @@ class winTelnet(dut):#, spawn
                 print(msg)
                 self.info(msg)
 
-    def send(self, cmd, Ctrl=False):
+
+
+    def send(self, cmd, Ctrl=False, noWait=False):
         '''send a command to Software/Device, add a line end
         move idxSearch to the end of streamOut
         Ctrl, bool, default is False, if it's True, then send a key combination: Ctrl+first_char_of_cmd
+        noWait, bool, defualt is False, means move searching index, otherwise doesn't move the searching index
         '''
 
+        import os
         tmp =[]
         if Ctrl:
             ascii = ord(cmd[0]) & 0x1f
@@ -334,14 +339,19 @@ class winTelnet(dut):#, spawn
             self.write(os.linesep)
         if self.attribute.get("LINESEP") and self.Connect2SUTDone ==True:
             self.write(os.linesep)
-        self.idxSearch =self.streamOut.__len__() #move the Search window to the end of streamOut
-    def find(self, pattern, timeout = 1.0, flags=0x18):
-        '''find a given patten within given time(timeout)
+        if noWait:
+            pass
+        else:
+            self.idxSearch =self.streamOut.__len__() #move the Search window to the end of streamOut
+
+    def find(self, pattern, timeout = 1.0, flags=0x18, noPattern=False):
+        '''find a given patten within given time(timeout),
         if pattern found, move idxSearch to index where is right after the pattern in streamOut
         return the content which matched the pattern
         if pattern doesn't find, raise a Execption
         otherwise return None
         flags: number, same as RE flags, default is re.MULTILINE|re.DOTALL 0x18
+        noPattern: don't want to find the given pattern
         '''
 
         import re
@@ -356,6 +366,7 @@ class winTelnet(dut):#, spawn
         match=None
         buffer = ''
         findduration= time.strftime("::Find Duration: %Y-%m-%d %H:%M:%S --", time.localtime())
+
         while currentTime<endtime:
             buffer = self.streamOut[self.idxSearch:]
             match = re.search(pat ,buffer )
@@ -367,10 +378,19 @@ class winTelnet(dut):#, spawn
         findduration+= time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())+' %f'%timeout
         print findduration
         if match:
-            self.idxSearch += buffer.find(pattern)+match.group().__len__()+1
-            return match.group()
+            if noPattern:
+                delta = endtime-time.time()
+                if delta>0.0:
+                    time.sleep(endtime-time.time())
+                raise  RuntimeError('pattern(%s) found with %f, buffer is:\n--buffer start--\n%s\n--buffer end here--\n'%(pattern,timeout, buffer))
+            else:
+                self.idxSearch += buffer.find(pattern)+match.group().__len__()+1
+                return match.group()
         else:
-            raise RuntimeError('pattern(%s) doesn\'t find with %f, buffer is:\n--buffer start--\n%s\n--buffer end here--\n'%(pattern,timeout, buffer))
+            if noPattern:
+                self.idxSearch += buffer.__len__()+1
+            else:
+                raise RuntimeError('pattern(%s) doesn\'t find with %f, buffer is:\n--buffer start--\n%s\n--buffer end here--\n'%(pattern,timeout, buffer))
 
 
 

@@ -100,7 +100,7 @@ def GetFunctionbyName(classobj, functionName):
     members = inspect.getmembers(classobj)
     objFun = None
     for item in members:
-        if re.match(item[0],functionName, re.I)
+        if re.match(item[0],functionName, re.I):
             objFun =classobj.__getattribute__(item[0])
             break
     return  objFun

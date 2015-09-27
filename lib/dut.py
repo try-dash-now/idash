@@ -59,7 +59,7 @@ class dut(object):
         self.openLogfile(logpath)
     def openLogfile(self, logpath):
         '''
-        logpath, a folder path, where log to be find
+        logpath, a folder path, where log to be found
         '''
         import os
         if not logpath:
@@ -73,18 +73,6 @@ class dut(object):
         self.logfile = open(log, "wb")
 
 
-    def send(self, cmd):
-        '''send a command to Software/Device, add a line end
-        move idxSearch to the end of streamOut
-        '''
-        pass
-    def find(self, pattern, timeout = 1.0):
-        '''find a given patten within given time(timeout)
-        if pattern found, move idxSearch to index where is right after the pattern in streamOut
-        return the content which matched the pattern
-        otherwise return None
-        '''
-        pass
     def show(self):
         '''return the delta of streamOut from last call of function Print,
         and move idxUpdate to end of streamOut'''
@@ -132,7 +120,6 @@ class dut(object):
             self.logger.debug(msg)
 
     def call(self, funName, *args, **kwargs):
-
         fun = self.__getattribute__(funName)
         try:
             return fun(*args, **kwargs)
@@ -166,10 +153,12 @@ call function(%s)
         import time
         time.sleep(float(wait))
 
+    def singleStep(self, cmd, expect, wait, ctrl, noPattern, noWait):
+        self.send(cmd, ctrl, noWait)
+        self.find(expect, float(wait), noPattern)
 
-
-    def stepCheck(self, cmd, expect, wait):
-        def  analyzeStep(command, expect, wait):
+    def stepCheck(self,lineNo, cmd, expect, wait):
+        def analyzeStep(command, expect, wait):
             import re
             reRetry         = re.compile("^\s*try\s+([0-9]+)\s*:(.*)", re.I)
             reFunction      = re.compile('\s*FUN\s*:\s*(.+?)\s*\(\s*(.*)\s*\)|\s*(.+?)\s*\(\s*(.*)\s*\)\s*$',re.IGNORECASE)
@@ -180,8 +169,8 @@ call function(%s)
             NewCommand  = command
             NewExpect = expect
             FunName     = None
-            ListArg     = None
-            DicArg      = None
+            ListArg     = []
+            DicArg      = {}
             IsCtrl      = False
             Retry       = 0
             IsNoWait    = False
@@ -197,6 +186,7 @@ call function(%s)
 
             mFun    = re.match(reFunction, NewCommand)
             from common import GetFunctionbyName
+            FunName = 'singleStep'
             if mFun:
                 from common import FunctionArgParser
                 if mFun.group(1) !=None:
@@ -221,30 +211,32 @@ call function(%s)
                     IsNoWait=True
                     NewExpect = mNoWait.group(1)
 
-            return NewCommand, NewExpect, wait,  FunName, ListArg, DicArg, IsCtrl, IsNo, IsNoWait
+                FunName = 'singleStep'
+                ListArg = [NewCommand, NewExpect, wait, IsCtrl, IsNo, IsNoWait]
 
-        def singleStep(self, cmd, expect, wait):
-            self.send(cmd)
-            self.find(expect, wait)
-        def noPattern(exp, wait):
-            try:
-                self.find(exp, wait)
-            except Exception as e:
-                raise ValueError('found pattern(%s) within %s'%(exp, wait))
-        def retry(maxtry, fun, arg, kwarg):
+            return Retry, FunName, ListArg, DicArg
+
+        def retry(maxtry, funName, arg, kwarg, ):
             maxtry+=1
             IsFail= True
             counter =0
+            from common import GetFunctionbyName
+            fun = GetFunctionbyName(self, funName)
             while(maxtry):
                 maxtry-=1
                 counter +=1
                 try:
-                    fun(arg, kwarg)
+                    fun(*arg, **kwarg)
                     IsFail=False
                     break
                 except Exception as e:
                     continue
             if IsFail:
-                raise ValueError('tried %d time, failed in function(%s), arg( %s) kwarg (%s)'%(counter, str(fun), str(arg), str(kwarg)))
+                raise ValueError('tried %d time, failed in function(%s),\n\targ( %s)\n\tkwarg (%s)'%(counter, str(fun), str(arg), str(kwarg)))
+
+        MaxTry, FunName, ListArg, DicArg = analyzeStep(cmd, expect, wait)
+
+        retry(MaxTry, FunName, ListArg, DicArg)
+
 
 

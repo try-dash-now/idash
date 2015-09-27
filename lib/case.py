@@ -40,7 +40,7 @@ class case(object):
     logpath     = None # the case folder path
     mode        = None # string, case mode, one of {full,run, setup, tear, r,s, t, norun, nosetup, notear, nr, ns,nt}
     duts        = None # dict of DUTs
-
+    dutnames    = None # set of DUT names
     def __init__(self,name, duts, setup=[], run=[], tear=[], mode='full',logpath='./'):
         '''
             name: string, the case's name, just letter, number and _, -, max length is 80
@@ -126,19 +126,28 @@ class case(object):
         def analyzeStep(dut, commnad, expect, wait):
             funName = dut.defaultFunction
             pass
-
-
-
         if mode not in CASE_MODE:
             raise ValueError('case mode is wrong, should be one of %s'%(str(CASE_MODE)))
         if mode in {'full', 'setup', 'norun', 'notear', 's', 'nr', 'nt', 'f'}:
+            segment='setup'
+            stepindex= 1
             for dut, cmd,expect , due, lineno in self.seqSetup:
+                self.duts[dut].stepCheck(lineno, cmd, expect, due)
+                stepindex+=1
                 print lineno ,dut, cmd, expect, due
         if mode in {'full', 'run', 'nosetup', 'notear', 'r', 'ns', 'nt', 'f'}:
+            segment='run'
+            stepindex= 1
             for dut, cmd,expect , due, lineno  in self.seqRun:
+                self.duts[dut].stepCheck(lineno, cmd, expect, due)
+                stepindex+=1
                 print lineno , dut, cmd, expect, due
         if mode in {'full', 'tear', 'norun', 'nosetup', 't', 'nr', 'ns', 'f'}:
+            segment='setup'
+            stepindex= 1
             for dut, cmd,expect , due , lineno in self.seqTeardown:
+                self.duts[dut].stepCheck(lineno, cmd, expect, due)
+                stepindex+=1
                 print lineno , dut, cmd, expect, due
         return None
 
@@ -150,7 +159,7 @@ class case(object):
 
     @logAction
     def __loadCsv(self, filename, global_vars):
-        sdut    =  set( [])
+        sdut    =   set([])
         lvar    =   []
         lsetup  =   []
         lrun    =   []
@@ -173,7 +182,7 @@ class case(object):
             lc = len(csv)
             cmd =''
             exp ='.*'
-            wait= 1
+            wait= '1'
             if lc == 0:
                 pass
             else :
@@ -181,7 +190,7 @@ class case(object):
                 if dut=='':
                     dut=previousDut.strip()
                     if dut=='':
-                        raise ValueError('Line %d:no Dut assgined, it should be one of dut name used in this case')
+                        raise ValueError('Line %d:no Dut assgined, it should be one of dut name used in this case'%(lineno))
                 if lc==1:
                     pass
                 elif lc ==2:
@@ -194,6 +203,10 @@ class case(object):
                     exp = csv[2]
                     if csv[3].strip()!='':
                         wait = csv[3].strip()
+                        try:
+                            float(wait)#test wait(string) could be convert to float, otherwise raise an exception
+                        except:
+                            raise ValueError('Line %d:wait(%s) should be a float number'%(lineno, csv[3]))
                     else:
                         wait = '0'
             dutset.add(dut)
@@ -270,6 +283,9 @@ class case(object):
 
         return sdut, lvar, lsetup, lrun, ltear
 
+    def requestDUTs(self, dutpool):
+        for dutname in self.dutnames:
+            self.duts.update({dutname:dutpool[dutname]})
 
     def load(self, filename, global_vars=[], filetype='csv'):
         '''
@@ -285,7 +301,7 @@ class case(object):
         self.seqSetup=lsetup
         self.seqRun = lrun
         self.seqTeardown= ltear
-        self.duts = sdut
+        self.dutnames = sdut
 
         return  sdut, lvar, lsetup, lrun, ltear
 
