@@ -41,7 +41,7 @@ class case(object):
     mode        = None # string, case mode, one of {full,run, setup, tear, r,s, t, norun, nosetup, notear, nr, ns,nt}
     duts        = None # dict of DUTs
     dutnames    = None # set of DUT names
-    def __init__(self,name, duts, setup=[], run=[], tear=[], mode='full',logpath='./'):
+    def __init__(self,name, mode='full',logpath='./'):
         '''
             name: string, the case's name, just letter, number and _, -, max length is 80
             duts: dict of terms/connection/sessions, on_dutA, on_dutB are instance(sessions connected to dutA, dutB...   can send commands to DUT, and check response
@@ -87,11 +87,6 @@ class case(object):
             errormessage = 'mode(%s) is wrong,it should be one of %s, not case-sensitive '%(mode, str(modeset))
             self.error(errormessage)
         self.mode = m
-        self.duts =duts
-        self.openDutLogfile()
-        self.seqSetup =setup
-        self.seqRun = run
-        self.seqTeardown =tear
 
     def openDutLogfile(self):
         for dut_name in self.duts.keys():
@@ -292,9 +287,7 @@ class case(object):
 
         return sdut, lvar, lsetup, lrun, ltear
 
-    def requestDUTs(self, dutpool):
-        for dutname in self.dutnames:
-            self.duts.update({dutname:dutpool[dutname]})
+
 
     def load(self, filename, global_vars=[], filetype='csv'):
         '''

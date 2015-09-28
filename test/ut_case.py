@@ -17,8 +17,8 @@ class test_case(unittest.TestCase):
     def setUpClass(cls):
         from winTelnet import winTelnet
         name= 'e7-20'
-        #cmd = 'telnet 192.168.1.113'
-        cmd = 'telnet cdc-dash'
+        cmd = 'telnet 192.168.1.113'
+        #cmd = 'telnet cdc-dash'
         #cmd = 'telnet 10.245.48.20'#great wall e7-20
         #cmd = 'telnet 10.245.69.106'#ryi
         attr={'TIMEOUT':180,'LOGIN': 'e7support,assword:,30\nadmin,>,30','CMD':cmd, 'LINEEND':'\r\n', 'EXP':'name:' }
@@ -68,7 +68,7 @@ class test_case(unittest.TestCase):
         duts = {'winTel': baseS}
         mode = 'full'
         global cs
-        cs = case('testcase', duts, setup, run, teardown, mode, './tmp1' )
+        cs = case('testcase',  mode, './tmp1' )
     def tes1t_execute(self):
         from case import  case
         setup =[]
@@ -76,7 +76,7 @@ class test_case(unittest.TestCase):
         teardown=[]
         duts = {'winTel': baseS}
         mode = 'full'
-        cs = case('testcase', duts, setup, run, teardown, mode, './tmp1' )
+        cs = case('testcase', mode, './tmp1' )
         #cs.myrunner(cs.runcase, [mode])
         rsp = self.assertRaises(Exception, cs.execute, 'xxx')
         rsp = cs.execute('s')
@@ -90,7 +90,7 @@ class test_case(unittest.TestCase):
         teardown=[]
         duts = {'winTel': baseS}
         mode = 'full'
-        cs = case('testcase', duts, setup, run, teardown, mode, './tmp1' )
+        cs = case('testcase',  mode, './tmp1' )
         arg =[]
         gvars =['gv1', 'gv2', 'gv3',]
 
@@ -114,8 +114,8 @@ class test_case(unittest.TestCase):
     def test_execute2(self):
         from winTelnet import winTelnet
         name= 'e7-20'
-        #cmd = 'telnet 192.168.1.113'
-        cmd = 'telnet cdc-dash'
+        cmd = 'telnet 192.168.1.113'
+        #cmd = 'telnet cdc-dash'
         #cmd = 'telnet 10.245.48.20'#great wall e7-20
         #cmd = 'telnet 10.245.69.106'#ryi
         attr={'TIMEOUT':180,'LOGIN': 'e7support,assword:,30\nadmin,>,30','CMD':cmd, 'LINEEND':'\r\n', 'EXP':'name:' }
@@ -149,12 +149,11 @@ class test_case(unittest.TestCase):
         teardown=[]
         duts = {'winTel': baseS}
         mode = 'full'
-        cs = case('execute2', duts, setup, run, teardown, mode, './tmp1' )
+        cs = case('execute2', mode, './tmp1' )
         arg =[]
         gvars =['winTel', 'whoami', 'ls','pwd']
         resp =cs.load('./case3.csv',gvars )
         dutname, varlist,setup, run, tear = resp
-        cs.requestDUTs(duts)
         #baseS.send('ls')
         #baseS.find('git', 30)
 
