@@ -14,8 +14,8 @@ class Test_winTerm(unittest.TestCase):
     def setUpClass(cls):
         from winTelnet import winTelnet
         name= 'e7-20'
-        cmd = 'telnet 192.168.1.113'
-        #cmd = 'telnet cdc-dash'
+        #cmd = 'telnet 192.168.1.113'
+        cmd = 'telnet cdc-dash'
         #cmd = 'telnet 10.245.48.20'#great wall e7-20
         #cmd = 'telnet 10.245.69.106'#ryi
         attr={'TIMEOUT':180,'LOGIN': 'e7support,assword:,30\nadmin,>,30','CMD':cmd, 'LINEEND':'\r\n', 'EXP':'name:' }

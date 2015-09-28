@@ -118,44 +118,53 @@ class case(object):
                 import os
                 with open(os.getcwd()+'/error.txt','a+') as errorfile:
                     errorfile.write(msg)
+                raise RuntimeError(msg)
             return inner
         return inner
     @logAction
-    def __run(self, mode):
+    def __run(self, casename, mode):
         global  CASE_MODE
-        def analyzeStep(dut, commnad, expect, wait):
+        def analyzeStep(casename, dut, commnad, expect, wait):
             funName = dut.defaultFunction
             pass
         if mode not in CASE_MODE:
             raise ValueError('case mode is wrong, should be one of %s'%(str(CASE_MODE)))
-        if mode in {'full', 'setup', 'norun', 'notear', 's', 'nr', 'nt', 'f'}:
-            segment='setup'
-            stepindex= 1
-            for dut, cmd,expect , due, lineno in self.seqSetup:
-                self.duts[dut].stepCheck(lineno, cmd, expect, due)
-                stepindex+=1
-                print lineno ,dut, cmd, expect, due
-        if mode in {'full', 'run', 'nosetup', 'notear', 'r', 'ns', 'nt', 'f'}:
-            segment='run'
-            stepindex= 1
-            for dut, cmd,expect , due, lineno  in self.seqRun:
-                self.duts[dut].stepCheck(lineno, cmd, expect, due)
-                stepindex+=1
-                print lineno , dut, cmd, expect, due
-        if mode in {'full', 'tear', 'norun', 'nosetup', 't', 'nr', 'ns', 'f'}:
-            segment='setup'
-            stepindex= 1
-            for dut, cmd,expect , due , lineno in self.seqTeardown:
-                self.duts[dut].stepCheck(lineno, cmd, expect, due)
-                stepindex+=1
-                print lineno , dut, cmd, expect, due
+
+        def runSegment( casename, mode, modeset, seq, segName):
+
+            if mode in modeset:#{'full', 'setup', 'norun', 'notear', 's', 'nr', 'nt', 'f'}:
+                segment=segName#'setup'
+                stepindex= 1
+                for dut, cmd,expect , due, lineno in self.seqSetup:
+                    session = self.duts[dut]
+                    session.stepCheck(casename, lineno, cmd, expect, due)
+                    stepindex+=1
+                    print lineno ,dut, cmd, expect, due
+
+        modeset =[
+                    {'full', 'setup', 'norun', 'notear', 's', 'nr', 'nt', 'f'},
+                    {'full', 'run', 'nosetup', 'notear', 'r', 'ns', 'nt', 'f'},
+                    {'full', 'tear', 'norun', 'nosetup', 't', 'nr', 'ns', 'f'}
+
+                  ]
+        seqlist =[self.seqSetup,
+                  self.seqRun,
+                  self.seqTeardown
+                  ]
+        segNamelist =['setup', 'run', 'teardown']
+        index = 0
+        totalseg = len(seqlist)
+        while index <totalseg:
+            runSegment(casename, mode, modeset[index], seqlist[index], segNamelist[index])
+
+
         return None
 
     def execute(self, mode =None):
         m =self.mode
         if mode :
             m =str(mode).lower()
-        response = self.__run(m)
+        response = self.__run(self.name, m)
 
     @logAction
     def __loadCsv(self, filename, global_vars):

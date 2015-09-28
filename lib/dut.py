@@ -37,7 +37,7 @@ class dut(object):
     name         =  None #the term name, string
     logger       =  None #parent logger, passed to term, default is logger,no logger needed
     defaultHandler= 'stepCheck' # the default handler for each action in sequences e.g. setup, run ,teardown
-
+    timestampCmd   =None # record the time stamp of last interaction, to anti-idle
     def __del__(self):
         self.SessionAlive=False
 
@@ -76,6 +76,10 @@ class dut(object):
     def show(self):
         '''return the delta of streamOut from last call of function Print,
         and move idxUpdate to end of streamOut'''
+        pass
+    def write(self, buffer):
+        import time
+        self.timestampCmd= time.time()
         pass
     def write2file(self, data, filename=None):
         '''write the data to a given file
@@ -155,10 +159,12 @@ call function(%s)
 
     def singleStep(self, cmd, expect, wait, ctrl, noPattern, noWait):
         self.send(cmd, ctrl, noWait)
+        import time
+        time.sleep(0.01)
         self.find(expect, float(wait), noPattern)
 
-    def stepCheck(self,lineNo, cmd, expect, wait):
-        def analyzeStep(command, expect, wait):
+    def stepCheck(self, CaseName, lineNo, cmd, expect, wait):
+        def analyzeStep(casename, command, expect, wait):
             import re
             reRetry         = re.compile("^\s*try\s+([0-9]+)\s*:(.*)", re.I)
             reFunction      = re.compile('\s*FUN\s*:\s*(.+?)\s*\(\s*(.*)\s*\)|\s*(.+?)\s*\(\s*(.*)\s*\)\s*$',re.IGNORECASE)
@@ -216,7 +222,7 @@ call function(%s)
 
             return Retry, FunName, ListArg, DicArg
 
-        def retry(maxtry, funName, arg, kwarg, ):
+        def retry(casename, maxtry, funName, arg, kwarg, ):
             maxtry+=1
             IsFail= True
             counter =0
@@ -234,9 +240,80 @@ call function(%s)
             if IsFail:
                 raise ValueError('tried %d time, failed in function(%s),\n\targ( %s)\n\tkwarg (%s)'%(counter, str(fun), str(arg), str(kwarg)))
 
-        MaxTry, FunName, ListArg, DicArg = analyzeStep(cmd, expect, wait)
+        MaxTry, FunName, ListArg, DicArg = analyzeStep(CaseName,cmd, expect, wait)
 
-        retry(MaxTry, FunName, ListArg, DicArg)
+        retry(CaseName, MaxTry, FunName, ListArg, DicArg)
 
+    def send(self, cmd, Ctrl=False, noWait=False):
+        '''send a command to Software/Device, add a line end
+        move idxSearch to the end of streamOut
+        Ctrl, bool, default is False, if it's True, then send a key combination: Ctrl+first_char_of_cmd
+        noWait, bool, defualt is False, means move searching index, otherwise doesn't move the searching index
+        '''
+
+        import os
+        tmp =[]
+        if Ctrl:
+            ascii = ord(cmd[0]) & 0x1f
+            ch = chr(ascii)
+            self.write(ch)
+        else:
+            self.write(cmd)
+            self.write(os.linesep)
+        if self.attribute.get("LINESEP") and self.Connect2SUTDone ==True:
+            self.write(os.linesep)
+
+        if noWait:
+            pass
+        else:
+            self.idxSearch =self.streamOut.__len__() #move the Search window to the end of streamOut
+
+    def find(self, pattern, timeout = 1.0, flags=0x18, noPattern=False):
+        '''find a given patten within given time(timeout),
+        if pattern found, move idxSearch to index where is right after the pattern in streamOut
+        return the content which matched the pattern
+        if pattern doesn't find, raise a Execption
+        otherwise return None
+        flags: number, same as RE flags, default is re.MULTILINE|re.DOTALL 0x18
+        noPattern: don't want to find the given pattern
+        '''
+
+        import re
+        pat = re.compile(pattern,flags)
+        if timeout<0.1:
+            timeout =0.1
+        interval = 0.1 #second
+        import  time
+        starttime = time.time()
+        endtime = starttime+timeout+interval
+        currentTime = starttime
+        match=None
+        buffer = ''
+        findduration= time.strftime("::Find Duration: %Y-%m-%d %H:%M:%S --", time.localtime())
+
+        while currentTime<endtime:
+            buffer = self.streamOut[self.idxSearch:]
+            match = re.search(pat ,buffer )
+
+            if match:
+                break
+            time.sleep(interval)
+            currentTime=time.time()
+        findduration+= time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())+' %f'%timeout
+        print findduration
+        if match:
+            if noPattern:
+                delta = endtime-time.time()
+                if delta>0.0:
+                    time.sleep(endtime-time.time())
+                raise  RuntimeError('pattern(%s) found with %f, buffer is:\n--buffer start--\n%s\n--buffer end here--\n'%(pattern,timeout, buffer))
+            else:
+                self.idxSearch += buffer.find(pattern)+match.group().__len__()+1
+                return match.group()
+        else:
+            if noPattern:
+                self.idxSearch += buffer.__len__()+1
+            else:
+                raise RuntimeError('pattern(%s) doesn\'t find with %f, buffer is:\n--buffer start--\n%s\n--buffer end here--\n'%(pattern,timeout, buffer))
 
 

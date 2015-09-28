@@ -116,6 +116,11 @@ def DumpDict(dicts):
         o= dicts[k]
         if k!='__builtins__':
             s+='\t%s: %s\n'%(repr(n),repr(o).replace('\\\\', '\\'))
+            if k=='self':
+                selfkey = dicts['self'].__dict__.keys()
+                selfkey = sorted(selfkey)
+                for member in selfkey:
+                    s+='\t\t%s: %s\n'%(repr(member),repr(dicts['self'].__dict__[member]).replace('\\\\', '\\'))
     return s
 import inspect
 import sys, traceback
@@ -134,3 +139,8 @@ def DumpStack(e):
     globals= DumpDict(lastframe.f_globals).replace('\n','\n*\t')
 
     return '%s\n*\t%s\n*\tglobals=> \n\t%s\n*\tlocals => \n\t%s\n*%s\n%s'%('*'*80,e.__str__().replace('\n','\n*\t'), globals,locals,str,'*'*80)
+
+
+
+
+
