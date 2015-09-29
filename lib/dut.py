@@ -17,7 +17,6 @@ class dut(object):
                 function Find will move idxSearch to index where is right after the pattern in streamOut
     idxUpdate:  number, 0-based, default is 0, point to index of streamOut, when the last call of function Print
                 function Prind will move it to the end of streamOut
-    attr     :  the attributes gave by caller
     logfile  :  the log file, which named as name.log
     Connect2SUTDone:
                 bool, initial value is False, means didn't complete the process of Device log-in, after log-in, it should be set to True
@@ -29,7 +28,6 @@ class dut(object):
     streamOut   =   None
     idxSearch   =   0
     idxUpdate   =   0
-    attr        =   None
     logfile     =   None
     Connect2DUTDone = False
     attribute   =   None
@@ -38,6 +36,7 @@ class dut(object):
     logger       =  None #parent logger, passed to term, default is logger,no logger needed
     defaultHandler= 'stepCheck' # the default handler for each action in sequences e.g. setup, run ,teardown
     timestampCmd   =None # record the time stamp of last interaction, to anti-idle
+    loginDone   = False
     def __del__(self):
         self.SessionAlive=False
 
@@ -76,11 +75,11 @@ class dut(object):
     def show(self):
         '''return the delta of streamOut from last call of function Print,
         and move idxUpdate to end of streamOut'''
-        pass
+        raise NotImplementedError('please implement it in your class')
     def write(self, buffer):
         import time
         self.timestampCmd= time.time()
-        pass
+
     def write2file(self, data, filename=None):
         '''write the data to a given file
         if filename is None, the create a term_name.txt under current path of term logfile
@@ -157,7 +156,7 @@ call function(%s)
         import time
         time.sleep(float(wait))
 
-    def singleStep(self, cmd, expect, wait, ctrl, noPattern, noWait):
+    def singleStep(self, cmd, expect, wait, ctrl=False, noPattern=False, noWait=False):
         self.send(cmd, ctrl, noWait)
         import time
         time.sleep(0.01)
@@ -242,7 +241,7 @@ call function(%s)
 
         MaxTry, FunName, ListArg, DicArg = analyzeStep(CaseName,cmd, expect, wait)
 
-        retry(CaseName, MaxTry, FunName, ListArg, DicArg)
+        retry(CaseName, int(MaxTry), FunName, ListArg, DicArg)
 
     def send(self, cmd, Ctrl=False, noWait=False):
         '''send a command to Software/Device, add a line end
@@ -316,4 +315,17 @@ call function(%s)
             else:
                 raise RuntimeError('pattern(%s) doesn\'t find with %f, buffer is:\n--buffer start--\n%s\n--buffer end here--\n'%(pattern,timeout, buffer))
 
-
+    def login(self):
+        self.loginDone=False
+        login = 'login'.upper()
+        import time
+        time.sleep(0.5)
+        if self.attribute.has_key(login):
+            from common import csvfile2array
+            seq = csvfile2array(self.attribute[login])
+            lineno =0
+            for cmd, exp, wait in seq:
+                lineno+=1
+                self.stepCheck(self.name, lineno, cmd, exp, wait)
+                #self.singleStep(cmd, exp, wait)
+        self.loginDone=True

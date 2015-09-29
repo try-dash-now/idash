@@ -12,13 +12,13 @@ pardir =os.path.dirname(os.path.realpath(os.getcwd()))
 sys.path.append(os.path.sep.join([pardir,'lib']))
 
 cs =None
-class test_case(unittest.TestCase):
+class test_Parser(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         from winTelnet import winTelnet
         name= 'e7-20'
-        cmd = 'telnet 192.168.1.113'
-        #cmd = 'telnet cdc-dash'
+        #cmd = 'telnet 192.168.1.113'
+        cmd = 'telnet cdc-dash'
         #cmd = 'telnet 10.245.48.20'#great wall e7-20
         #cmd = 'telnet 10.245.69.106'#ryi
         attr={'TIMEOUT':180,'LOGIN': 'e7support,assword:,30\nadmin,>,30','CMD':cmd, 'LINEEND':'\r\n', 'EXP':'name:' }
@@ -61,22 +61,22 @@ class test_case(unittest.TestCase):
     def setUp(self):
         pass
     def tes1t_Init(self):
-        from case import  case
+        from Parser import  Parser
         setup =[]
         run =[]
         teardown=[]
         duts = {'winTel': baseS}
         mode = 'full'
         global cs
-        cs = case('testcase',  mode, './tmp1' )
+        cs = Parser('testcase',  mode, './tmp1' )
     def tes1t_execute(self):
-        from case import  case
+        from Parser import  Parser
         setup =[]
         run =[]
         teardown=[]
         duts = {'winTel': baseS}
         mode = 'full'
-        cs = case('testcase', mode, './tmp1' )
+        cs = Parser('testcase', mode, './tmp1' )
         #cs.myrunner(cs.runcase, [mode])
         rsp = self.assertRaises(Exception, cs.execute, 'xxx')
         rsp = cs.execute('s')
@@ -84,13 +84,13 @@ class test_case(unittest.TestCase):
         rsp = cs.execute('t')
 
     def tes1t_loadCsvCase(self):
-        from case import  case
+        from Parser import  Parser
         setup =[]
         run =[]
         teardown=[]
         duts = {'winTel': baseS}
         mode = 'full'
-        cs = case('testcase',  mode, './tmp1' )
+        cs = Parser('testParser',  mode, './tmp1' )
         arg =[]
         gvars =['gv1', 'gv2', 'gv3',]
 
@@ -114,8 +114,8 @@ class test_case(unittest.TestCase):
     def test_execute2(self):
         from winTelnet import winTelnet
         name= 'e7-20'
-        cmd = 'telnet 192.168.1.113'
-        #cmd = 'telnet cdc-dash'
+        #cmd = 'telnet 192.168.1.113'
+        cmd = 'telnet cdc-dash'
         #cmd = 'telnet 10.245.48.20'#great wall e7-20
         #cmd = 'telnet 10.245.69.106'#ryi
         attr={'TIMEOUT':180,'LOGIN': 'e7support,assword:,30\nadmin,>,30','CMD':cmd, 'LINEEND':'\r\n', 'EXP':'name:' }
@@ -143,13 +143,13 @@ class test_case(unittest.TestCase):
         baseS.find('assword', 30)
         baseS.send('yxw123')
         baseS.find('~', 30)
-        from case import  case
+        from Parser import Parser
         setup =[]
         run =[]
         teardown=[]
         duts = {'winTel': baseS}
         mode = 'full'
-        cs = case('execute2', mode, './tmp1' )
+        cs = Parser('execute2', mode, './tmp1' )
         arg =[]
         gvars =['winTel', 'whoami', 'ls','pwd']
         resp =cs.load('./case3.csv',gvars )

@@ -5,7 +5,7 @@ __mail__ = 'try.dash.now@gmail.com'
 created 2015/9/19 
 '''
 
-from case import  case
+from Parser import  parser
 class caseRunner(object):
     case =None
     def __init__(self):

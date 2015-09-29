@@ -1,3 +1,2 @@
-,ogin:,10
-syu,assword:,30
+try 3:syu,assword:,5
 yxw123,~,30

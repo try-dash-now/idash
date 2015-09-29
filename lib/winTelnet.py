@@ -113,7 +113,8 @@ class winTelnet(dut):#, spawn
         import re as sre
         reHostOnly=  sre.compile('\s*telnet\s+([\d.\w\-_]+)\s*',sre.I)
         reHostPort = sre.compile('\s*telnet\s+([\d.\w]+)\s+(\d+)', sre.I )
-        command = attr.get('CMD')
+
+        command = self.attribute.get('CMD')
         m1=sre.match(reHostOnly, command)
         m2=sre.match(reHostPort, command)
         if m1:
