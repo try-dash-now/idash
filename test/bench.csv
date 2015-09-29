@@ -1,0 +1,2 @@
+lnx1,SUT=,LOGIN=../bench/lnx.login,CMD=telnet 192.168.1.113
+lnx2,SUT=,LOGIN=../bench/lnx.login,CMD=telnet 192.168.1.113

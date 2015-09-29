@@ -8,33 +8,32 @@ pardir =os.path.dirname(os.path.realpath(os.getcwd()))
 sys.path.append(os.path.sep.join([pardir,'lib']))
 
 
-logpath = './tmp1'
+logpath = './log'
 
-
+cmd = 'telnet 192.168.1.113'
+#cmd = 'telnet cdc-dash'
 import shutil
 
 if os.path.exists(logpath):
     shutil.rmtree(logpath)
-if os.path.exists('./tmp2'):
-    shutil.rmtree('tmp2')
 
 
-if not os.path.exists(logpath):
-    os.mkdir('tmp1')
-    os.mkdir('tmp2')
 class Test_winTerm(unittest.TestCase):
 
     def test_Login2Linux(self):
         from winTelnet import winTelnet
         name= 'linux'
+        import os
+
         #cmd = 'telnet 192.168.1.113'
-        cmd = 'telnet cdc-dash'
+        #cmd = 'telnet cdc-dash'
         #cmd = 'telnet 10.245.48.20'#great wall e7-20
         #cmd = 'telnet 10.245.69.106'#ryi
         attr={'TIMEOUT':180,'LOGIN': '../bench/lnx.login','CMD':cmd, 'LINEEND':'\r\n', 'EXP':'name:' }
         logger=None
         global logpath
-
+        if not os.path.exists(logpath):
+            os.mkdir(logpath)
         import logging
         logfile = logpath+os.sep+"tc.log"
         logging.basicConfig( level = logging.DEBUG)
@@ -60,8 +59,8 @@ class Test_winTerm(unittest.TestCase):
             time.sleep(0.1)
         baseS.find('.*')
 
-        newpath= './tmp2'
-        if not os.path.exists('./tmp2'):
+        newpath= logpath+'/cas1_wintelnet'
+        if not os.path.exists(newpath):
 
             os.mkdir( newpath)
 
@@ -74,7 +73,7 @@ class Test_winTerm(unittest.TestCase):
         baseS.SessionAlive=False
         print 'done'
 
-    def test_Login2E7(self):
+    def tes1t_Login2E7(self):
         name = 'e7'
         cmd = 'telnet 10.245.3.16'
         attr = {'TIMEOUT':180,'LOGIN': '../bench/e7.login','CMD':cmd, 'LINEEND':'\r\n', 'EXP':'name:' }
