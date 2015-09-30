@@ -63,24 +63,8 @@ class Parser(object):
         '''
 
         #create  a unique folder for case, and logfile for case
-        import os
-        if not os.path.exists(logpath):
-            logpath = os.getcwd()
-        import re, datetime
-        fullname = name[:80]+datetime.datetime.now().isoformat('_')
-        self.name = re.sub('\W', '.', fullname)
-        logpath = logpath+'/'+ self.name
-        print("case folder created: %s"%logpath)
-        os.mkdir(logpath)
-        self.logpath= logpath
-        import logging
-        logfile = logpath+"/tc.log"
-        self.logger = logging.Logger(self.name,logging.DEBUG)
-        hdrlog = logging.FileHandler(logfile)
-        hdrlog .setFormatter(logging.Formatter('%(asctime)s -%(levelname)s:    %(message)s'))
-        self.logger.addHandler(hdrlog )
-        self.logger.info("case folder created: %s"%logpath)
 
+        self.name = name
         m = mode.lower()
         modeset = {'full', 'f', 'run', 'r', 'setup', 's', 'tear', 't', 'norun', 'nr', 'nosetup', 'ns', 'notear', 'nt'}
         if m not in modeset:
@@ -88,10 +72,7 @@ class Parser(object):
             self.error(errormessage)
         self.mode = m
 
-    def openDutLogfile(self):
-        for dut_name in self.duts.keys():
-            self.duts[dut_name].openLogfile(self.logpath)
-            self.logger.info("DUT %s redirected to case folder"%dut_name)
+
     def error(self,msg,  casefail=True):
         print(msg)
         if self.logger:

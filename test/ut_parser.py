@@ -10,8 +10,8 @@ import sys
 pardir =os.path.dirname(os.path.realpath(os.getcwd()))
 #pardir= os.path.sep.join(pardir.split(os.path.sep)[:-1])
 sys.path.append(os.path.sep.join([pardir,'lib']))
-cmd = 'telnet 192.168.1.113'
-#cmd = 'telnet cdc-dash'
+#cmd = 'telnet 192.168.1.113'
+cmd = 'telnet cdc-dash'
 cs =None
 class test_Parser(unittest.TestCase):
     @classmethod

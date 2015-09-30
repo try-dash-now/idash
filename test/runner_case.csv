@@ -1,0 +1,8 @@
+#var
+dut,${5}
+#setup
+N1,try 2:show alarm,no:VOIP,10
+N1,set ses tim dis page dis,success,10
+N1,show version,2.4.*,10
+,show card,>,10
+#!---

@@ -37,6 +37,7 @@ class dut(object):
     defaultHandler= 'stepCheck' # the default handler for each action in sequences e.g. setup, run ,teardown
     timestampCmd   =None # record the time stamp of last interaction, to anti-idle
     loginDone   = False
+    sock        =None
     def __del__(self):
         self.SessionAlive=False
 
@@ -160,7 +161,12 @@ call function(%s)
         self.send(cmd, ctrl, noWait)
         import time
         time.sleep(0.01)
-        self.find(expect, float(wait), noPattern)
+        if not noPattern:
+            self.find(expect, float(wait), noPattern)
+        else:
+            self.find(expect, float(wait), noPattern)
+            raise RuntimeError('found pattern(%s) within %s'%(expect,wait))
+
 
     def stepCheck(self, CaseName, lineNo, cmd, expect, wait):
         def analyzeStep(casename, command, expect, wait):

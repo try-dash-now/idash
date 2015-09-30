@@ -340,3 +340,12 @@ class winTelnet(dut):#, spawn
         self.idxUpdate= newIndex
         print('print::%d'%result.__len__())
         return result
+
+
+    def relogin(self):
+        self.loginDone=False
+        if self.sock:
+            self.sock.close()
+        self.open(self.host,self.port,self.timeout)
+        self.login()
+        self.Connect2SUTDone=True

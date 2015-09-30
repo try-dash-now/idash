@@ -39,7 +39,7 @@ class test_Parser(unittest.TestCase):
             os.mkdir(logpath)
         casefolder = createCaseLogDir('case1',logpath)
 
-    def test_InitDUTs(self):
+    def tes1t_InitDUTs(self):
         from runner import initDUT
         logpath ='./log'
         from common import bench2dict
@@ -47,9 +47,36 @@ class test_Parser(unittest.TestCase):
         duts= initDUT(bench,['lnx1', 'lnx2'])
         print(duts)
 
+    def test_case_runner(self):
+        from runner import case_runner, initDUT, createCaseLogDir
+        logpath ='./log'
+        if not os.path.exists(logpath):
+            os.mkdir(logpath)
+        logpath+='/ut_runner'
+        logger = createLogger('runner_logger', logpath)
+        casename = 'test_case_runner_2_duts'
+        casefolder = createCaseLogDir(casename,logpath)
+
+        from common import bench2dict
+        bench =bench2dict('./bench.csv')
 
 
+        from Parser import  Parser
+        mode = 'full'
+        cs = Parser(casename, mode, casefolder)
+        casefile = './runner_case.csv'
+        sdut, lvar, lsetup, lrun, ltear =cs.load(casefile)
+        ldut = list(sdut)
+        duts= initDUT(bench,ldut,logger, casefolder)#['lnx1', 'lnx2']
+        seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
+        case= case_runner(casename,duts,seq, mode)
 
+
+        print(duts)
+        for name in duts.keys():
+            dut = duts[name]
+            if dut :
+                dut.SessionAlive=False
 
 if __name__ == '__main__':
     unittest.main()
