@@ -69,7 +69,8 @@ class test_Parser(unittest.TestCase):
         casefile = './runner_case.csv'
         sdut, lvar, lsetup, lrun, ltear =cs.load(casefile)
         ldut = list(sdut)
-        duts= initDUT(bench,ldut,logger, casefolder)#['lnx1', 'lnx2']
+        errormessage =[]
+        duts= initDUT(errormessage,bench,ldut,logger, casefolder)#['lnx1', 'lnx2']
         seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
         case= case_runner(casename,duts,seq, mode)
 
@@ -102,7 +103,8 @@ class test_Parser(unittest.TestCase):
         sdut, lvar, lsetup, lrun, ltear =cs.load(casefile)
         ldut = list(sdut)
         ldut[0]='N1wrong'
-        #duts= initDUT(bench,ldut,logger, casefolder)#['lnx1', 'lnx2']
-        self.assertRaises(Exception, initDUT,bench, ldut,logger, casefolder)
+        errormessage =[]
+        #duts= initDUT(errormessage,bench,ldut,logger, casefolder)#['lnx1', 'lnx2']
+        self.assertRaises(Exception, initDUT,errormessage,bench, ldut,logger, casefolder)
 if __name__ == '__main__':
     unittest.main()

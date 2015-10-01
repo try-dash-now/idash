@@ -31,7 +31,7 @@ def logAction(fun):
             import os
             with open(os.getcwd()+'/error.txt','a+') as errorfile:
                 errorfile.write(msg)
-            raise ValueError(msg)
+            raise Exception(msg)
         return inner
     return inner
 @logAction
@@ -66,13 +66,13 @@ def openDutLogfile(duts, logpath, logger):
     for dut_name in duts.keys():
         duts[dut_name].openLogfile(logpath)
         logger.info("DUT %s redirected to case folder"%dut_name)
-gInitErrorMessage=''
+
 @logAction
-def initDUT(bench, dutnames, logger=None, casepath='./'):
+def initDUT(errormessage ,bench, dutnames, logger=None, casepath='./'):
     dictDUTs={}
-    global  gInitErrorMessage
-    gInitErrorMessage =''
-    def connect2dut(dutname, dut_attr, logger=None,path='./'):
+    #global  gInitErrorMessage
+
+    def connect2dut(InitErrorMessage , dutname, dut_attr, logger=None,path='./'):
         msg = ''
         try:
             import os
@@ -100,24 +100,23 @@ def initDUT(bench, dutnames, logger=None, casepath='./'):
             #     errorfile.write(msg)
             # if logger:
             #     logger.error(msg)
-            global  gInitErrorMessage
+            #global  gInitErrorMessage
             msg = 'can\'t init dut(%s)\n'%(dutname)
-            gInitErrorMessage += msg
+            InitErrorMessage.append(msg)
             raise ValueError(msg)
     import threading
     dutobjs=[]
 
     for dutname in dutnames:
-        th = threading.Thread(target= connect2dut, args =[dutname, bench[dutname],logger, casepath])
+        th = threading.Thread(target= connect2dut, args =[errormessage, dutname, bench[dutname],logger, casepath])
         dutobjs.append(th)
     for th in dutobjs:
         th.start()
 
     for th in dutobjs:
         th.join()
-
-    if gInitErrorMessage!='' or len(dictDUTs)==0:
-        raise ValueError(gInitErrorMessage)
+    if len(errormessage)!=0 or len(dictDUTs)==0:
+        raise ValueError(errormessage)
     return  dictDUTs
 
 
