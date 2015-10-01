@@ -58,7 +58,9 @@ class test_Parser(unittest.TestCase):
         casefolder = createCaseLogDir(casename,logpath)
 
         from common import bench2dict
-        bench =bench2dict('./bench.csv')
+        benchfile = './bench.csv'
+        benchfile= './home.csv'
+        bench =bench2dict(benchfile)
 
 
         from Parser import  Parser
@@ -77,6 +79,30 @@ class test_Parser(unittest.TestCase):
             dut = duts[name]
             if dut :
                 dut.SessionAlive=False
+    def test_case_runner_init_dut_failed(self):
+        from runner import case_runner, initDUT, createCaseLogDir
+        logpath ='./log'
+        if not os.path.exists(logpath):
+            os.mkdir(logpath)
+        logpath+='/ut_runner'
+        logger = createLogger('runner_logger', logpath)
+        casename = 'test_case_runner_2_duts'
+        casefolder = createCaseLogDir(casename,logpath)
 
+        from common import bench2dict
+        benchfile = './bench.csv'
+        benchfile= './home.csv'
+        bench =bench2dict(benchfile)
+
+
+        from Parser import  Parser
+        mode = 'full'
+        cs = Parser(casename, mode, casefolder)
+        casefile = './runner_case.csv'
+        sdut, lvar, lsetup, lrun, ltear =cs.load(casefile)
+        ldut = list(sdut)
+        ldut[0]='N1wrong'
+        #duts= initDUT(bench,ldut,logger, casefolder)#['lnx1', 'lnx2']
+        self.assertRaises(Exception, initDUT,bench, ldut,logger, casefolder)
 if __name__ == '__main__':
     unittest.main()

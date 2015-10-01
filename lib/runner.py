@@ -16,14 +16,22 @@ def logAction(fun):
             response = fun(*arg, **kwargs)
             return  response
         except Exception as e:
-            msg ='\tFunction Name: \t\t%s\n\tArguments: \t\t%s\n\tKeyword Arguments: \t\t%s'%(str(fun), str(arg), str(kwargs))
+            arglist = list(arg)
+            argstring =''
+            for a in arglist:
+                argstring +='\n\t\t'+str(a)
+            kwargstring = ''
+            for k,v in kwargs:
+                kwargstring += '\n\t\t%s: %s'%(str(k),str(v))
+            msg ='logAction dump:\n\tFunction Name: \t\t%s\n\tArguments: \t\t%s\n\tKeyword Arguments: \t\t%s'%(str(fun), argstring, kwargstring)
             from common import DumpStack
-            msg ='\n'*8+DumpStack(e)+'\n'+msg
+            msg =DumpStack(e)+'\n'+msg
+            msg = msg.replace('\n', '\n*')+'\n'+'*'*80
             print(msg)
             import os
             with open(os.getcwd()+'/error.txt','a+') as errorfile:
                 errorfile.write(msg)
-            raise RuntimeError(msg)
+            raise ValueError(msg)
         return inner
     return inner
 @logAction
@@ -58,10 +66,12 @@ def openDutLogfile(duts, logpath, logger):
     for dut_name in duts.keys():
         duts[dut_name].openLogfile(logpath)
         logger.info("DUT %s redirected to case folder"%dut_name)
+gInitErrorMessage=''
 @logAction
 def initDUT(bench, dutnames, logger=None, casepath='./'):
     dictDUTs={}
-    errormessage =''
+    global  gInitErrorMessage
+    gInitErrorMessage =''
     def connect2dut(dutname, dut_attr, logger=None,path='./'):
         msg = ''
         try:
@@ -76,20 +86,24 @@ def initDUT(bench, dutnames, logger=None, casepath='./'):
             ModuleName = __import__(classname)
             ClassName = ModuleName.__getattribute__(classname)
             ses= ClassName(dutname, dut_attr,logger=logger ,logpath = path)
-            dictDUTs[dutname]=ses
             ses.login()
+            dictDUTs[dutname]=ses
             return  ses
         except Exception as e:
-            from common import DumpStack
-            msg ='\n'*8+DumpStack(e)+'\n'
-            print(msg)
-            import os
-            with open(os.getcwd()+'/error.txt','a+') as errorfile:
-                errorfile.write(msg)
-            errormessage= msg
-            if logger:
-                logger.error(msg)
-            raise RuntimeError(msg)
+            # from common import DumpStack
+            # msg ='\n'*8+DumpStack(e)+'\n'
+            # print(msg)
+            # import os
+            # msg = 'can\'t init dut(%s)\n'%(dutname)+msg
+            # errormessage = msg
+            # with open(os.getcwd()+'/error.txt','a+') as errorfile:
+            #     errorfile.write(msg)
+            # if logger:
+            #     logger.error(msg)
+            global  gInitErrorMessage
+            msg = 'can\'t init dut(%s)\n'%(dutname)
+            gInitErrorMessage += msg
+            raise ValueError(msg)
     import threading
     dutobjs=[]
 
@@ -102,8 +116,8 @@ def initDUT(bench, dutnames, logger=None, casepath='./'):
     for th in dutobjs:
         th.join()
 
-    if errormessage!='' or len(dictDUTs)==0:
-        raise RuntimeError(msg)
+    if gInitErrorMessage!='' or len(dictDUTs)==0:
+        raise ValueError(gInitErrorMessage)
     return  dictDUTs
 
 
