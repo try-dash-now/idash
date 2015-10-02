@@ -178,9 +178,6 @@ def case_runner(casename, dictDUTs, case_seq, mode='full'):
 
 
 
-
-
-
 def suite_runner(dictDUTs, case_seqs):
 
     pass

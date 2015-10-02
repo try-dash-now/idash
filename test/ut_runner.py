@@ -16,7 +16,7 @@ cmd = 'telnet 192.168.1.113'
 #cmd = 'telnet cdc-dash'
 
 from runner import *
-class test_Parser(unittest.TestCase):
+class test_caseParser(unittest.TestCase):
     def test_0init(self):
         import shutil
         log = './log'
@@ -68,9 +68,9 @@ class test_Parser(unittest.TestCase):
         bench =bench2dict(benchfile)
 
 
-        from Parser import  Parser
+        from Parser import  caseParser
         mode = 'full'
-        cs = Parser(casename, mode, casefolder)
+        cs = caseParser(casename, mode, casefolder)
 
         sdut, lvar, lsetup, lrun, ltear =cs.load(casefile)
         ldut = list(sdut)
@@ -101,9 +101,9 @@ class test_Parser(unittest.TestCase):
         bench =bench2dict(benchfile)
 
 
-        from Parser import  Parser
+        from Parser import  caseParser
         mode = 'full'
-        cs = Parser(casename, mode, casefolder)
+        cs = caseParser(casename, mode, casefolder)
         casefile = './runner_case.csv'
         sdut, lvar, lsetup, lrun, ltear =cs.load(casefile)
         ldut = list(sdut)

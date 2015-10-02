@@ -27,7 +27,7 @@ def error(msg,  logger=None, casefail=True):
         logger.error(msg)
     if casefail:
         raise ValueError(msg)
-class Parser(object):
+class caseParser(object):
     '''
     a case is a sequence operation
     '''
@@ -97,50 +97,6 @@ class Parser(object):
                 raise RuntimeError(msg)
             return inner
         return inner
-    @logAction
-    def __run(self, casename, mode):
-        global  CASE_MODE
-        def analyzeStep(casename, dut, commnad, expect, wait):
-            funName = dut.defaultFunction
-            pass
-        if mode not in CASE_MODE:
-            raise ValueError('case mode is wrong, should be one of %s'%(str(CASE_MODE)))
-
-        def runSegment( casename, mode, modeset, seq, segName):
-
-            if mode in modeset:#{'full', 'setup', 'norun', 'notear', 's', 'nr', 'nt', 'f'}:
-                segment=segName#'setup'
-                stepindex= 1
-                for dut, cmd,expect , due, lineno in seq:#self.seqSetup:
-                    session = self.duts[dut]
-                    session.stepCheck(casename, lineno, cmd, expect, due)
-                    stepindex+=1
-                    print lineno ,dut, cmd, expect, due
-
-        modeset =[
-                    {'full', 'setup', 'norun', 'notear', 's', 'nr', 'nt', 'f'},
-                    {'full', 'run', 'nosetup', 'notear', 'r', 'ns', 'nt', 'f'},
-                    {'full', 'tear', 'norun', 'nosetup', 't', 'nr', 'ns', 'f'}
-
-                  ]
-        seqlist =[self.seqSetup,
-                  self.seqRun,
-                  self.seqTeardown
-                  ]
-        segNamelist =['setup', 'run', 'teardown']
-        index = 0
-        totalseg = len(seqlist)
-        while index <totalseg:
-            runSegment(casename, mode, modeset[index], seqlist[index], segNamelist[index])
-
-
-        return None
-
-    def execute(self, mode =None):
-        m =self.mode
-        if mode :
-            m =str(mode).lower()
-        response = self.__run(self.name, m)
 
     @logAction
     def __loadCsvCase(self, filename, global_vars):
@@ -288,3 +244,8 @@ class Parser(object):
 
         return  sdut, lvar, lsetup, lrun, ltear
 
+
+
+class suiteParser(object):
+    def __init__(self, name, logpath ='./'):
+        pass
