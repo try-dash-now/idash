@@ -58,15 +58,20 @@ class test_Parser(unittest.TestCase):
         casefolder = createCaseLogDir(casename,logpath)
 
         from common import bench2dict
+        where= 'home'
         benchfile = './bench.csv'
-        benchfile= './home.csv'
+        casefile = './runner_case.csv'
+        if where=='home':
+            benchfile= './home.csv'
+            casefile = './home_case.csv'
+
         bench =bench2dict(benchfile)
 
 
         from Parser import  Parser
         mode = 'full'
         cs = Parser(casename, mode, casefolder)
-        casefile = './runner_case.csv'
+
         sdut, lvar, lsetup, lrun, ltear =cs.load(casefile)
         ldut = list(sdut)
         errormessage =[]

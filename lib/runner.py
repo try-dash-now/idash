@@ -26,7 +26,7 @@ def logAction(fun):
             msg ='logAction dump:\n\tFunction Name: \t\t%s\n\tArguments: \t\t%s\n\tKeyword Arguments: \t\t%s'%(str(fun), argstring, kwargstring)
             from common import DumpStack
             msg =DumpStack(e)+'\n'+msg
-            msg = msg.replace('\n', '\n*')+'\n'+'*'*80
+            msg = '*********************************ERROR DUMP**************************************\n'+msg.replace('\n', '\n*')+'\n*********************************EREOR END***************************************\n'
             print(msg)
             import os
             with open(os.getcwd()+'/error.txt','a+') as errorfile:
@@ -116,7 +116,7 @@ def initDUT(errormessage ,bench, dutnames, logger=None, casepath='./'):
     for th in dutobjs:
         th.join()
     if len(errormessage)!=0 or len(dictDUTs)==0:
-        raise ValueError(errormessage)
+        raise ValueError('\n\t'.join(errormessage))
     return  dictDUTs
 
 

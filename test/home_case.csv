@@ -1,0 +1,8 @@
+#var
+dut,N1
+#setup
+${dut},try 2:pwd,syu,10
+${dut},ping localhost,=,10
+${dut},ctrl:c,\$,10
+,ls,\$,10
+#!---
