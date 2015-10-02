@@ -247,5 +247,34 @@ class caseParser(object):
 
 
 class suiteParser(object):
+    name =None
+    logpath = None
     def __init__(self, name, logpath ='./'):
-        pass
+        self.name = name
+        self.logpath= logpath
+    def load(self, suitfile, arglist=[]):
+        import re
+        from common import csvstring2array
+        numOfArglist = len(arglist)
+        with open(suitfile, 'r') as suitefile:
+            for line in suitefile.readlines():
+                index = 0
+                while index <numOfArglist:
+                    index+=1
+                    line =  re.sub('\$\s*\{\s*%d\s*\}'%(index), arglist[index-1], line)
+                columns = csvstring2array(line)
+                lenColum = len(columns)
+                #case_line,action_when_case_failed[continue,stop], repeat[repeat_stop_on_fail, repeat_ignore_fail],parallel[parallel_fail_all, parallel_fail_continue,stop_parallel]
+                #0        ,1                                     ,2                                               ,3
+                #skip     ,continue                              ,0                                               ,stop parallel
+                case_line = ''
+                failAction= 'continue'
+                repeat    = [0, 'repeat_stop_on_fail']
+                parallel   = [0, 'fail_all']
+                if lenColum ==0:
+                    pass
+                elif lenColum==1:
+                    #pass the case
+                    pass
+                elif lenColum ==2
+
