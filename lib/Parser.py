@@ -340,9 +340,10 @@ class suiteParser(object):
                             continue
                         else:
                             SuiteLine[index]=col
-                    if lineNo==4:
+                    if lineNo==7:
                         pass
                     cmd, failAction, loopAction, ConcAction = SuiteLine
+                    failAction = parseFailAction(lineNo, failAction)
                     newConc,ConcNumber = parserConcurent(lineNo, ConcAction)
                     loopCounter , loop_stop_at_fail = parserLoop(lineNo, loopAction)
 
@@ -350,19 +351,20 @@ class suiteParser(object):
                     currentAction = previousAction
                     if ConcNumber>0:
                         currentAction = concurrent
+                        failAction = 'break'
                         stop_on_fail = True
                         if newConc =='new':
                             if previousAction ==  concurrent:
-                                newSuiteLine =[currentAction, failAction, lstConc]
-                                SuiteArray.append([lineNo-1, newSuiteLine])
+                                newSuiteLine =[currentAction,  lstConc]
+                                SuiteArray.append([lineNo-1,failAction, newSuiteLine])
                             else:
                                 previousAction= currentAction
                             if loopCounter>1:
                                 action = loop
-                                lstConc=[[action, failAction,loopCounter, loop_stop_at_fail, cmd]]
+                                lstConc=[[action, loopCounter, loop_stop_at_fail, cmd]]
                             else:
                                 action = case_runner
-                                lstConc=[[action, failAction, cmd]]
+                                lstConc=[[action, cmd]]
                         else:
 
                             if loopCounter>1:
@@ -370,25 +372,26 @@ class suiteParser(object):
                                 lstConc.append([action,loopCounter, loop_stop_at_fail, cmd])
                             else:
                                 action = case_runner
-                                lstConc.append([action,failAction, cmd])
+                                lstConc.append([action, cmd])
                             previousAction = currentAction
                     else:
                         currentAction = None
                         if previousAction== concurrent:
-                            newSuiteLine =[previousAction, failAction,lstConc, stop_on_fail]
+                            newSuiteLine =[previousAction, lstConc]
                             lstConc = []
-                            SuiteArray.append([lineNo-1, newSuiteLine])
+                            prefailAction = 'break'
+                            SuiteArray.append([lineNo-1,prefailAction, newSuiteLine])
 
                         if loopCounter>1:
                             action = loop
                             currentAction =action
-                            newSuiteLine =[action, failAction,loop_stop_at_fail,cmd]
-                            SuiteArray.append([lineNo, newSuiteLine])
+                            newSuiteLine =[action,loopCounter, loop_stop_at_fail,cmd]
+                            SuiteArray.append([lineNo,failAction, newSuiteLine])
                         else:
                             action = case_runner
                             currentAction = action
-                            newSuiteLine =[action, failAction,cmd]
-                            SuiteArray.append([lineNo, newSuiteLine])
+                            newSuiteLine =[action, cmd]
+                            SuiteArray.append([lineNo,failAction, newSuiteLine])
 
 
 

@@ -182,8 +182,14 @@ class test_Parser(unittest.TestCase):
         logpath = createLogDir(name, logpath)
         st = suiteParser(name, logpath)
         suite= st.load(suitefile)
+        from runner import concurrent
         for i in suite:
-            print(i)
+            if i[2][0]!=concurrent:
+                print(i)
+            else:
+                print(i)
+                for ii in i[2][1]:
+                    print('\t'+str(i[0])+' '+str(ii))
 
 
     @classmethod

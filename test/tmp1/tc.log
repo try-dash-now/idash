@@ -1,7 +1,0 @@
-2015-10-02 22:53:12,948 -INFO:    2015-10-02 22:53:12.948000	e7-20	Traceback (most recent call last):
-  File "D:\YXW\workspace\idash\lib\winTelnet.py", line 312, in ReadDataFromSocket
-    self.fill_rawq()
-  File "D:\YXW\workspace\idash\lib\winTelnet.py", line 206, in fill_rawq
-    buf = self.sock.recv(50)
-timeout: timed out
-

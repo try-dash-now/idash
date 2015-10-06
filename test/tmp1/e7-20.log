@@ -1,8 +1,0 @@
-CentOS release 6.4 (Final)
-Kernel 2.6.32-358.el6.i686 on an i686
-login: Password: 
-Last login: Fri Oct  2 22:53:11 from 192.168.1.103
-tput: unknown terminal "network"
-csh: No entry for terminal type "network"
-csh: using dumb terminal settings.
-[syu@Centos64-SYU ~]$ 
