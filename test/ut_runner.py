@@ -111,5 +111,44 @@ class test_caseParser(unittest.TestCase):
         errormessage =[]
         #duts= initDUT(errormessage,bench,ldut,logger, casefolder)#['lnx1', 'lnx2']
         self.assertRaises(Exception, initDUT,errormessage,bench, ldut,logger, casefolder)
+    def test_suiteLoad(self):
+        from runner import case_runner, initDUT, createCaseLogDir
+        logpath ='./log'
+        if not os.path.exists(logpath):
+            os.mkdir(logpath)
+        logpath+='/ut_runner'
+        logger = createLogger('runner_logger', logpath)
+        casename = 'test_suiteLoad'
+        casefolder = createCaseLogDir(casename,logpath)
+
+        from common import bench2dict
+        where= 'home'
+        benchfile = './bench.csv'
+        casefile = './suite2.csv'
+        if where=='home':
+            benchfile= './home.csv'
+            casefile = './suite1.csv'
+
+        bench =bench2dict(benchfile)
+
+
+        from Parser import  suiteParser
+        suite = suiteParser(casename, casefolder)
+
+        st =suite.load(casefile)
+        for i  in st:
+            print(i)
+#        ldut = list(sdut)
+#        errormessage =[]
+#        duts= initDUT(errormessage,bench,ldut,logger, casefolder)#['lnx1', 'lnx2']
+#        seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
+#        case= case_runner(casename,duts,seq, mode)
+#
+#
+#        print(duts)
+#        for name in duts.keys():
+#            dut = duts[name]
+#            if dut :
+#                dut.SessionAlive=False
 if __name__ == '__main__':
     unittest.main()

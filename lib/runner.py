@@ -23,10 +23,10 @@ def logAction(fun):
             kwargstring = ''
             for k,v in kwargs:
                 kwargstring += '\n\t\t%s: %s'%(str(k),str(v))
-            msg ='logAction dump:\n\tFunction Name: \t\t%s\n\tArguments: \t\t%s\n\tKeyword Arguments: \t\t%s'%(str(fun), argstring, kwargstring)
+            msg ='*logAction dump:\n\tFunction Name: \t\t%s\n\tArguments: \t\t%s\n\tKeyword Arguments: \t\t%s'%(str(fun), argstring, kwargstring)
             from common import DumpStack
-            msg =DumpStack(e)+'\n'+msg
-            msg = '*********************************ERROR DUMP**************************************\n'+msg.replace('\n', '\n*')+'\n*********************************EREOR END***************************************\n'
+            msg =msg +'\n-------------------------------------------------------------------------------'+DumpStack(e)
+            msg = '*********************************ERROR DUMP*************************************\n'+msg.replace('\n', '\n*')+'*********************************EREOR END**************************************\n\n'
             print(msg)
             import os
             with open(os.getcwd()+'/error.txt','a+') as errorfile:
@@ -176,10 +176,53 @@ def case_runner(casename, dictDUTs, case_seq, mode='full'):
     print(response)
     return  response
 
+def loop(counter, stop_at_fail, cmd):
+    i = 0
+    flagFail = False
+    msgError = ''
+    while i <counter:
+        try:
+            i +=1
+            import shlex
+            cmdlist = shlex.split(cmd,comments=True)
+            case_runner(*cmdlist)
+        except:
+            flagFail=True
+            msgError +='%s: failed @%d of %d'%(cmd, i,counter)
+            if stop_at_fail:
+                break
 
+    return  flagFail, msgError
 
+def concurrent(cmdConcurrent):
+    msgError =''
+    def folder(cmd, times):
+        ths = []
+        import threading
+        import shlex
+        for i in range(0,times):
+
+            cmdlist = shlex.split(cmd,comments=True)
+            th =threading.Thread(target= case_runner,args=cmdlist )
+            ths.append(th)
+        for i in ths:
+            i.start()
+        for i in ths:
+            i.join()
+    msgConcurrent = ''
+    for line in cmdConcurrent:
+        cmd = line[0]
+        times = line[1]
+        try:
+            folder(cmd, times )
+        except:
+            msgConcurrent +='%s: repeat %s failed\n'%(cmd,times)
 def suite_runner(dictDUTs, case_seqs):
 
     pass
-
+def releaseDUTs(duts):
+    for name in duts.keys():
+        dut = duts[name]
+        if dut :
+            dut.SessionAlive=False
 errorlogger = None

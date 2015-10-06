@@ -79,7 +79,7 @@ class Test_winTerm(unittest.TestCase):
         attr = {'TIMEOUT':180,'LOGIN': '../bench/e7.login','CMD':cmd, 'LINEEND':'\r\n', 'EXP':'name:' }
         from winTelnet import winTelnet
         logger = None
-        logpath = './tmp1'
+        logpath = './log/winTelnet_Login2E7'
         e7 = winTelnet(name,attr,logger , logpath)
         e7.login()
         e7.__del__()

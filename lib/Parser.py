@@ -253,28 +253,90 @@ class suiteParser(object):
         self.name = name
         self.logpath= logpath
     def load(self, suitfile, arglist=[]):
-        import re
-        from common import csvstring2array
-        numOfArglist = len(arglist)
-        with open(suitfile, 'r') as suitefile:
-            for line in suitefile.readlines():
-                index = 0
-                while index <numOfArglist:
-                    index+=1
-                    line =  re.sub('\$\s*\{\s*%d\s*\}'%(index), arglist[index-1], line)
-                columns = csvstring2array(line)
-                lenColum = len(columns)
-                #case_line,action_when_case_failed[continue,stop], repeat[repeat_stop_on_fail, repeat_ignore_fail],parallel[parallel_fail_all, parallel_fail_continue,stop_parallel]
-                #0        ,1                                     ,2                                               ,3
-                #skip     ,continue                              ,0                                               ,stop parallel
-                case_line = ''
-                failAction= 'continue'
-                repeat    = [0, 'repeat_stop_on_fail']
-                parallel   = [0, 'fail_all']
-                if lenColum ==0:
-                    pass
-                elif lenColum==1:
-                    #pass the case
-                    pass
-                elif lenColum ==2
+        arrSuite =[]
+        def parseFailAction(lineNo, failAction):
+            import re
+            pat = '\s*(break|continue)\s*'
+            pFailAction = re.compile(pat, re.IGNORECASE)
+            m = re.match(pFailAction, failAction)
+            if m:
+                return m.group(1).lower()
+            else:
+                errormsg = 'Line: %d, FailAction(%s) doesn\'t match pattern(%s)'%(lineNo,failAction,pat)
+                raise ValueError(errormsg)
+        def parserLoop(lineNo, loopAction):
+            import re
+            pat = '\s*loop\s+(\d+)\s+(stop_at_fail|no_stop)\s*' #loop 1 stop_at_fail
+            pLoop = re.compile(pat, re.IGNORECASE)
+            m = re.match(pLoop, loopAction)
+            if m:
+                return m.group(1), m.group(2).lower()
+            else:
+                errormsg = 'Line: %d, LoopAction(%s) doesn\'t match pattern(%s)'%(lineNo,loopAction,pat)
+                raise ValueError(errormsg)
+
+        def parserConcurent(lineNo, ConcurrentAction):
+            import re
+            pat = '\s*concurent\s*(\d+|)\s*' #cocurent 0
+            pConcurrent = re.compile(pat, re.IGNORECASE)
+            m = re.match(pConcurrent, ConcurrentAction)
+            if m:
+                return m.group(1), m.group(2).lower()
+            else:
+                errormsg = 'Line: %d, ConcurrentAction(%s) doesn\'t match pattern(%s)'%(lineNo,ConcurrentAction,pat)
+                raise ValueError(errormsg)
+
+        def loadCsvSuite2Array(filename, arglist):
+            import re
+            from common import csvstring2array
+            numOfArglist = len(arglist)
+            pComments = re.compile('\s*#',re.IGNORECASE)
+            SuiteArray = []
+            with open(suitfile, 'r') as suitefile:
+                lineNo = 0
+                for line in suitefile.readlines():
+                    lineNo+=1
+
+                    if re.match(pComments, line):
+                        continue
+                    index = 0
+                    while index <numOfArglist:
+                        index+=1
+                        line =  re.sub('\$\s*\{\s*%d\s*\}'%(index), arglist[index-1], line)
+                    columns = csvstring2array(line)
+                    tmp =[]
+                    for i in columns:
+                        if re.match(pComments, i):
+                            break
+                        else:
+                            tmp.append(i)
+                    columns =tmp
+                    lenColum = len(columns)
+                    # case line     	#fail action	#loop	                #concurent
+                    #default	        continue        loop 1 stop_at_fail	    concurent 0
+                    #	                break	        loop xxx no_stop	    concurent not_zero
+                    #	                continue	    loop xxx stop_at_fail	concurent 0
+
+                    case_line   = ''
+                    failAction  = 'continue'
+                    loop        = 'loop 1 stop_at_fail'
+                    concurrent  = 'cocurent 0'
+                    newSuiteLine = [case_line,failAction, loop, concurrent]
+                    maxCol = len(newSuiteLine)
+                    for index, col in enumerate( columns[:maxCol]):
+                        if col.strip()=='':
+                            continue
+                        else:
+                            newSuiteLine[index]=col
+                    cmd, failAction, loopAction, ConcAction = newSuiteLine
+
+                    SuiteArray.append([lineNo, newSuiteLine])
+                return SuiteArray
+
+
+        return  arrSuite
+
+
+
+
 

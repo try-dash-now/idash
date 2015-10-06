@@ -322,10 +322,11 @@ class winTelnet(dut):#, spawn
                 import time
                 time.sleep(0.02)
             except Exception, e:
-                import traceback
-                msg = traceback.format_exc()
-                print(msg)
-                self.info(msg)
+                if str(e)!='timed out':
+                    import traceback
+                    msg = traceback.format_exc()
+                    print(msg)
+                    self.info(msg)
 
 
 

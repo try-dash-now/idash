@@ -14,7 +14,7 @@ sys.path.append(os.path.sep.join([pardir,'lib']))
 cmd = 'telnet cdc-dash'
 where ='home'
 cs =None
-class test_caseParser(unittest.TestCase):
+class test_Parser(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         from winTelnet import winTelnet
@@ -26,7 +26,7 @@ class test_caseParser(unittest.TestCase):
         attr={'TIMEOUT':180,'LOGIN': 'e7support,assword:,30\nadmin,>,30','CMD':cmd, 'LINEEND':'\r\n', 'EXP':'name:' }
         logger=None
         global  logpath
-        logpath='./tmp1'
+        logpath='./log/ut_parser'
 
         import shutil
         if os.path.exists(logpath):
@@ -34,7 +34,7 @@ class test_caseParser(unittest.TestCase):
 
 
         if not os.path.exists(logpath):
-            os.mkdir('./tmp1')
+            os.mkdir(logpath)
         cls.logpath = logpath
 
         import logging
@@ -70,7 +70,7 @@ class test_caseParser(unittest.TestCase):
         duts = {'winTel': baseS}
         mode = 'full'
         global cs
-        cs = caseParser('testcase',  mode, './tmp1' )
+        cs = caseParser('testcase',  mode, './log/ut_parser' )
     def tes1t_execute(self):
         from Parser import  caseParser
         setup =[]
@@ -78,7 +78,7 @@ class test_caseParser(unittest.TestCase):
         teardown=[]
         duts = {'winTel': baseS}
         mode = 'full'
-        cs = caseParser('testcase', mode, './tmp1' )
+        cs = caseParser('testcase', mode, './log/ut_parser' )
         #cs.myrunner(cs.runcase, [mode])
         rsp = self.assertRaises(Exception, cs.execute, 'xxx')
         rsp = cs.execute('s')
@@ -92,7 +92,7 @@ class test_caseParser(unittest.TestCase):
         teardown=[]
         duts = {'winTel': baseS}
         mode = 'full'
-        cs = caseParser('testParser',  mode, './tmp1' )
+        cs = caseParser('testParser',  mode, './log/ut_parser' )
         arg =[]
         gvars =['gv1', 'gv2', 'gv3',]
 
@@ -122,11 +122,11 @@ class test_caseParser(unittest.TestCase):
             cmd = 'telnet 192.168.1.113'
         attr={'TIMEOUT':180,'LOGIN': 'e7support,assword:,30\nadmin,>,30','CMD':cmd, 'LINEEND':'\r\n', 'EXP':'name:' }
         logger=None
-        logpath='./tmp1'
+        logpath='./log/ut_parser'
 
         import shutil
         if not os.path.exists(logpath):
-            os.mkdir('./tmp1')
+            os.mkdir(logpath)
 
         import logging
         logfile = logpath+os.sep+"execute2tc.log"
@@ -171,6 +171,7 @@ class test_caseParser(unittest.TestCase):
         print(setup)
         print(run)
         print(tear)
+        baseS.SessionAlive =False
     @classmethod
     def tearDownClass(cls):
         cls.baseS.SessionAlive = False

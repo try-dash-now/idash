@@ -15,6 +15,14 @@ created 2015/5/8 
 import io,csv,re
 DELIMITER = '[${PATTERN_NOT_EXIST}$]'
 import time
+def addPath2syspath():
+    import os
+    pardir =os.path.dirname(os.path.realpath(os.getcwd()))
+    subfolder = ['lib', 'dut']
+    for sub in subfolder:
+        libpath = os.path.sep.join([pardir,sub])
+        if libpath not in sys.path:
+            sys.path.insert(0,libpath)
 
 def bench2dict(csvfile, delimiter='='):
     reComment = re.compile('\s*#', re.I)
@@ -141,16 +149,12 @@ def DumpStack(e):
     return '''
 ERROR MESSAGE:
    %s
----------------------------------------------------------------------------------
+%s-------------------------------------------------------------------------------
 globals=>
 %s
 locals =>
 %s
----------------------------------------------------------------------------------
-%s
----------------------------------------------------------------------------------
-
-    '''%(e.__str__(), globals,locals,str)
+'''%(e.__str__(),str, globals,locals)
 
 
 
