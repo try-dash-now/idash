@@ -26,7 +26,7 @@ def logAction(fun):
             msg ='*logAction dump:\n\tFunction Name: \t\t%s\n\tArguments: \t\t%s\n\tKeyword Arguments: \t\t%s'%(str(fun), argstring, kwargstring)
             from common import DumpStack
             msg =msg +'\n-------------------------------------------------------------------------------'+DumpStack(e)
-            msg = '*********************************ERROR DUMP*************************************\n'+msg.replace('\n', '\n*')+'*********************************EREOR END**************************************\n\n'
+            msg = '*********************************ERROR DUMP*************************************\n'+msg.replace('\n', '\n*')+'*********************************EREOR END*************************************\n\n'
             print(msg)
             import os
             with open(os.getcwd()+'/error.txt','a+') as errorfile:
@@ -47,9 +47,9 @@ def createLogger(name, logpath='./'):
     logger.addHandler(hdrlog )
     return logger
 @logAction
-def createCaseLogDir(casename,logpath='./'):
+def createLogDir(name,logpath='./'):
     import re, datetime
-    fullname = casename[:80]
+    fullname = name[:80]
     removelist = '\-_.'
     pat = r'[^\w'+removelist+']'
     name = re.sub(pat, '', fullname)
@@ -194,16 +194,15 @@ def loop(counter, stop_at_fail, cmd):
 
     return  flagFail, msgError
 
-def concurrent(cmdConcurrent):
+def concurrent(action, cmdConcurrent):
     msgError =''
     def folder(cmd, times):
         ths = []
         import threading
         import shlex
         for i in range(0,times):
-
             cmdlist = shlex.split(cmd,comments=True)
-            th =threading.Thread(target= case_runner,args=cmdlist )
+            th =threading.Thread(target= action,args=cmdlist )
             ths.append(th)
         for i in ths:
             i.start()

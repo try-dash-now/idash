@@ -32,12 +32,12 @@ class test_caseParser(unittest.TestCase):
         logger.debug('this is debug message')
 
 
-    def test_createCaseLogDir(self):
-        from runner import createCaseLogDir
+    def test_createLogDir(self):
+        from runner import createLogDir
         logpath ='./log'
         if not os.path.exists(logpath):
             os.mkdir(logpath)
-        casefolder = createCaseLogDir('case1',logpath)
+        casefolder = createLogDir('case1',logpath)
 
     def tes1t_InitDUTs(self):
         from runner import initDUT
@@ -48,14 +48,14 @@ class test_caseParser(unittest.TestCase):
         print(duts)
 
     def test_case_runner(self):
-        from runner import case_runner, initDUT, createCaseLogDir
+        from runner import case_runner, initDUT, createLogDir
         logpath ='./log'
         if not os.path.exists(logpath):
             os.mkdir(logpath)
         logpath+='/ut_runner'
         logger = createLogger('runner_logger', logpath)
         casename = 'test_case_runner_2_duts'
-        casefolder = createCaseLogDir(casename,logpath)
+        casefolder = createLogDir(casename,logpath)
 
         from common import bench2dict
         where= 'home'
@@ -86,14 +86,14 @@ class test_caseParser(unittest.TestCase):
             if dut :
                 dut.SessionAlive=False
     def test_case_runner_init_dut_failed(self):
-        from runner import case_runner, initDUT, createCaseLogDir
+        from runner import case_runner, initDUT, createLogDir
         logpath ='./log'
         if not os.path.exists(logpath):
             os.mkdir(logpath)
         logpath+='/ut_runner'
         logger = createLogger('runner_logger', logpath)
         casename = 'test_case_runner_2_duts'
-        casefolder = createCaseLogDir(casename,logpath)
+        casefolder = createLogDir(casename,logpath)
 
         from common import bench2dict
         benchfile = './bench.csv'
@@ -112,14 +112,14 @@ class test_caseParser(unittest.TestCase):
         #duts= initDUT(errormessage,bench,ldut,logger, casefolder)#['lnx1', 'lnx2']
         self.assertRaises(Exception, initDUT,errormessage,bench, ldut,logger, casefolder)
     def test_suiteLoad(self):
-        from runner import case_runner, initDUT, createCaseLogDir
+        from runner import case_runner, initDUT, createLogDir
         logpath ='./log'
         if not os.path.exists(logpath):
             os.mkdir(logpath)
         logpath+='/ut_runner'
         logger = createLogger('runner_logger', logpath)
         casename = 'test_suiteLoad'
-        casefolder = createCaseLogDir(casename,logpath)
+        casefolder = createLogDir(casename,logpath)
 
         from common import bench2dict
         where= 'home'

@@ -57,6 +57,7 @@ class test_Parser(unittest.TestCase):
         baseS.find('assword', 30)
         baseS.send('yxw123')
         baseS.find('~', 30)
+        baseS.SessionAlive=False
 
 
 
@@ -172,6 +173,19 @@ class test_Parser(unittest.TestCase):
         print(run)
         print(tear)
         baseS.SessionAlive =False
+    def test_suiteParser(self):
+        from Parser import suiteParser
+        from runner import createLogDir
+        suitefile = './suite1.csv'
+        name = 'suite1_parser'
+        logpath = './log'
+        logpath = createLogDir(name, logpath)
+        st = suiteParser(name, logpath)
+        suite= st.load(suitefile)
+        for i in suite:
+            print(i)
+
+
     @classmethod
     def tearDownClass(cls):
         cls.baseS.SessionAlive = False
