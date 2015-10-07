@@ -11,7 +11,7 @@ import os
 def logAction(fun):
     def inner(*arg, **kwargs):
         try:
-            msg ='fun: %s\narg: %s\nkwargs: %s'%(str(fun), str(arg), str(kwargs))
+            msg ='Called function: %s'%(fun.func_name)
             print(msg)
             response = fun(*arg, **kwargs)
             return  response
@@ -23,10 +23,10 @@ def logAction(fun):
             kwargstring = ''
             for k,v in kwargs:
                 kwargstring += '\n\t\t%s: %s'%(str(k),str(v))
-            msg ='*logAction dump:\n\tFunction Name: \t\t%s\n\tArguments: \t\t%s\n\tKeyword Arguments: \t\t%s'%(str(fun), argstring, kwargstring)
+            msg ='*logAction dump:\n\tFunction Name: \t\t%s\n\tArguments: \t\t%s\n\tKeyword Arguments: \t\t%s'%(fun.func_name, argstring, kwargstring)
             from common import DumpStack
             msg =msg +'\n-------------------------------------------------------------------------------'+DumpStack(e)
-            msg = '*********************************ERROR DUMP*************************************\n'+msg.replace('\n', '\n*')+'*********************************EREOR END*************************************\n\n'
+            msg = '\n*********************************ERROR DUMP************************************\n'+msg.replace('\n', '\n*')+'*********************************EREOR END*************************************\n\n'
             print(msg)
             import os
             with open(os.getcwd()+'/error.txt','a+') as errorfile:
@@ -90,17 +90,6 @@ def initDUT(errormessage ,bench, dutnames, logger=None, casepath='./'):
             dictDUTs[dutname]=ses
             return  ses
         except Exception as e:
-            # from common import DumpStack
-            # msg ='\n'*8+DumpStack(e)+'\n'
-            # print(msg)
-            # import os
-            # msg = 'can\'t init dut(%s)\n'%(dutname)+msg
-            # errormessage = msg
-            # with open(os.getcwd()+'/error.txt','a+') as errorfile:
-            #     errorfile.write(msg)
-            # if logger:
-            #     logger.error(msg)
-            #global  gInitErrorMessage
             msg = 'can\'t init dut(%s)\n'%(dutname)
             InitErrorMessage.append(msg)
             raise ValueError(msg)
@@ -140,12 +129,18 @@ def run(casename,duts, seqs ,mode):
 
             if mode in modeset:#{'full', 'setup', 'norun', 'notear', 's', 'nr', 'nt', 'f'}:
                 segment=segName#'setup'
-                stepindex= 1
+                stepindex= 0
                 for dut, cmd,expect , due, lineno in seq:#self.seqSetup:
                     session = duts[dut]
+                    stepinfo = """###############################################################################
+# Case: %s, LineNo:%d, %s.%d
+# DUT(%s) Action(%s),Exp(%s),Wait(%s)
+###############################################################################"""%(casename,lineno,segment, stepindex,
+                         dut,cmd, expect, due)
+                    print(stepinfo)
                     session.stepCheck(casename, lineno, cmd, expect, due)
                     stepindex+=1
-                    print lineno ,dut, cmd, expect, due
+
 
         modeset =[
                     {'full', 'setup', 'norun', 'notear', 's', 'nr', 'nt', 'f'},
@@ -163,9 +158,7 @@ def run(casename,duts, seqs ,mode):
         while index <totalseg:
             runSegment(casename, mode, modeset[index], duts,seqlist[index],  segNamelist[index])
             index +=1
-
-
-        return None
+        return 0
 
 
 def case_runner(casename, dictDUTs, case_seq, mode='full'):
@@ -173,8 +166,55 @@ def case_runner(casename, dictDUTs, case_seq, mode='full'):
     if mode :
         m =str(mode).lower()
     response = run(casename, dictDUTs, case_seq, m)
-    print(response)
+    #print(response)
     return  response
+
+def run_case_in_suite(casename, currentBenchfile, currentBenchinfo,logger, stop_at_fail,logdir, cmd ):
+    import re
+    patDash  = re.compile('\s*(python|python[\d.]+|python.exe|)\s* cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
+    m =  re.match(patDash, cmd)
+    returncode = 0
+    if m:
+        argstring = m.group(2)
+        import shlex
+        lstArg = shlex.split(argstring)
+        #0-case.csv, 1-bench, 2-mode, 4...-2- args
+        casefile = lstArg[0]
+        benchfile = lstArg[1]
+        mode       = lstArg[2]
+        args= lstArg[3:]
+
+        from common import bench2dict
+        bench =bench2dict(benchfile)
+        from Parser import  caseParser
+
+        cs = caseParser(casename, mode, logdir)
+        sdut, lvar, lsetup, lrun, ltear =cs.load(casefile)
+        ldut = list(sdut)
+        errormessage =[]
+        duts= initDUT(errormessage,bench,ldut,logger, logdir)
+        seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
+        returncode= case_runner(casename,duts,seq, mode)
+    else:
+        import subprocess
+        pp =None
+        if cmd.startswith('\w+.py') :
+            exe_cmd ='python '+ cmd+" "+logdir
+            pp = subprocess.Popen(args = exe_cmd ,shell =True)
+
+        import time
+        ChildRuning = True
+        first =True
+        while ChildRuning:
+            if pp.poll() is None:
+                interval = 1
+                if first:
+                    first=False
+                time.sleep(interval)
+            else:
+                ChildRuning = False
+
+        returncode = pp.returncode
 
 def loop(counter, stop_at_fail, cmd):
     i = 0
@@ -185,7 +225,7 @@ def loop(counter, stop_at_fail, cmd):
             i +=1
             import shlex
             cmdlist = shlex.split(cmd,comments=True)
-            case_runner(*cmdlist)
+            run_case_in_suite(*cmdlist)
         except:
             flagFail=True
             msgError +='%s: failed @%d of %d'%(cmd, i,counter)
@@ -216,9 +256,7 @@ def concurrent(action, cmdConcurrent):
             folder(cmd, times )
         except:
             msgConcurrent +='%s: repeat %s failed\n'%(cmd,times)
-def suite_runner(dictDUTs, case_seqs):
 
-    pass
 def releaseDUTs(duts):
     for name in duts.keys():
         dut = duts[name]

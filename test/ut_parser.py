@@ -176,21 +176,54 @@ class test_Parser(unittest.TestCase):
     def test_suiteParser(self):
         from Parser import suiteParser
         from runner import createLogDir
-        suitefile = './suite1.csv'
+        suitefile = './suite_parser.csv'
         name = 'suite1_parser'
         logpath = './log'
         logpath = createLogDir(name, logpath)
         st = suiteParser(name, logpath)
-        suite= st.load(suitefile)
+        suite= st.load(suitefile , [], 'all')
         from runner import concurrent
+        parseResult = ''
         for i in suite:
             if i[2][0]!=concurrent:
                 print(i)
+                parseResult+='%d, %s, %s, %s\n'%(i[0], i[1], i[2][0].func_name, ' ,'.join([str(x) for x in i[2][1:]]))
             else:
                 print(i)
                 for ii in i[2][1]:
                     print('\t'+str(i[0])+' '+str(ii))
+                    parseResult+='\t%d, %s, %s, %s\n'%(i[0],i[2][0].func_name,ii[0].func_name, ' ,'.join([str(x) for x in ii[1:]]) )
+        expectResult = '''2, continue, run_case_in_suite, rc.py1 home_case.csv home.csv full
+3, break, run_case_in_suite, rc.py2 home_case.csv home.csv full
+4, continue, loop, 2 ,no_stop ,rc.py3 home_case1.csv home.csv full
+5, continue, loop, 2 ,stop_at_fail ,rc.py4 home_case.csv home.csv full
+	6, concurrent, loop, 2 ,no_stop ,rc.py5 home_case.csv home.csv full
+	8, concurrent, run_case_in_suite, rc.py6 home_case.csv home.csv full
+	8, concurrent, run_case_in_suite, rc.py7 home_case.csv home.csv full
+9, continue, run_case_in_suite, rc.py8 home_case.csv home.csv full
+'''
+        print(parseResult)
+        self.assertEqual(expectResult, parseResult)
 
+
+        suite= st.load(suitefile , [], [1,4,6])
+        from runner import concurrent
+        parseResult = ''
+        for i in suite:
+            if i[2][0]!=concurrent:
+                print(i)
+                parseResult+='%d, %s, %s, %s\n'%(i[0], i[1], i[2][0].func_name, ' ,'.join([str(x) for x in i[2][1:]]))
+            else:
+                print(i)
+                for ii in i[2][1]:
+                    print('\t'+str(i[0])+' '+str(ii))
+                    parseResult+='\t%d, %s, %s, %s\n'%(i[0],i[2][0].func_name,ii[0].func_name, ' ,'.join([str(x) for x in ii[1:]]) )
+        expectResult = '''3, break, run_case_in_suite, rc.py2 home_case.csv home.csv full
+	9, concurrent, loop, 2 ,no_stop ,rc.py5 home_case.csv home.csv full
+	9, concurrent, run_case_in_suite, rc.py7 home_case.csv home.csv full
+'''
+        print(parseResult)
+        self.assertEqual(expectResult, parseResult)
 
     @classmethod
     def tearDownClass(cls):

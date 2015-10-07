@@ -37,14 +37,14 @@ if __name__ == "__main__":
             logpath:    full path name for log, default is ./log/
             '''
             print(errormessage)
-        from runner import case_runner, initDUT, createCaseLogDir      ,createLogger
+        from runner import case_runner, initDUT, createLogDir      ,createLogger
 
         if not os.path.exists(defaultlogdir):
             os.mkdir(defaultlogdir)
         #defaultlogdir+='/ut_runner'
         casename = sys.argv[1]
         logger = createLogger(casename, defaultlogdir)
-        casefolder = createCaseLogDir(casename,defaultlogdir)
+        casefolder = createLogDir(casename,defaultlogdir)
 
         from common import bench2dict
         benchfile = sys.argv[2]
@@ -65,11 +65,12 @@ if __name__ == "__main__":
         case= case_runner(casename,duts,seq, mode)
         from runner import releaseDUTs
         releaseDUTs(duts)
+        print ("---------------------------------- CASE PASS ----------------------------------")
     except Exception as e:
         import traceback
         msg = traceback.format_exc()
         print(msg)
         print(e)
-        print ("!!!!!!!!!!!!!!!!!!!!!!!! CASE FAIL !!!!!!!!!!!!!!!!!!!!!!!!")
+        print ("---------------------------------- CASE FAIL ----------------------------------")
         os._exit(1)
         #exit(1)

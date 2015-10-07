@@ -318,7 +318,7 @@ class winTelnet(dut):#, spawn
                 self.lockStreamOut.release()
                 if self.logfile:
                     self.logfile.flush()
-                    print (self.logfile.name)
+                    #print (self.logfile.name)
                 import time
                 time.sleep(0.02)
             except Exception, e:
@@ -339,7 +339,9 @@ class winTelnet(dut):#, spawn
         newIndex = self.streamOut.__len__()
         result = self.streamOut[self.idxUpdate  :  newIndex+1]
         self.idxUpdate= newIndex
-        print('print::%d'%result.__len__())
+        #print('print::%d'%result.__len__())
+        if result!='':
+            print('\t%s'%(result.replace('\n', '\n\t')))
         return result
 
 

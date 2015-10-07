@@ -163,8 +163,10 @@ call function(%s)
         time.sleep(0.01)
         if not noPattern:
             self.find(expect, float(wait), noPattern)
+            self.show()
         else:
             self.find(expect, float(wait), noPattern)
+            self.show()
             raise RuntimeError('found pattern(%s) within %s'%(expect,wait))
 
 
@@ -243,7 +245,7 @@ call function(%s)
                 except Exception as e:
                     continue
             if IsFail:
-                raise ValueError('tried %d time, failed in function(%s),\n\targ( %s)\n\tkwarg (%s)'%(counter, str(fun), str(arg), str(kwarg)))
+                raise ValueError('tried %d times, failed in function(%s),\n\targ( %s)\n\tkwarg (%s)'%(counter, fun.func_name, str(arg), str(kwarg)))
 
         MaxTry, FunName, ListArg, DicArg = analyzeStep(CaseName,cmd, expect, wait)
 
@@ -305,7 +307,7 @@ call function(%s)
             time.sleep(interval)
             currentTime=time.time()
         findduration+= time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())+' %f'%timeout
-        print findduration
+        #print findduration
         if match:
             if noPattern:
                 delta = endtime-time.time()
@@ -319,7 +321,8 @@ call function(%s)
             if noPattern:
                 self.idxSearch += buffer.__len__()+1
             else:
-                raise RuntimeError('pattern(%s) doesn\'t find with %f, buffer is:\n--buffer start--\n%s\n--buffer end here--\n'%(pattern,timeout, buffer))
+                msg = 'pattern(%s) doesn\'t find with %f, buffer is:\n--buffer start--\n%s\n--buffer end here--\n'%(pattern,timeout, buffer)
+                raise RuntimeError(msg)
 
     def login(self):
         self.loginDone=False
@@ -330,8 +333,10 @@ call function(%s)
             from common import csvfile2array
             seq = csvfile2array(self.attribute[login])
             lineno =0
+            self.show()
             for cmd, exp, wait in seq:
                 lineno+=1
                 self.stepCheck(self.name, lineno, cmd, exp, wait)
+                self.show()
                 #self.singleStep(cmd, exp, wait)
         self.loginDone=True

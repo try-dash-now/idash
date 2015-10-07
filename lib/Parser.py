@@ -82,12 +82,12 @@ class caseParser(object):
     def logAction(fun):
         def inner(*arg, **kwargs):
             try:
-                msg ='fun: %s\narg: %s\nkwargs: %s'%(str(fun), str(arg), str(kwargs))
+                msg ='called function: %s'%(fun.func_name)
                 print(msg)
                 response = fun(*arg, **kwargs)
                 return  response
             except Exception as e:
-                msg ='\tFunction Name: \t\t%s\n\tArguments: \t\t%s\n\tKeyword Arguments: \t\t%s'%(str(fun), str(arg), str(kwargs))
+                msg ='\tFunction Name: \t\t%s\n\tArguments: \t\t%s\n\tKeyword Arguments: \t\t%s'%(fun.func_name, str(arg), str(kwargs))
                 from common import DumpStack
                 msg ='\n'*8+DumpStack(e)+'\n'+msg
                 print(msg)
@@ -253,7 +253,7 @@ class suiteParser(object):
         self.name = name
         self.logpath= logpath
     @logAction
-    def load(self, suitfile, arglist=[]):
+    def load(self, suitfile, arglist=[], rangelist=[]):
         arrSuite =[]
         def parseFailAction(lineNo, failAction):
             import re
@@ -294,22 +294,31 @@ class suiteParser(object):
                 errormsg = 'Line: %d, ConcurrentAction(%s) doesn\'t match pattern(%s)'%(lineNo,ConcurrentAction,pat)
                 raise ValueError(errormsg)
 
-        def loadCsvSuite2Array(filename, arglist):
+        def loadCsvSuite2Array(filename, arglist, rangelist='all'):
             import re
             from common import csvstring2array
             numOfArglist = len(arglist)
             pComments = re.compile('\s*#',re.IGNORECASE)
             SuiteArray = []
             lstConc = []
-            with open(suitfile, 'r') as suitefile:
-                from runner import case_runner, concurrent, loop
-                previousAction = case_runner
-                lineNo = 0
+            caserange = rangelist
+            if rangelist=='all':
+                caserange = []
 
+            with open(suitfile, 'r') as suitefile:
+                from runner import run_case_in_suite, concurrent, loop
+                previousAction = run_case_in_suite
+                lineNo = 0
+                suiteIndex = 0
                 for line in suitefile.readlines():
+                    if rangelist =='all':
+                        caserange.append(lineNo)
                     lineNo+=1
 
                     if re.match(pComments, line):
+                        continue
+                    if (suiteIndex) not in caserange:
+                        suiteIndex+=1
                         continue
                     index = 0
                     while index <numOfArglist:
@@ -340,7 +349,7 @@ class suiteParser(object):
                             continue
                         else:
                             SuiteLine[index]=col
-                    if lineNo==7:
+                    if lineNo==8:
                         pass
                     cmd, failAction, loopAction, ConcAction = SuiteLine
                     failAction = parseFailAction(lineNo, failAction)
@@ -363,7 +372,7 @@ class suiteParser(object):
                                 action = loop
                                 lstConc=[[action, loopCounter, loop_stop_at_fail, cmd]]
                             else:
-                                action = case_runner
+                                action = run_case_in_suite
                                 lstConc=[[action, cmd]]
                         else:
 
@@ -371,7 +380,7 @@ class suiteParser(object):
                                 action = loop
                                 lstConc.append([action,loopCounter, loop_stop_at_fail, cmd])
                             else:
-                                action = case_runner
+                                action = run_case_in_suite
                                 lstConc.append([action, cmd])
                             previousAction = currentAction
                     else:
@@ -388,18 +397,16 @@ class suiteParser(object):
                             newSuiteLine =[action,loopCounter, loop_stop_at_fail,cmd]
                             SuiteArray.append([lineNo,failAction, newSuiteLine])
                         else:
-                            action = case_runner
+                            action = run_case_in_suite
                             currentAction = action
                             newSuiteLine =[action, cmd]
                             SuiteArray.append([lineNo,failAction, newSuiteLine])
-
-
-
-
-
+                    suiteIndex+=1
+                if lstConc !=[]:
+                    SuiteArray.append([lineNo,'break', [concurrent, lstConc]])
                 return SuiteArray
 
-        arrSuite = loadCsvSuite2Array(suitfile, arglist)
+        arrSuite = loadCsvSuite2Array(suitfile, arglist, rangelist)
 
 
 

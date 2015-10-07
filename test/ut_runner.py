@@ -124,7 +124,7 @@ class test_caseParser(unittest.TestCase):
         from common import bench2dict
         where= 'home'
         benchfile = './bench.csv'
-        casefile = './suite2.csv'
+        casefile = './suite_parser.csv'
         if where=='home':
             benchfile= './home.csv'
             casefile = './suite1.csv'

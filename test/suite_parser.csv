@@ -1,0 +1,9 @@
+#test, this line will be ignoreed for it's comments
+rc.py1 home_case.csv home.csv full
+rc.py2 home_case.csv home.csv full,breaK,
+rc.py3 home_case1.csv home.csv full,continue,loop 2 no_stop,
+rc.py4 home_case.csv home.csv full, continue,loop 2 stop_at_fail,
+rc.py5 home_case.csv home.csv full,break,    loop 2 no_stop,     concurrent 1
+rc.py6 home_case.csv home.csv full,break,                ,       new concurrent 2
+rc.py7 home_case.csv home.csv full,break,                ,       concurrent
+rc.py8 home_case.csv home.csv full,#comments
