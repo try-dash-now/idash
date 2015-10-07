@@ -129,7 +129,7 @@ def run(casename,duts, seqs ,mode):
 
             if mode in modeset:#{'full', 'setup', 'norun', 'notear', 's', 'nr', 'nt', 'f'}:
                 segment=segName#'setup'
-                stepindex= 0
+                stepindex= 1
                 for dut, cmd,expect , due, lineno in seq:#self.seqSetup:
                     session = duts[dut]
                     stepinfo = """###############################################################################
@@ -171,7 +171,7 @@ def case_runner(casename, dictDUTs, case_seq, mode='full'):
 
 def run_case_in_suite(casename, currentBenchfile, currentBenchinfo,logger, stop_at_fail,logdir, cmd ):
     import re
-    patDash  = re.compile('\s*(python|python[\d.]+|python.exe|)\s* cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
+    patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s* cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
     m =  re.match(patDash, cmd)
     returncode = 0
     if m:
@@ -183,9 +183,13 @@ def run_case_in_suite(casename, currentBenchfile, currentBenchinfo,logger, stop_
         benchfile = lstArg[1]
         mode       = lstArg[2]
         args= lstArg[3:]
-
-        from common import bench2dict
-        bench =bench2dict(benchfile)
+        newBenchInfo =None
+        if currentBenchfile!=benchfile:
+            from common import bench2dict
+            bench =bench2dict(benchfile)
+            releaseDUTs()
+        else:
+            bench = currentBenchinfo
         from Parser import  caseParser
 
         cs = caseParser(casename, mode, logdir)
