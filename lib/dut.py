@@ -18,7 +18,7 @@ class dut(object):
     idxUpdate:  number, 0-based, default is 0, point to index of streamOut, when the last call of function Print
                 function Prind will move it to the end of streamOut
     logfile  :  the log file, which named as name.log
-    Connect2SUTDone:
+    loginDone:
                 bool, initial value is False, means didn't complete the process of Device log-in, after log-in, it should be set to True
     attribute   :
                 dict, initial is None, and assigned in __init__ as {} or set to the given variable attr
@@ -29,7 +29,7 @@ class dut(object):
     idxSearch   =   0
     idxUpdate   =   0
     logfile     =   None
-    Connect2DUTDone = False
+
     attribute   =   None
     SessionAlive =  True
     name         =  None #the term name, string
@@ -157,17 +157,19 @@ call function(%s)
         import time
         time.sleep(float(wait))
 
-    def singleStep(self, cmd, expect, wait, ctrl=False, noPattern=False, noWait=False):
+    def singleStep(self, cmd, expect, wait, ctrl=False, noPatternFlag=False, noWait=False):
         self.send(cmd, ctrl, noWait)
         self.show()
         import time
         time.sleep(0.01)
-        if not noPattern:
-            self.find(expect, float(wait), noPattern=noPattern)
-            self.show()
-        else:
-            self.find(expect, float(wait), noPattern=noPattern)
-            self.show()
+        self.find(expect, float(wait), noPattern=noPatternFlag)
+        self.show()
+#       if not noPattern:
+#           self.find(expect, float(wait), noPattern=noPattern)
+#           self.show()
+#        else:
+#            self.find(expect, float(wait), noPattern=noPattern)
+#            self.show()
             #raise RuntimeError('found pattern(%s) within %s'%(expect,wait))
 
 
@@ -186,7 +188,7 @@ call function(%s)
             ListArg     = []
             DicArg      = {}
             IsCtrl      = False
-            Retry       = 0
+            Retry       = '1'
             IsNoWait    = False
             IsNo        = False
 
@@ -196,6 +198,8 @@ call function(%s)
             mTry = re.match(reRetry, command)
             if mTry:
                 Retry       = mTry.group(1)
+                if Retry =='':
+                    Retry ='1'
                 NewCommand  = mTry.group(2)
 
             mFun    = re.match(reFunction, NewCommand)
@@ -231,22 +235,25 @@ call function(%s)
             return Retry, FunName, ListArg, DicArg
 
         def retry(casename, maxtry, funName, arg, kwarg, ):
-            maxtry+=1
+            #maxtry+=1
             IsFail= True
             counter =0
             from common import GetFunctionbyName
+            errormessage =''
             fun = GetFunctionbyName(self, funName)
-            while(maxtry):
-                maxtry-=1
+            while(counter<maxtry):
+                #maxtry-=1
                 counter +=1
                 try:
                     fun(*arg, **kwarg)
                     IsFail=False
                     break
                 except Exception as e:
+                    import traceback
+                    errormessage+=e.__str__()+'\n'+traceback.format_exc()
                     continue
             if IsFail:
-                raise ValueError('tried %d times, failed in function(%s),\n\targ( %s)\n\tkwarg (%s)'%(counter, fun.func_name, str(arg), str(kwarg)))
+                raise ValueError('tried %d time(s), failed in function(%s),\n\targ( %s)\n\tkwarg (%s)\n%s'%(counter, fun.func_name, str(arg), str(kwarg),errormessage))
 
         MaxTry, FunName, ListArg, DicArg = analyzeStep(CaseName,cmd, expect, wait)
 
@@ -269,15 +276,24 @@ call function(%s)
 
         else:
             self.write(cmd)
-            self.write(os.linesep)
-        if self.attribute.get("LINESEP") and self.Connect2SUTDone ==True:
-            self.write('\r\n')
+
+        if self.loginDone:
+            if self.attribute.get("LINESEP"):
+                LINESEP = self.attribute.get('LINESEP').replace('\\r', '\r').replace('\\n', '\n')
+                self.write(LINESEP)
+            else:
+                self.write('\n')
+        else:
+            if self.attribute.get("LOGIN_LINESEP"):
+                LINESEP = self.attribute.get('LOGIN_LINESEP').replace('\\r', '\r').replace('\\n', '\n')
+                self.write(LINESEP)
+            else:
+                self.write('\n')
 
         if noWait:
             pass
         else:
             self.idxSearch =self.streamOut.__len__() #move the Search window to the end of streamOut
-        self.flush()
     def find(self, pattern, timeout = 1.0, flags=0x18, noPattern=False):
         '''find a given patten within given time(timeout),
         if pattern found, move idxSearch to index where is right after the pattern in streamOut
@@ -312,13 +328,18 @@ call function(%s)
         findduration+= time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())+' %f'%timeout
         #print findduration
         if match:
+            self.idxSearch += buffer.find(pattern)+match.group().__len__()+1
             if noPattern:
                 delta = endtime-time.time()
-                if delta>0.0:
-                    time.sleep(endtime-time.time())
+                delta = int(delta+0.5)
+                if delta>0:
+                    interval=1
+                    while delta:
+                        delta-=interval
+                        time.sleep(interval)
                 raise  RuntimeError('pattern(%s) found with %f, buffer is:\n--buffer start--\n%s\n--buffer end here--\n'%(pattern,timeout, buffer))
             else:
-                self.idxSearch += buffer.find(pattern)+match.group().__len__()+1
+                #self.idxSearch += buffer.find(pattern)+match.group().__len__()+1
                 return match.group()
         else:
             if noPattern:

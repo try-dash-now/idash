@@ -2,4 +2,4 @@ lnx1,SUT=,LOGIN=../bench/lnx.login,CMD=telnet cdc-dash,#192.168.1.113
 lnx2,SUT=,LOGIN=../bench/lnx.login,CMD=telnet cdc-dash,#192.168.1.113
 #N6,SUT=,LOGIN=../bench/lnx.login,CMD=telnet 10.245.3.18,
 N1wrong,SUT=e7,LOGIN=../bench/lnx.login,CMD=telnet 192.168.1.255,
-N1,SUT=e7,LOGIN=../bench/lnx.login,CMD=telnet 192.168.1.113,
+N1,SUT=e7,LOGIN=../bench/lnx.login,CMD=telnet 192.168.1.118,LINESEP=\r\n

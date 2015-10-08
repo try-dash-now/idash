@@ -1,7 +1,8 @@
 #var
-dut,N1
+dut,${4}
 #setup
-${dut},try 2:pwd,syu,10
+${dut},pwd,NO:BByu,1
+${dut},try 2:pwd,NO:syu,1
 ${dut},ping localhost,=,10
 ${dut},ctrl:c,\$,10
 ,ls,\$,10

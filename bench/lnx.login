@@ -1,2 +1,2 @@
-try 6:syu,assword:,5
+try 6:syu,assword:,20
 yxw123,~,30

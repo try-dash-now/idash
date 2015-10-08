@@ -55,7 +55,7 @@ if __name__ == "__main__":
         mode = sys.argv[3]
         cs = caseParser(casename, mode, casefolder)
         casefile = casename
-        sdut, lvar, lsetup, lrun, ltear =cs.load(casefile)
+        sdut, lvar, lsetup, lrun, ltear =cs.load(casefile, sys.argv)
         ldut = list(sdut)
 
         errormessage =[]

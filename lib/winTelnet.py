@@ -128,7 +128,7 @@ class winTelnet(dut):#, spawn
         self.debuglevel = DEBUGLEVEL
         self.host = host
         self.port = port
-        timeout=1
+        timeout=0.5
         self.timeout = timeout
         self.sock = None
         self.rawq = ''
@@ -146,6 +146,7 @@ class winTelnet(dut):#, spawn
         self.streamOut=''
         th =threading.Thread(target=self.ReadDataFromSocket)
         th.start()
+        self.debuglevel=0
 
     def rawq_getchar(self):
         """Get next char from raw queue.
@@ -306,9 +307,11 @@ class winTelnet(dut):#, spawn
                 self.lockStreamOut.acquire()
                 #self.rawq=''
                 #self.irawq = 0
-
+                #print('read data')
                 if (time.time()-self.timestampCmd)>maxInterval:
+                    #print('anti-idle')
                     self.write(os.linesep)
+                    self.timestampCmd = time.time()
                 self.fill_rawq()
                 self.cookedq=''
                 self.process_rawq()
@@ -322,7 +325,9 @@ class winTelnet(dut):#, spawn
                 import time
                 time.sleep(0.02)
             except Exception, e:
+                self.lockStreamOut.release()
                 if str(e)!='timed out':
+                    #print('timeout!!!!!')
                     import traceback
                     msg = traceback.format_exc()
                     print(msg)

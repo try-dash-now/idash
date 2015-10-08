@@ -90,7 +90,7 @@ def initDUT(errormessage ,bench, dutnames, logger=None, casepath='./'):
             dictDUTs[dutname]=ses
             return  ses
         except Exception as e:
-            msg = 'can\'t init dut(%s)\n'%(dutname)
+            msg = 'can\'t init dut(%s)\n%s\n'%(dutname, e.__str__())
             InitErrorMessage.append(msg)
             raise ValueError(msg)
     import threading
