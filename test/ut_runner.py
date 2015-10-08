@@ -58,7 +58,7 @@ class test_caseParser(unittest.TestCase):
         casefolder = createLogDir(casename,logpath)
 
         from common import bench2dict
-        where= 'home'
+        where= 'nohome'
         benchfile = './bench.csv'
         casefile = './runner_case.csv'
         if where=='home':

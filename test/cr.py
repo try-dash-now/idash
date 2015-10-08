@@ -67,10 +67,6 @@ if __name__ == "__main__":
         releaseDUTs(duts)
         print ("---------------------------------- CASE PASS ----------------------------------")
     except Exception as e:
-        import traceback
-        msg = traceback.format_exc()
-        print(msg)
-        print(e)
         print ("---------------------------------- CASE FAIL ----------------------------------")
         os._exit(1)
         #exit(1)

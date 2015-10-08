@@ -159,15 +159,16 @@ call function(%s)
 
     def singleStep(self, cmd, expect, wait, ctrl=False, noPattern=False, noWait=False):
         self.send(cmd, ctrl, noWait)
+        self.show()
         import time
         time.sleep(0.01)
         if not noPattern:
-            self.find(expect, float(wait), noPattern)
+            self.find(expect, float(wait), noPattern=noPattern)
             self.show()
         else:
-            self.find(expect, float(wait), noPattern)
+            self.find(expect, float(wait), noPattern=noPattern)
             self.show()
-            raise RuntimeError('found pattern(%s) within %s'%(expect,wait))
+            #raise RuntimeError('found pattern(%s) within %s'%(expect,wait))
 
 
     def stepCheck(self, CaseName, lineNo, cmd, expect, wait):
@@ -257,24 +258,26 @@ call function(%s)
         Ctrl, bool, default is False, if it's True, then send a key combination: Ctrl+first_char_of_cmd
         noWait, bool, defualt is False, means move searching index, otherwise doesn't move the searching index
         '''
-
+        if cmd.find('set ses tim dis pager dis')!=-1:
+            pass
         import os
         tmp =[]
         if Ctrl:
             ascii = ord(cmd[0]) & 0x1f
             ch = chr(ascii)
             self.write(ch)
+
         else:
             self.write(cmd)
             self.write(os.linesep)
         if self.attribute.get("LINESEP") and self.Connect2SUTDone ==True:
-            self.write(os.linesep)
+            self.write('\r\n')
 
         if noWait:
             pass
         else:
             self.idxSearch =self.streamOut.__len__() #move the Search window to the end of streamOut
-
+        self.flush()
     def find(self, pattern, timeout = 1.0, flags=0x18, noPattern=False):
         '''find a given patten within given time(timeout),
         if pattern found, move idxSearch to index where is right after the pattern in streamOut
@@ -320,6 +323,7 @@ call function(%s)
         else:
             if noPattern:
                 self.idxSearch += buffer.__len__()+1
+                return ''
             else:
                 msg = 'pattern(%s) doesn\'t find with %f, buffer is:\n--buffer start--\n%s\n--buffer end here--\n'%(pattern,timeout, buffer)
                 raise RuntimeError(msg)
