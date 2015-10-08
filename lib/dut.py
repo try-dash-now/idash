@@ -249,11 +249,11 @@ call function(%s)
                     IsFail=False
                     break
                 except Exception as e:
-                    import traceback
-                    errormessage+=e.__str__()+'\n'+traceback.format_exc()
+                    #import traceback
+                    errormessage=e.__str__()#+'\n'+traceback.format_exc()
                     continue
             if IsFail:
-                raise ValueError('tried %d time(s), failed in function(%s),\n\targ( %s)\n\tkwarg (%s)\n%s'%(counter, fun.func_name, str(arg), str(kwarg),errormessage))
+                raise ValueError('tried %d time(s), failed in function(%s),\n\targ( %s)\n\tkwarg (%s)\n\nException:%s\n'%(counter, fun.func_name, str(arg), str(kwarg),errormessage))
 
         MaxTry, FunName, ListArg, DicArg = analyzeStep(CaseName,cmd, expect, wait)
 
