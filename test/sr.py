@@ -21,7 +21,7 @@ if __name__ == "__main__":
     suitefile =sys.argv[1]
     name = '-'.join(sys.argv[1:])
     def  GetRange(caserange='all'):
-        if str(caserange).lower()=='all':
+        if str(caserange).strip().lower()=='all':
             caserange = 'all'
         else:
             caserange = str(caserange).strip()
@@ -37,11 +37,14 @@ if __name__ == "__main__":
             caserange= sorted(drange)
         CaseRange=caserange
         return CaseRange
-    logpath = './log'
+    suitelogdir = './log'
     rangelist = sys.argv[2]
     arglist = sys.argv[3:]
-    logpath = createLogDir(name, logpath)
-    st = suiteParser(name, logpath)
+    if not os.path.exists(suitelogdir):
+        os.mkdir(suitelogdir)
+
+    suitelogdir = createLogDir(name, suitelogdir)
+    st = suiteParser(name, suitelogdir)
     lstRange = GetRange(rangelist )
     suite= st.load(suitefile, arglist, lstRange)
 
@@ -55,50 +58,72 @@ if __name__ == "__main__":
 #	9, concurren,FailAction,FuncName,cmd =case, run_case_in_suite, rc.py7 home_case.csv home.csv full
     index = 1
     from runner import run_case_in_suite , releaseDUTs , initDUT,case_runner, createLogDir
+
+
     for caseline in suite:
         LineNo,FailAction,[FuncName,cmd ]=caseline
         casename ='%d'%index
+        index+=1
         import os
-        logpath = logpath+"/%s"%casename
+        logpath = suitelogdir+"/%s"%casename
         if not os.path.exists(logpath):
             os.mkdir(logpath)
-        logdir = createLogDir('', logpath)
+        logdir = createLogDir(casename, logpath)
         if FuncName == run_case_in_suite:
             import re
             patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
             m =  re.match(patDash, cmd)
             returncode = 0
             if m:
-                argstring = m.group(2)
-                import shlex
-                lstArg = shlex.split(argstring)
-                #0-case.csv, 1-bench, 2-mode, 4...-2- args
-                casefile = lstArg[0]
-                case_benchfile = lstArg[1]
-                case_mode       = lstArg[2]
-                case_args= lstArg[3:]
+                try:
+                    argstring = m.group(2)
+                    import shlex
+                    lstArg = shlex.split(argstring)
+                    #0-case.csv, 1-bench, 2-mode, 4...-2- args
+                    casefile = lstArg[0]
+                    case_benchfile = lstArg[1]
+                    case_mode       = lstArg[2]
+                    case_args= lstArg
+                    case_args.insert(0,'cr.py')
 
-                if case_benchfile!=benchfile:
-                    from common import bench2dict
-                    bench =bench2dict(case_benchfile)
-                    benchfile = case_benchfile
-                    releaseDUTs(dut_pool)
-                    dut_pool ={}
-                from Parser import  caseParser
-                cs = caseParser(casename, case_mode, logdir)
-                sdut, lvar, lsetup, lrun, ltear =cs.load(casefile, case_args)
-                ldut = list(sdut)
-                errormessage =[]
-                duts= initDUT(errormessage,bench,ldut,logger, logdir)
+                    if case_benchfile!=benchfile:
+                        from common import bench2dict
+                        bench =bench2dict(case_benchfile)
+                        benchfile = case_benchfile
+                        releaseDUTs(dut_pool)
+                        dut_pool ={}
+                    from Parser import  caseParser
+                    cs = caseParser(casename, case_mode, logdir)
+                    sdut, lvar, lsetup, lrun, ltear =cs.load(casefile, case_args)
+                    ldut = list(sdut)
+                    newduts= []
+                    for nd in ldut:
+                        if dut_pool.has_key(nd):
+                            continue
+                        else:
+                            newduts.append(nd)
+                    errormessage =[]
+                    duts= initDUT(errormessage,bench,newduts,logger, logdir)
 
-                for key in duts.keys():
-                    if dut_pool.has_key(key):
-                        continue
+                    for k in duts.keys():
+                        dut_pool[k]=duts[k]
+
+                    for key in duts.keys():
+                        if dut_pool.has_key(key):
+                            continue
+                        else:
+                            dut_pool[key]= duts[key]
+
+                    seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
+
+                    returncode= case_runner(casename,dut_pool,seq, case_mode)
+
+                except Exception as e:
+                    print e.__str__()
+                    if FailAction.lower() == 'break':
+                        break
                     else:
-                        dut_pool[key]= duts[key]
-
-                seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
-                returncode= case_runner(casename,duts,seq, case_mode)
+                        continue
             else:
                 import subprocess
                 pp =None
@@ -119,15 +144,16 @@ if __name__ == "__main__":
                         ChildRuning = False
 
                 returncode = pp.returncode
-
+                if returncode:
+                    break
 
         casename='%d'%index
         logdir ='./log/'+suitefile+'/'+casename
         casename, benchinfo,logger, FailAction,logdir, cmd
 
 
-    if dut_pool!={}:
-        releaseDUTs(dut_pool)
+    #if dut_pool.__len__()!={}:
+    releaseDUTs(dut_pool)
 
 
     from runner import concurrent

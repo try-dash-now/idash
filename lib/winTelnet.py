@@ -104,6 +104,7 @@ class winTelnet(dut):#, spawn
         import time
         time.sleep(0.1)
         if self.sock:
+            self.write('quit')
             self.sock.close()
     def __init__(self, name, attr =None,logger=None,  logpath= None):
         dut.__init__(self, name,attr,logger, logpath)
@@ -176,7 +177,8 @@ class winTelnet(dut):#, spawn
         if IAC in buffer:
             buffer = buffer.replace(IAC, IAC+IAC)
         self.msg("send %r", buffer)
-        self.sock.sendall(buffer)
+        if self.sock:
+            self.sock.sendall(buffer)
 
     def msg(self, msg, *args):
         """Print a debug message, when the debug level is > 0.
@@ -198,6 +200,8 @@ class winTelnet(dut):#, spawn
         connection is closed.
 
         """
+        if self.sock==0 or self.sock==None:
+            return
         if self.irawq >= len(self.rawq):
             self.rawq = ''
             self.irawq = 0
@@ -302,36 +306,54 @@ class winTelnet(dut):#, spawn
         maxInterval = 60
         if self.timestampCmd ==None:
             self.timestampCmd= time.time()
+        import time
+        counter = 0
         while self.SessionAlive:
+            self.lockStreamOut.acquire()
             try:
-                self.lockStreamOut.acquire()
-                #self.rawq=''
-                #self.irawq = 0
-                #print('read data')
+                #if not self.sock:
+                #    self.relogin()
                 if (time.time()-self.timestampCmd)>maxInterval:
-                    #print('anti-idle')
                     self.write(os.linesep)
                     self.timestampCmd = time.time()
                 self.fill_rawq()
                 self.cookedq=''
                 self.process_rawq()
                 self.streamOut+=self.cookedq
-                if self.logfile:
+                if self.logfile and self.cookedq.__len__()!=0:
                     self.logfile.write(self.cookedq)
-                self.lockStreamOut.release()
-                if self.logfile:
                     self.logfile.flush()
-                    #print (self.logfile.name)
-                import time
-                time.sleep(0.02)
+                counter = 0
             except Exception, e:
-                self.lockStreamOut.release()
+                counter+=1
+                if self.debuglevel:
+                    print('\nReadDataFromSocket Exception %d:'%(counter)+e.__str__()+'\n')
+                #self.lockStreamOut.release()
                 if str(e)!='timed out':
-                    #print('timeout!!!!!')
-                    import traceback
-                    msg = traceback.format_exc()
-                    print(msg)
-                    self.info(msg)
+                    if str(e) =='[Errno 10053] An established connection was aborted by the software in your host machine' or '[Errno 9] Bad file descriptor'==str(e):
+                        #self.lockStreamOut.acquire()
+                        try:
+                            time.sleep(7)
+                            if self.sock:
+                                #self.write('quit\r\n')
+                                self.sock.close()
+                                self.sock = 0
+                                self.eof = 1
+                                self.iacseq = ''
+                                self.sb = 0
+                            self.open(self.host,self.port,self.timeout)
+                        except Exception as e:
+                            print('\nReadDataFromSocket Exception2 %d:'%(counter)+e.__str__()+'\n')
+                            pass
+                        #self.lockStreamOut.release()
+                    else:
+                        print("ReadDataFromSocket Exception: %s"%(str(e)))
+                        import traceback
+                        msg = traceback.format_exc()
+                        print(msg)
+                        self.error(msg)
+            self.lockStreamOut.release()
+
 
 
 
@@ -353,7 +375,14 @@ class winTelnet(dut):#, spawn
     def relogin(self):
         self.loginDone=False
         if self.sock:
+            #self.write('quit\n\r\n')
             self.sock.close()
+            self.sock = 0
+            self.eof = 1
+            self.iacseq = ''
+            self.sb = 0
         self.open(self.host,self.port,self.timeout)
+        import time
+        time.sleep(1)
         self.login()
-        self.Connect2SUTDone=True
+        self.loginDone=True

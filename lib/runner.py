@@ -104,7 +104,7 @@ def initDUT(errormessage ,bench, dutnames, logger=None, casepath='./'):
 
     for th in dutobjs:
         th.join()
-    if len(errormessage)!=0 or len(dictDUTs)==0:
+    if len(errormessage)!=0 or (len(dictDUTs)!= len(dutnames)):
         raise ValueError('\n\t'.join(errormessage))
     return  dictDUTs
 
@@ -262,6 +262,8 @@ def concurrent(action, cmdConcurrent):
             msgConcurrent +='%s: repeat %s failed\n'%(cmd,times)
 
 def releaseDUTs(duts):
+    if duts.keys()==None:
+        return
     for name in duts.keys():
         dut = duts[name]
         if dut :

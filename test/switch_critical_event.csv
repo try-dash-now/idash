@@ -1,0 +1,21 @@
+#var
+dut,${4}
+db,${5}
+#setup
+#${dut},sleep(60)
+#,try 600:relogin(),,30
+${dut},set ses time dis page dis,success,10
+,show session,>,30
+,set  system modular-chassis  disabled,success,20
+,try 400:show card 1 detail,Alarms:\s*\n*\s*<none>\s*\n*\s*Conditions:\s*\n*\s*<none>,10
+,try 400:show card 2 detail,Alarms:\s*\n*\s*<none>\s*\n*\s*Conditions:\s*\n*\s*<none>,10
+,show alarm,>,30
+,show card,>,30
+,load backup  from-host  10.245.3.201 user  backup file-path ${db},assword:,30
+,bk,success,30
+,switch database,yes/no,30
+,yes,success,30
+,sleep(240)
+,try 600:relogin(),,30
+${dut},set ses time dis page dis,success,10
+,show alarm,no:Switch Critical Event,30

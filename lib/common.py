@@ -66,12 +66,15 @@ def csvfile2dict(csvfile):
             d.update({str(i[0]).strip():str(i[1]).strip()})
     return d
 def csvstring2array(csvstring):
-    lines= csvstring.replace('\\r\\n','\\n').split('\\n')
+    lines= csvstring.split('\n')#.replace('\\r\\n','\\n').split('\\n')
     a=[]
     for line in lines:
         csvfile= io.StringIO(unicode(line, "utf-8"))
         for row in csv.reader(csvfile, quoting=csv.QUOTE_MINIMAL):
-            a.append(row)
+            tmp =[]
+            for col in row:
+                tmp.append(col.replace('\\r', '\r').replace('\\n', '\n'))
+            a.append(tmp)
     return a
 def csvfile2array(csvfile, Delimiter = ',', Newline = '', Quoting=csv.QUOTE_ALL):
     a=[]

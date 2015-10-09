@@ -354,11 +354,11 @@ call function(%s)
         login = 'login'.upper()
         import time
         time.sleep(0.5)
+        self.show()
         if self.attribute.has_key(login):
             from common import csvfile2array
             seq = csvfile2array(self.attribute[login])
             lineno =0
-            self.show()
             for cmd, exp, wait in seq:
                 lineno+=1
                 self.stepCheck(self.name, lineno, cmd, exp, wait)

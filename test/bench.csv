@@ -3,3 +3,4 @@ lnx2,SUT=,LOGIN=../bench/lnx.login,CMD=telnet cdc-dash,#192.168.1.113
 N6,SUT=,LOGIN=../bench/lnx.login,CMD=telnet 10.245.3.18,
 N1,SUT=e7,LOGIN=../bench/e7.login,CMD=telnet 10.245.3.18,
 N5,SUT=e7,LOGIN=../bench/e7.login,CMD=telnet 10.245.3.13,
+N3,SUT=e7,LOGIN=../bench/e7.login,CMD=telnet 10.245.3.15,

@@ -311,12 +311,12 @@ class suiteParser(object):
                 lineNo = 0
                 suiteIndex = 0
                 for line in suitefile.readlines():
-                    if rangelist =='all':
-                        caserange.append(lineNo)
                     lineNo+=1
 
                     if re.match(pComments, line):
                         continue
+                    if rangelist =='all':
+                        caserange.append(suiteIndex)
                     if (suiteIndex) not in caserange:
                         suiteIndex+=1
                         continue
