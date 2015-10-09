@@ -60,13 +60,14 @@ if __name__ == "__main__":
     from runner import run_case_in_suite , releaseDUTs , initDUT,case_runner, createLogDir
 
     def run1case(benchfile, benchinfo, dut_pool ):
+        errormessage = ''
+        try:
+            import re
+            patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
+            m =  re.match(patDash, cmd)
+            returncode = 0
+            if m:
 
-        import re
-        patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
-        m =  re.match(patDash, cmd)
-        returncode = 0
-        if m:
-            try:
                 argstring = m.group(2)
                 import shlex
                 lstArg = shlex.split(argstring)
@@ -109,98 +110,7 @@ if __name__ == "__main__":
 
                 returncode= case_runner(casename,dut_pool,seq, case_mode)
 
-            except Exception as e:
-                print e.__str__()
-                if FailAction.lower() == 'break':
-                    break
-                else:
-                    continue
-        else:
-            import subprocess
-            pp =None
-            if cmd.startswith('\w+.py') :
-                exe_cmd ='python '+ cmd+" "+logdir
-                pp = subprocess.Popen(args = exe_cmd ,shell =True)
 
-            import time
-            ChildRuning = True
-            first =True
-            while ChildRuning:
-                if pp.poll() is None:
-                    interval = 1
-                    if first:
-                        first=False
-                    time.sleep(interval)
-                else:
-                    ChildRuning = False
-
-            returncode = pp.returncode
-            if returncode:
-                break
-    for caseline in suite:
-        LineNo,FailAction,[FuncName,cmd ]=caseline
-        casename ='%d'%index
-        index+=1
-        import os
-        logpath = suitelogdir+"/%s"%casename
-        if not os.path.exists(logpath):
-            os.mkdir(logpath)
-        logdir = createLogDir(casename, logpath)
-        if FuncName == run_case_in_suite:
-            import re
-            patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
-            m =  re.match(patDash, cmd)
-            returncode = 0
-            if m:
-                try:
-                    argstring = m.group(2)
-                    import shlex
-                    lstArg = shlex.split(argstring)
-                    #0-case.csv, 1-bench, 2-mode, 4...-2- args
-                    casefile = lstArg[0]
-                    case_benchfile = lstArg[1]
-                    case_mode       = lstArg[2]
-                    case_args= lstArg
-                    case_args.insert(0,'cr.py')
-
-                    if case_benchfile!=benchfile:
-                        from common import bench2dict
-                        bench =bench2dict(case_benchfile)
-                        benchfile = case_benchfile
-                        releaseDUTs(dut_pool)
-                        dut_pool ={}
-                    from Parser import  caseParser
-                    cs = caseParser(casename, case_mode, logdir)
-                    sdut, lvar, lsetup, lrun, ltear =cs.load(casefile, case_args)
-                    ldut = list(sdut)
-                    newduts= []
-                    for nd in ldut:
-                        if dut_pool.has_key(nd):
-                            continue
-                        else:
-                            newduts.append(nd)
-                    errormessage =[]
-                    duts= initDUT(errormessage,bench,newduts,logger, logdir)
-
-                    for k in duts.keys():
-                        dut_pool[k]=duts[k]
-
-                    for key in duts.keys():
-                        if dut_pool.has_key(key):
-                            continue
-                        else:
-                            dut_pool[key]= duts[key]
-
-                    seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
-
-                    returncode= case_runner(casename,dut_pool,seq, case_mode)
-
-                except Exception as e:
-                    print e.__str__()
-                    if FailAction.lower() == 'break':
-                        break
-                    else:
-                        continue
             else:
                 import subprocess
                 pp =None
@@ -221,8 +131,55 @@ if __name__ == "__main__":
                         ChildRuning = False
 
                 returncode = pp.returncode
-                if returncode:
-                    break
+        except Exception as e:
+            import traceback
+            errormessage = '%s\n%s'%(e.__str__(),traceback.format_exc())
+        return  returncode, errormessage, benchfile,benchinfo, dut_pool
+    import time
+    returncode =1
+    errormessage =''
+    suiteStartTime = time.time()
+    statsPass =0
+    statsFail =0
+    lstFailCase = []
+    for caseline in suite:
+        caseStartTime = time.time()
+        LineNo,FailAction,[FuncName,cmd ]=caseline
+        casename ='%d'%index
+        index+=1
+        import os
+        logpath = suitelogdir+"/%s"%casename
+        if not os.path.exists(logpath):
+            os.mkdir(logpath)
+        logdir = createLogDir(casename, logpath)
+
+        if FuncName == run_case_in_suite:
+
+            import re
+            patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
+            m =  re.match(patDash, cmd)
+            returncode = 0
+            returncode , errormessage ,benchfile, benchinfo, dut_pool = run1case(benchfile, benchinfo, dut_pool )
+        caseEndTime = time.time()
+        ExecutionDuration = caseEndTime-caseStartTime
+        caseResult = 'PASS'
+
+        if returncode:
+            caseResult ='FAIL'
+            lstFailCase.append(caseline)
+            statsFail+=1
+        else:
+            statsPass+=1
+
+        NewRecord = [index,caseResult,caseline, errormessage,logdir, LineNo]
+        print("RESULT:", NewRecord)
+        print('Pass:',statsPass, 'Fail', statsFail)
+        report.append(NewRecord)
+        if returncode:
+            if FailAction.strip().lower()=='break':
+                break
+            else:
+                continue
 
         casename='%d'%index
         logdir ='./log/'+suitefile+'/'+casename
@@ -246,3 +203,4 @@ if __name__ == "__main__":
                 parseResult+='\t%d, %s, %s, %s\n'%(i[0],i[2][0].func_name,ii[0].func_name, ' ,'.join([str(x) for x in ii[1:]]) )
     print(parseResult)
     os._exit(0)
+
