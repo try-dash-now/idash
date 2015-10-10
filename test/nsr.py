@@ -16,10 +16,12 @@ for sub in subfolder:
         sys.path.insert(0,libpath)
 if __name__ == "__main__":
     #sr.py suite_file range [arg1 arg2 ...]
+    import re
     from Parser import suiteParser
     from runner import createLogDir
     suitefile =sys.argv[1]
     name = '-'.join(sys.argv[1:])
+    name = re.sub('[^\w\-_]','-',name)
     def  GetRange(caserange='all'):
         if str(caserange).strip().lower()=='all':
             caserange = 'all'
@@ -77,7 +79,7 @@ if __name__ == "__main__":
                 case_mode       = lstArg[2]
                 case_args= lstArg
                 case_args.insert(0,'cr.py')
-
+                bench = benchinfo
                 if case_benchfile!=benchfile:
                     from common import bench2dict
                     bench =bench2dict(case_benchfile)
@@ -132,9 +134,84 @@ if __name__ == "__main__":
 
                 returncode = pp.returncode
         except Exception as e:
+
+            if returncode ==0:
+                returncode =1
             import traceback
             errormessage = '%s\n%s'%(e.__str__(),traceback.format_exc())
-        return  returncode, errormessage, benchfile,benchinfo, dut_pool
+        return  returncode, errormessage, benchfile,bench, dut_pool
+
+    def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN, Report):
+        PPASS = '%.0f'%((CASEPASS*100.0)/CASERUN*1.0)+'''%'''
+        PFAIL = '%.0f'%((CASEFAIL*100.0)/CASERUN*1.0)+'''%'''
+        CASENOTRUN  = TOTAL - CASEPASS-CASEFAIL
+        PNOTRUN = '%.0f'%((CASENOTRUN*100.0) /TOTAL*1.0)+'''%'''
+
+
+        response ="""
+    <HTML>
+    <HEAD>
+    <TITLE>Suite Test Report</TITLE>
+    </HEAD>
+    <BODY>
+    <table cellspacing="1" cellpadding="2" border="1">
+    <tr><td>SUITE NAME</td><td>ARGURMENTS</td><td>CASE RANGE</td></tr>
+    <tr><td>%s</td><td>%s</td><td>%s</td></tr>
+    </table>
+    <br><br>
+
+    <table cellspacing="1" cellpadding="2" border="1">
+    <tr>
+    <td>TOTAL CASE</td><td bgcolor="#00FF00">PASS</td><td bgcolor="#FF0000">FAIL</td><td bgcolor="#0000FF">NOT RUN</td>
+    </tr>
+    <tr>
+    <td>%d</td><td bgcolor="#00FF00" >%d</td><td bgcolor="#FF0000">%d</td><td  bgcolor="#0000FF">%d</td>
+    </tr>
+    <tr>
+    <td> </td><td>%s</td><td>%s</td><td>%s</td>
+    </tr>
+    </table>
+    <BR>
+    <BR>
+    <table cellspacing="1" cellpadding="2" border="1">
+    """%(reportname, CaseRangeStr, ArgStr ,TOTAL, CASEPASS, CASEFAIL, CASENOTRUN, PPASS,PFAIL,PNOTRUN)
+
+        response = response+ '''<tr><td>No.</td><td>Result</td><td>Case Name</td><td>Duration(s)</td><td>Line No</td><td>Error Message</td></tr>'''
+        #NewRecord = [index,caseResult,caseline[2][1], errormessage,logdir, LineNo]
+        for result in Report:
+            index,caseResult,caseLine, errormessage,logdir, LineNo ,ExecutionDuration=result
+            if errormessage ==[]:
+                errormessage =''
+            errormessage = re.match('\*ERROR MESSAGE:(.*)\*Traceback',errormessage,re.IGNORECASE|re.DOTALL)
+            if errormessage:
+                errormessage= errormessage.group(1).replace('*\t','')
+            bgcolor="#00FF00"
+            if caseResult=='FAIL':
+                bgcolor = "#FF0000"
+
+            response = response +"""<tr>
+            <td>%d</td>
+            <td bgcolor="%s"><a target="+BLANK" href="%s">%s</td>
+            <td><a target="+BLANK" href="%s">%s</td>
+            <td>%s</td>
+            <td>%s</td>
+            <td>%s</td>
+            </tr>
+    """%(index,bgcolor,logdir,caseResult,logdir,caseLine, ExecutionDuration, LineNo, errormessage)
+
+
+
+
+        return response+"""</table>
+    <br />
+    <br />
+    </body></html>"""
+
+
+
+
+
+
     import time
     returncode =1
     errormessage =''
@@ -171,10 +248,15 @@ if __name__ == "__main__":
         else:
             statsPass+=1
 
-        NewRecord = [index,caseResult,caseline, errormessage,logdir, LineNo]
+        NewRecord = [index-1,caseResult,caseline[2][1], errormessage,'../'+logdir, LineNo,ExecutionDuration]
         print("RESULT:", NewRecord)
         print('Pass:',statsPass, 'Fail', statsFail)
+        #reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN, Report,htmllogdir
         report.append(NewRecord)
+        htmlstring = array2html(suitefile,rangelist,','.join(arglist), suite.__len__(),statsFail+statsPass,statsPass,statsFail, suite.__len__()-statsFail-statsPass,report)
+        reportfilename = './log/%s.html'%(name)
+        with open(reportfilename, 'wb') as f:
+            f.write(htmlstring.encode(encoding='utf_8', errors='strict'))
         if returncode:
             if FailAction.strip().lower()=='break':
                 break
@@ -183,7 +265,7 @@ if __name__ == "__main__":
 
         casename='%d'%index
         logdir ='./log/'+suitefile+'/'+casename
-        casename, benchinfo,logger, FailAction,logdir, cmd
+
 
 
     #if dut_pool.__len__()!={}:

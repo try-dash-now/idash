@@ -160,6 +160,3 @@ locals =>
 '''%(e.__str__(),str, globals,locals)
 
 
-
-
-

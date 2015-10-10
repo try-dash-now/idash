@@ -120,6 +120,7 @@ CASE_MODE = set(['full', 'f',
 @logAction
 def run(casename,duts, seqs ,mode):
         global  CASE_MODE
+        import datetime
         def analyzeStep(casename, dut, commnad, expect, wait):
             funName = dut.defaultFunction
         if mode not in CASE_MODE:
@@ -133,9 +134,10 @@ def run(casename,duts, seqs ,mode):
                 for dut, cmd,expect , due, lineno in seq:#self.seqSetup:
                     session = duts[dut]
                     stepinfo = """###############################################################################
+# %s
 # Case: %s, LineNo:%d, %s.%d
 # DUT(%s) Action(%s),Exp(%s),Wait(%s)
-###############################################################################"""%(casename,lineno,segment, stepindex,
+###############################################################################"""%(datetime.datetime.now().isoformat('_'),casename,lineno,segment, stepindex,
                          dut,cmd, expect, due)
                     print(stepinfo)
                     session.stepCheck(casename, lineno, cmd, expect, due)
