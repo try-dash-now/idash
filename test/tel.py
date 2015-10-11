@@ -8,16 +8,7 @@ import time
 import  os
 
 import telnetlib
-
-#reload(sys)
-#sys.setdefaultencoding('utf-8')
-
-#from CSession import CSession
-#attr={'TIMEOUT': 10, 'CMD':'ftp localhost'}
-#s = CSession('sut',attr)
-import time
 filetype = sys.argv[1].strip().lower()
-import time
 host = sys.argv[2]
 port = 23
 import re
