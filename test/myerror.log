@@ -1,0 +1,179 @@
+Called function: createLogger
+Called function: createLogDir
+called function: __loadCsvCase
+Called function: initDUT
+	"N5" Fri Oct  9 10:44:40 2015
+	
+	Username: 
+	e7support
+	Password: 
+	
+	N5>
+	set ses time dis page dis
+	success: session updated.
+	N5>
+Called function: run
+###############################################################################
+# Case: switch_critical_event.csv, LineNo:5, setup.1
+# DUT(N5) Action(set ses time dis page dis),Exp(success),Wait(10)
+###############################################################################
+	set ses time dis page dis
+	success: session updated.
+	N5>
+###############################################################################
+# Case: switch_critical_event.csv, LineNo:6, setup.2
+# DUT(N5) Action(show alarm),Exp(>),Wait(30)
+###############################################################################
+	show alarm
+	Occurred Time          Severity Alarm                                          
+	---------------------- -------- -----------------------------------------------
+	2015/10/09 10:39:24.14 major    Ethernet port "1/x3"
+	                                "Loss of signal"
+	                                 (affects service)
+	2015/10/09 10:41:26.72 warning  card 2
+	                                "Restore file exists"
+	2015/10/09 10:39:21.60 major    Ethernet port "2/x3"
+	                                "Loss of signal"
+	                                 (affects service)
+	2015/10/09 10:39:21.29 major    Ethernet port "2/g2"
+	                                "Loss of signal"
+	                                 (affects service)
+	2015/10/09 10:39:21.28 minor    Ethernet port "2/g3"
+	                                "Improper removal"
+	                                 (affects service)
+	2015/10/09 10:39:16.18 major    LAG interface "l11"
+	                                "No eth-ports for service"
+	                                 (affects service)
+	2015/10/09 10:39:16.18 major    LAG interface "l21"
+	                                "No eth-ports for service"
+	                                 (affects service)
+	2015/10/09 10:39:16.18 major    LAG interface "weblag"
+	                                "No eth-ports for service"
+	                                 (affects service)
+	
+	8 alarms found.
+	N5>
+###############################################################################
+# Case: switch_critical_event.csv, LineNo:7, setup.3
+# DUT(N5) Action(show card),Exp(>),Wait(30)
+###############################################################################
+	show card
+	* = active controller
+	                                                           Alarms          
+	Card  Provisioned Type  Actual Type       Status           (Cr Mj Mn Wn In)
+	----- ----------------- ----------------- ---------------- ----------------
+	 1    VDSL2-48Cr2       VDSL2-48Cr2       enabled           0  0  0  0  0 
+	*2    GPON-4r2          GPON-4r2          enabled           0  0  0  1  0 
+	
+	2 cards found.
+	N5>
+###############################################################################
+# Case: switch_critical_event.csv, LineNo:8, setup.4
+# DUT(N5) Action(try 400:show card 1 detail),Exp(Alarms:\s*),Wait(1)
+###############################################################################
+	show card 1 detail
+	Information for card 1:
+	Provisioned type        : VDSL2-48Cr2
+	Actual type             : VDSL2-48Cr2
+	Part number             : 100-03882
+	CLEI                    : CALIXCALIX
+	Serial number           : 211508600511
+	Application version     : 2.4.253.92
+	Database created        : 2015/09/07 08:44:04
+	Database last updated   : 2015/09/23 00:51:49
+	Controller candidate    : enabled
+	MAC address start       : 00:02:5d:e1:bb:1c
+	MAC address end         : 00:02:5d:e1:bb:57
+	Temperature level       : cool
+	Admin status            : enabled
+	Operational status      : enabled
+	Additional status info  : child provisioned, standby
+	Critical alarms         : 0
+	Major alarms            : 0
+	Minor alarms            : 0
+	Warning conditions      : 0
+	Info conditions         : 0
+	
+	Alarms:
+		<none>
+	
+	Conditions:
+		<none>
+	N5>
+###############################################################################
+# Case: switch_critical_event.csv, LineNo:9, setup.5
+# DUT(N5) Action(try 400:show card 2 detail),Exp(Alarms:\s*),Wait(1)
+###############################################################################
+	show card 2 detail
+	Information for card 2:
+	Provisioned type        : GPON-4r2
+	Actual type             : GPON-4r2
+	Part number             : 100-03656
+	CLEI                    : BVL3AW5FTA
+	Serial number           : 211410600629
+	Application version     : 2.4.253.92
+	Database created        : 2015/09/07 08:44:04
+	Database last updated   : 2015/09/23 00:51:49
+	Controller candidate    : enabled
+	MAC address start       : 00:02:5d:da:31:6a
+	MAC address end         : 00:02:5d:da:31:7b
+	Temperature level       : fine
+	Admin status            : enabled
+	Operational status      : enabled
+	Additional status info  : child provisioned, default provisioned, active
+	Critical alarms         : 0
+	Major alarms            : 0
+	Minor alarms            : 0
+	Warning conditions      : 1
+	Info conditions         : 0
+	
+	Alarms:
+		<none>
+	
+	Conditions:
+		Restore file exists
+	N5>
+###############################################################################
+# Case: switch_critical_event.csv, LineNo:10, setup.6
+# DUT(N5) Action(load backup  from-host  10.245.3.201 user  backup file-path n5-db2.provdb),Exp(assword:),Wait(30)
+###############################################################################
+	load backup  from-host  10.245.3.201 user  backup file-path n5-db2.provd$p  from-host  10.245.3.201 user  backup file-path n5-db2.provdb          
+	Password: 
+###############################################################################
+# Case: switch_critical_event.csv, LineNo:11, setup.7
+# DUT(N5) Action(bk),Exp(success),Wait(30)
+###############################################################################
+	
+	success: loading backup from server completed.
+	
+###############################################################################
+# Case: switch_critical_event.csv, LineNo:12, setup.8
+# DUT(N5) Action(switch database),Exp(yes/no),Wait(30)
+###############################################################################
+	N5>switch database
+	This will replace current running database, and reset the system. After this completes, reset again to ensure proper operation.
+	Switch database? (yes/no): 
+###############################################################################
+# Case: switch_critical_event.csv, LineNo:13, setup.9
+# DUT(N5) Action(yes),Exp(success),Wait(30)
+###############################################################################
+ReadDataFromSocket Exception 1:timed out
+
+ReadDataFromSocket Exception 2:timed out
+
+ReadDataFromSocket Exception 3:timed out
+
+	yes
+	Alarm CLEARED for card 2 at 2015/10/09 10:44:47.41:
+	    "Restore file exists"
+	success: switching database completed.
+	         resetting system to activate new database.
+	
+	N5>
+###############################################################################
+# Case: switch_critical_event.csv, LineNo:14, setup.10
+# DUT(N5) Action(sleep(120)),Exp(.*),Wait(1)
+###############################################################################
+('stringOfArgs:', '120')
+ReadDataFromSocket Exception 1:timed out
+

@@ -1,0 +1,1006 @@
+"N5" Sun Oct 11 16:43:36 2015
+
+Username: e7support
+Password: 
+N5>set ses time dis page dis
+success: session updated.
+N5>set ses time dis page dis
+success: session updated.
+N5>show session
+"*" indicates this session.
+                                                                           Auto
+ID  User          Login                       Notifications   Pager      Logout
+--- ------------- --------------------------- --------------- -------- --------
+*1  e7support     telnet from 192.168.37.112  Alarm/Event/TCA disabled disabled
+    (debug)       at 2015/10/11 16:43:37                                       
+    auth: local
+
+1 session found.
+N5>set  system modular-chassis  disabled
+success: Modify system.
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.253.93
+Database created        : <never created>
+Database last updated   : <no updates>
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 2
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+	Mismatch Equipment
+
+Conditions:
+	Release is not Committed
+N5>EVENT for system at 2015/10/11 16:49:25.11:
+    "Commit: In Progress -- Version=2.4.253.93"
+
+N5>
+N5>Alarm CLEARED for card 1 at 2015/10/11 16:51:01.65:
+    "Release is not Committed"
+EVENT for system at 2015/10/11 16:51:05.61:
+    "Commit: Success -- Version=2.4.253.93"
+
+N5>
+N5>
+N5>
+N5>
+N5>
+N5>
+N5>
+N5>
+N5>
+N5>
+N5>
+N5>
+N5>
+N5>
+N5>

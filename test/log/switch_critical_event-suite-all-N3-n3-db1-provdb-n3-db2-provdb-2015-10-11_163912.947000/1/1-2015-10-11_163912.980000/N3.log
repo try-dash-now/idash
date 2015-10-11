@@ -1,0 +1,2121 @@
+"N3" Sun Oct 11 16:38:35 2015
+
+Username: e7support
+Password: 
+N3>set ses time dis page dis
+success: session updated.
+N3>set ses time dis page dis
+success: session updated.
+N3>show session
+"*" indicates this session.
+                                                                           Auto
+ID  User          Login                       Notifications   Pager      Logout
+--- ------------- --------------------------- --------------- -------- --------
+ 1  e7support     telnet from 192.168.37.112  Alarm/Event/TCA enabled  disabled
+    (debug)       at 2015/10/11 16:38:31                                       
+    auth: local
+*2  e7support     telnet from 192.168.37.112  Alarm/Event/TCA disabled disabled
+    (debug)       at 2015/10/11 16:38:35                                       
+    auth: local
+
+2 sessions found.
+N3>set  system modular-chassis  disabled
+success: Modify system.
+warning: system activity may delay changes taking affect.
+N3>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211508600509
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:ee:2b:1c
+MAC address end         : 00:02:5d:ee:2b:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 1
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+
+Conditions:
+	Software initialization in progress
+N3>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211508600509
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:ee:2b:1c
+MAC address end         : 00:02:5d:ee:2b:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 1
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+
+Conditions:
+	Software initialization in progress
+N3>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211508600509
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:ee:2b:1c
+MAC address end         : 00:02:5d:ee:2b:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 1
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+
+Conditions:
+	Software initialization in progress
+N3>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211508600509
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:ee:2b:1c
+MAC address end         : 00:02:5d:ee:2b:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned
+Critical alarms         : 1
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+
+Conditions:
+	Software initialization in progress
+N3>Alarm CLEARED for card 1 at 2015/10/11 16:39:17.13:
+    "Not Operational"
+Alarm CLEARED for system at 2015/10/11 16:39:17.13:
+    "No standby controller"
+minor ALARM for system at 2015/10/11 16:39:17.13:
+    "No standby controller"
+    (related object: card 1)
+minor ALARM for Ethernet port "1/g1" at 2015/10/11 16:38:21.67:
+    "Improper removal"
+    (affects service)
+Alarm CLEARED for system at 2015/10/11 16:39:18.89:
+    "No standby controller"
+    (related object: card 1)
+show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211508600509
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:ee:2b:1c
+MAC address end         : 00:02:5d:ee:2b:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, standby
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211508600509
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:ee:2b:1c
+MAC address end         : 00:02:5d:ee:2b:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, standby
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>
+N3>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211508600509
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:ee:2b:1c
+MAC address end         : 00:02:5d:ee:2b:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, standby
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>Alarm CLEARED for card 1 at 2015/10/11 16:39:48.76:
+    "Software initialization in progress"
+show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211508600509
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:ee:2b:1c
+MAC address end         : 00:02:5d:ee:2b:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, standby
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	<none>
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>Alarm CLEARED for system at 2015/10/11 16:40:33.98:
+    "File Server Not Available"
+major ALARM for system at 2015/10/11 16:40:33.98:
+    "File Server Not Available --  Reason: Cannot login to remote host"
+show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>Alarm CLEARED for card 2 at 2015/10/11 16:41:58.34:
+    "Software initialization in progress"
+show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:38:37
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	<none>
+N3>show alarm
+Occurred Time          Severity Alarm                                          
+---------------------- -------- -----------------------------------------------
+2015/10/11 16:40:33.98 major    system
+                                "File Server Not Available"
+                                  Reason: Cannot login to remote host
+2015/10/11 16:38:21.67 minor    Ethernet port "1/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:38:18.01 minor    Ethernet port "2/x3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:38:17.91 minor    Ethernet port "2/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:38:17.76 major    Ethernet port "2/g2"
+                                "Loss of signal"
+                                 (affects service)
+2015/10/11 16:38:17.76 minor    Ethernet port "2/g3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:38:17.48 minor    Ethernet port "2/g8"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:38:12.39 major    LAG interface "l11"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:38:12.39 major    LAG interface "l21"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:38:12.39 major    LAG interface "weblag"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:38:17.88 major    LAG interface "as1"
+                                "Aggregation Interface down"
+                                 (affects service)
+
+11 alarms found.
+N3>show card
+* = active controller
+                                                           Alarms          
+Card  Provisioned Type  Actual Type       Status           (Cr Mj Mn Wn In)
+----- ----------------- ----------------- ---------------- ----------------
+ 1    VDSL2-48Cr2       VDSL2-48Cr2       enabled           0  0  0  0  0 
+*2    GPON-4r2          GPON-4r2          enabled           0  0  0  0  0 
+
+2 cards found.
+N3>load backup  from-host  10.245.3.201 user  backup file-path n3-db1.provd$p  from-host  10.245.3.201 user  backup file-path n3-db1.provdb          
+Password: 
+success: loading backup from server completed.
+N3>switch database
+This will replace current running database, and reset the system. After this completes, reset again to ensure proper operation.
+Switch database? (yes/no): yes
+warning ALARM for card 2 at 2015/10/11 16:42:29.26:
+    "Restore file exists"
+Alarm CLEARED for card 2 at 2015/10/11 16:42:29.85:
+    "Restore file exists"
+success: switching database completed.
+         resetting system to activate new database.
+
+N3>"N3" Sun Oct 11 16:42:43 2015
+
+Username: "N3" Sun Oct 11 16:46:29 2015
+
+Username: e7support
+Password: 
+N3>set ses time dis page dis
+success: session updated.
+N3>set ses time dis page dis
+success: session updated.
+N3>show alarm
+Occurred Time          Severity Alarm                                          
+---------------------- -------- -----------------------------------------------
+2015/10/11 16:45:07.23 warning  card 1
+                                "Software initialization in progress"
+2015/10/11 16:45:02.30 minor    Ethernet port "1/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:45:07.23 warning  card 2
+                                "Software initialization in progress"
+2015/10/11 16:44:59.66 minor    Ethernet port "2/x3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:44:59.56 minor    Ethernet port "2/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:44:59.41 major    Ethernet port "2/g2"
+                                "Loss of signal"
+                                 (affects service)
+2015/10/11 16:44:59.41 minor    Ethernet port "2/g3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:44:59.13 minor    Ethernet port "2/g8"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:44:54.43 major    LAG interface "l11"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:44:54.43 major    LAG interface "l21"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:44:54.43 major    LAG interface "weblag"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:44:59.53 major    LAG interface "as1"
+                                "Aggregation Interface down"
+                                 (affects service)
+
+12 alarms found.
+N3>
+N3>Alarm CLEARED for card 1 at 2015/10/11 16:46:51.57:
+    "Software initialization in progress"
+set ses time dis page dis
+success: session updated.
+N3>show session
+"*" indicates this session.
+                                                                           Auto
+ID  User          Login                       Notifications   Pager      Logout
+--- ------------- --------------------------- --------------- -------- --------
+*1  e7support     telnet from 192.168.37.112  Alarm/Event/TCA disabled disabled
+    (debug)       at 2015/10/11 16:46:31                                       
+    auth: local
+
+1 session found.
+N3>set  system modular-chassis  disabled
+success: Modify system.
+N3>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211508600509
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/09/17 16:08:07
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:ee:2b:1c
+MAC address end         : 00:02:5d:ee:2b:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, standby
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	<none>
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/09/17 16:08:07
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:47:03
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:47:03
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:47:03
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:47:03
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:47:03
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:47:03
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:47:03
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:47:03
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:47:03
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>
+N3>Alarm CLEARED for card 2 at 2015/10/11 16:48:37.15:
+    "Software initialization in progress"
+show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:47:03
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	<none>
+N3>show alarm
+Occurred Time          Severity Alarm                                          
+---------------------- -------- -----------------------------------------------
+2015/10/11 16:45:02.30 minor    Ethernet port "1/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:44:59.66 minor    Ethernet port "2/x3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:44:59.56 minor    Ethernet port "2/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:44:59.41 major    Ethernet port "2/g2"
+                                "Loss of signal"
+                                 (affects service)
+2015/10/11 16:44:59.41 minor    Ethernet port "2/g3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:44:59.13 minor    Ethernet port "2/g8"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:44:54.43 major    LAG interface "l11"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:44:54.43 major    LAG interface "l21"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:44:54.43 major    LAG interface "weblag"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:44:59.53 major    LAG interface "as1"
+                                "Aggregation Interface down"
+                                 (affects service)
+
+10 alarms found.
+N3>show card
+* = active controller
+                                                           Alarms          
+Card  Provisioned Type  Actual Type       Status           (Cr Mj Mn Wn In)
+----- ----------------- ----------------- ---------------- ----------------
+ 1    VDSL2-48Cr2       VDSL2-48Cr2       enabled           0  0  0  0  0 
+*2    GPON-4r2          GPON-4r2          enabled           0  0  0  0  0 
+
+2 cards found.
+N3>load backup  from-host  10.245.3.201 user  backup file-path n3-db2.provd$p  from-host  10.245.3.201 user  backup file-path n3-db2.provdb          
+Password: 
+warning ALARM for card 2 at 2015/10/11 16:49:06.70:
+    "Restore file exists"
+success: loading backup from server completed.
+N3>switch database
+This will replace current running database, and reset the system. After this completes, reset again to ensure proper operation.
+Switch database? (yes/no): yes
+Alarm CLEARED for card 2 at 2015/10/11 16:49:08.79:
+    "Restore file exists"
+success: switching database completed.
+         resetting system to activate new database.
+
+N3>"N3" Sun Oct 11 16:53:08 2015
+
+Username: e7support
+Password: 
+N3>set ses time dis page dis
+success: session updated.
+N3>set ses time dis page dis
+success: session updated.
+N3>show alarm
+Occurred Time          Severity Alarm                                          
+---------------------- -------- -----------------------------------------------
+2015/10/11 16:51:47.62 major    system
+                                "File Server Not Available"
+                                  Reason: File Transfer service not available on remote host
+2015/10/11 16:51:50.59 warning  card 1/1
+                                "Software initialization in progress"
+2015/10/11 16:51:41.53 minor    Ethernet port "1/1/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:51:48.73 warning  card 1/2
+                                "Software initialization in progress"
+2015/10/11 16:51:40.92 minor    Ethernet port "1/2/x3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:51:40.81 minor    Ethernet port "1/2/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:51:40.66 major    Ethernet port "1/2/g2"
+                                "Loss of signal"
+                                 (affects service)
+2015/10/11 16:51:40.66 minor    Ethernet port "1/2/g3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:51:39.36 minor    Ethernet port "1/2/g8"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:51:34.38 major    LAG interface "l11"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:51:34.38 major    LAG interface "l21"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:51:34.38 major    LAG interface "weblag"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:51:40.76 major    LAG interface "as1"
+                                "Aggregation Interface down"
+                                 (affects service)
+
+13 alarms found.
+N3>Alarm CLEARED for card 1/1 at 2015/10/11 16:53:20.85:
+    "Software initialization in progress"
+
+N3>set ses time dis page dis
+success: session updated.
+N3>show session
+"*" indicates this session.
+                                                                           Auto
+ID  User          Login                       Notifications   Pager      Logout
+--- ------------- --------------------------- --------------- -------- --------
+*1  e7support     telnet from 192.168.37.112  Alarm/Event/TCA disabled disabled
+    (debug)       at 2015/10/11 16:53:10                                       
+    auth: local
+
+1 session found.
+N3>set  system modular-chassis  disabled
+success: Modify system.
+N3>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211508600509
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:53:42
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:ee:2b:1c
+MAC address end         : 00:02:5d:ee:2b:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, standby
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	<none>
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:53:42
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:53:42
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>Alarm CLEARED for system at 2015/10/11 16:53:54.62:
+    "File Server Not Available"
+major ALARM for system at 2015/10/11 16:53:54.62:
+    "File Server Not Available --  Reason: File Transfer service not available on remote host"
+Alarm CLEARED for system at 2015/10/11 16:53:54.64:
+    "File Server Not Available"
+major ALARM for system at 2015/10/11 16:53:54.64:
+    "File Server Not Available --  Reason: Cannot login to remote host"
+show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:53:42
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:53:42
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:53:42
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:53:42
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:53:42
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:53:42
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:53:42
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:53:42
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>Alarm CLEARED for card 2 at 2015/10/11 16:55:20.72:
+    "Software initialization in progress"
+show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 16:53:42
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	<none>
+N3>show alarm
+Occurred Time          Severity Alarm                                          
+---------------------- -------- -----------------------------------------------
+2015/10/11 16:53:54.64 major    system
+                                "File Server Not Available"
+                                  Reason: Cannot login to remote host
+2015/10/11 16:51:41.53 minor    Ethernet port "1/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:51:40.92 minor    Ethernet port "2/x3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:51:40.81 minor    Ethernet port "2/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:51:40.66 major    Ethernet port "2/g2"
+                                "Loss of signal"
+                                 (affects service)
+2015/10/11 16:51:40.66 minor    Ethernet port "2/g3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:51:39.36 minor    Ethernet port "2/g8"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:51:34.38 major    LAG interface "l11"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:51:34.38 major    LAG interface "l21"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:51:34.38 major    LAG interface "weblag"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:51:40.76 major    LAG interface "as1"
+                                "Aggregation Interface down"
+                                 (affects service)
+
+11 alarms found.
+N3>show card
+* = active controller
+                                                           Alarms          
+Card  Provisioned Type  Actual Type       Status           (Cr Mj Mn Wn In)
+----- ----------------- ----------------- ---------------- ----------------
+ 1    VDSL2-48Cr2       VDSL2-48Cr2       enabled           0  0  0  0  0 
+*2    GPON-4r2          GPON-4r2          enabled           0  0  0  0  0 
+
+2 cards found.
+N3>load backup  from-host  10.245.3.201 user  backup file-path n3-db1.provd$p  from-host  10.245.3.201 user  backup file-path n3-db1.provdb          
+Password: 
+warning ALARM for card 2 at 2015/10/11 16:55:45.66:
+    "Restore file exists"
+success: loading backup from server completed.
+N3>
+N3>switch database
+This will replace current running database, and reset the system. After this completes, reset again to ensure proper operation.
+Switch database? (yes/no): yes
+Alarm CLEARED for card 2 at 2015/10/11 16:55:47.80:
+    "Restore file exists"
+success: switching database completed.
+         resetting system to activate new database.
+
+N3>"N3" Sun Oct 11 16:59:47 2015
+
+Username: e7support
+Password: 
+N3>set ses time dis page dis
+success: session updated.
+N3>set ses time dis page dis
+success: session updated.
+N3>show alarm
+Occurred Time          Severity Alarm                                          
+---------------------- -------- -----------------------------------------------
+2015/10/11 16:58:15.85 minor    Ethernet port "1/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:58:23.21 warning  card 2
+                                "Software initialization in progress"
+2015/10/11 16:58:15.65 minor    Ethernet port "2/x3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:58:15.55 minor    Ethernet port "2/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:58:15.40 major    Ethernet port "2/g2"
+                                "Loss of signal"
+                                 (affects service)
+2015/10/11 16:58:15.39 minor    Ethernet port "2/g3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:58:15.12 minor    Ethernet port "2/g8"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:58:10.39 major    LAG interface "l11"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:58:10.39 major    LAG interface "l21"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:58:10.39 major    LAG interface "weblag"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:58:15.52 major    LAG interface "as1"
+                                "Aggregation Interface down"
+                                 (affects service)
+
+11 alarms found.
+N3>set ses time dis page dis
+success: session updated.
+N3>show session
+"*" indicates this session.
+                                                                           Auto
+ID  User          Login                       Notifications   Pager      Logout
+--- ------------- --------------------------- --------------- -------- --------
+*1  e7support     telnet from 192.168.37.112  Alarm/Event/TCA disabled disabled
+    (debug)       at 2015/10/11 16:59:49                                       
+    auth: local
+
+1 session found.
+N3>set  system modular-chassis  disabled
+success: Modify system.
+N3>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211508600509
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 17:00:21
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:ee:2b:1c
+MAC address end         : 00:02:5d:ee:2b:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, standby
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	<none>
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 17:00:21
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 17:00:21
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 17:00:21
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 17:00:21
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 17:00:21
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 17:00:21
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 17:00:21
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 17:00:21
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 17:00:21
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 17:00:21
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N3>Alarm CLEARED for card 2 at 2015/10/11 17:01:53.71:
+    "Software initialization in progress"
+show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/11 17:00:21
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	<none>
+N3>show alarm
+Occurred Time          Severity Alarm                                          
+---------------------- -------- -----------------------------------------------
+2015/10/11 16:58:15.85 minor    Ethernet port "1/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:58:15.65 minor    Ethernet port "2/x3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:58:15.55 minor    Ethernet port "2/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:58:15.40 major    Ethernet port "2/g2"
+                                "Loss of signal"
+                                 (affects service)
+2015/10/11 16:58:15.39 minor    Ethernet port "2/g3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:58:15.12 minor    Ethernet port "2/g8"
+                                "Improper removal"
+                                 (affects service)
+2015/10/11 16:58:10.39 major    LAG interface "l11"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:58:10.39 major    LAG interface "l21"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:58:10.39 major    LAG interface "weblag"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/11 16:58:15.52 major    LAG interface "as1"
+                                "Aggregation Interface down"
+                                 (affects service)
+
+10 alarms found.
+N3>show card
+* = active controller
+                                                           Alarms          
+Card  Provisioned Type  Actual Type       Status           (Cr Mj Mn Wn In)
+----- ----------------- ----------------- ---------------- ----------------
+ 1    VDSL2-48Cr2       VDSL2-48Cr2       enabled           0  0  0  0  0 
+*2    GPON-4r2          GPON-4r2          enabled           0  0  0  0  0 
+
+2 cards found.
+N3>load backup  from-host  10.245.3.201 user  backup file-path n3-db2.provd$p  from-host  10.245.3.201 user  backup file-path n3-db2.provdb          
+Password: 
+warning ALARM for card 2 at 2015/10/11 17:02:25.65:
+    "Restore file exists"
+success: loading backup from server completed.
+N3>switch database
+This will replace current running database, and reset the system. After this completes, reset again to ensure proper operation.
+Switch database? (yes/no): yes
+Alarm CLEARED for card 2 at 2015/10/11 17:02:27.75:
+    "Restore file exists"
+success: switching database completed.
+         resetting system to activate new database.
+
+N3>"N3" Sun Oct 11 17:02:43 2015
+
+Username: 

@@ -1,0 +1,416 @@
+"N3" Sat Oct 10 11:39:39 2015
+
+Username: e7support
+Password: 
+N3>set ses time dis page dis
+success: session updated.
+N3>set ses time dis page dis
+success: session updated.
+N3>show session
+"*" indicates this session.
+                                                                           Auto
+ID  User          Login                       Notifications   Pager      Logout
+--- ------------- --------------------------- --------------- -------- --------
+*1  e7support     telnet from 192.168.37.112  Alarm/Event/TCA disabled disabled
+    (debug)       at 2015/10/10 11:39:40                                       
+    auth: local
+
+1 session found.
+N3>set  system modular-chassis  disabled
+success: Modify system.
+N3>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211508600509
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/10 11:39:41
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:ee:2b:1c
+MAC address end         : 00:02:5d:ee:2b:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, standby
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	<none>
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/10 11:39:41
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	<none>
+N3>show alarm
+Occurred Time          Severity Alarm                                          
+---------------------- -------- -----------------------------------------------
+2015/10/10 11:35:51.04 minor    Ethernet port "1/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/10 11:35:45.50 minor    Ethernet port "2/x3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/10 11:35:45.40 minor    Ethernet port "2/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/10 11:35:45.25 major    Ethernet port "2/g2"
+                                "Loss of signal"
+                                 (affects service)
+2015/10/10 11:35:45.25 minor    Ethernet port "2/g3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/10 11:35:44.94 minor    Ethernet port "2/g8"
+                                "Improper removal"
+                                 (affects service)
+2015/10/10 11:35:40.16 major    LAG interface "l11"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/10 11:35:40.16 major    LAG interface "l21"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/10 11:35:40.16 major    LAG interface "weblag"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/10 11:35:45.37 major    LAG interface "as1"
+                                "Aggregation Interface down"
+                                 (affects service)
+
+10 alarms found.
+N3>show card
+* = active controller
+                                                           Alarms          
+Card  Provisioned Type  Actual Type       Status           (Cr Mj Mn Wn In)
+----- ----------------- ----------------- ---------------- ----------------
+ 1    VDSL2-48Cr2       VDSL2-48Cr2       enabled           0  0  0  0  0 
+*2    GPON-4r2          GPON-4r2          enabled           0  0  0  0  0 
+
+2 cards found.
+N3>load backup  from-host  10.245.3.201 user  backup file-path n3-db1.provd$p  from-host  10.245.3.201 user  backup file-path n3-db1.provdb          
+Password: 
+success: loading backup from server completed.
+N3>switch database
+This will replace current running database, and reset the system. After this completes, reset again to ensure proper operation.
+Switch database? (yes/no): warning ALARM for card 2 at 2015/10/10 11:40:04.31:
+    "Restore file exists"
+yes
+Alarm CLEARED for card 2 at 2015/10/10 11:40:06.09:
+    "Restore file exists"
+success: switching database completed.
+         resetting system to activate new database.
+
+N3>"N3" Sat Oct 10 11:44:05 2015
+
+Username: e7support
+Password: 
+N3>set ses time dis page dis
+success: session updated.
+N3>set ses time dis page dis
+success: session updated.
+N3>show alarm
+Occurred Time          Severity Alarm                                          
+---------------------- -------- -----------------------------------------------
+2015/10/10 11:42:35.56 minor    Ethernet port "1/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/10 11:42:43.23 warning  card 2
+                                "Software initialization in progress"
+2015/10/10 11:42:33.50 minor    Ethernet port "2/x3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/10 11:42:33.40 minor    Ethernet port "2/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/10 11:42:33.25 major    Ethernet port "2/g2"
+                                "Loss of signal"
+                                 (affects service)
+2015/10/10 11:42:33.25 minor    Ethernet port "2/g3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/10 11:42:32.94 minor    Ethernet port "2/g8"
+                                "Improper removal"
+                                 (affects service)
+2015/10/10 11:42:28.14 major    LAG interface "l11"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/10 11:42:28.14 major    LAG interface "l21"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/10 11:42:28.14 major    LAG interface "weblag"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/10 11:42:33.37 major    LAG interface "as1"
+                                "Aggregation Interface down"
+                                 (affects service)
+
+11 alarms found.
+N3>
+N3>
+N3>Alarm CLEARED for card 2 at 2015/10/10 11:46:13.09:
+    "Software initialization in progress"
+
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>
+N3>set ses time dis page dis
+success: session updated.
+N3>show session
+"*" indicates this session.
+                                                                           Auto
+ID  User          Login                       Notifications   Pager      Logout
+--- ------------- --------------------------- --------------- -------- --------
+*1  e7support     telnet from 192.168.37.112  Alarm/Event/TCA disabled disabled
+    (debug)       at 2015/10/10 11:44:07                                       
+    auth: local
+
+1 session found.
+N3>set  system modular-chassis  disabled
+success: Modify system.
+N3>show card 1 detail
+Information for card 1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211508600509
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/10 12:27:18
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:ee:2b:1c
+MAC address end         : 00:02:5d:ee:2b:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, standby
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	<none>
+N3>show card 2 detail
+Information for card 2:
+Provisioned type        : GPON-4r2
+Actual type             : GPON-4r2
+Part number             : 100-03656
+CLEI                    : BVL3AW5FTA
+Serial number           : 211410600640
+Application version     : 2.4.253.93
+Database created        : 2015/09/07 08:44:04
+Database last updated   : 2015/10/10 12:27:18
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:da:2c:ea
+MAC address end         : 00:02:5d:da:2c:fb
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	<none>
+N3>show alarm
+Occurred Time          Severity Alarm                                          
+---------------------- -------- -----------------------------------------------
+2015/10/10 11:42:35.56 minor    Ethernet port "1/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/10 11:42:33.50 minor    Ethernet port "2/x3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/10 11:42:33.40 minor    Ethernet port "2/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/10 11:42:33.25 major    Ethernet port "2/g2"
+                                "Loss of signal"
+                                 (affects service)
+2015/10/10 11:42:33.25 minor    Ethernet port "2/g3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/10 11:42:32.94 minor    Ethernet port "2/g8"
+                                "Improper removal"
+                                 (affects service)
+2015/10/10 11:42:28.14 major    LAG interface "l11"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/10 11:42:28.14 major    LAG interface "l21"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/10 11:42:28.14 major    LAG interface "weblag"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/10 11:42:33.37 major    LAG interface "as1"
+                                "Aggregation Interface down"
+                                 (affects service)
+
+10 alarms found.
+N3>show card
+* = active controller
+                                                           Alarms          
+Card  Provisioned Type  Actual Type       Status           (Cr Mj Mn Wn In)
+----- ----------------- ----------------- ---------------- ----------------
+ 1    VDSL2-48Cr2       VDSL2-48Cr2       enabled           0  0  0  0  0 
+*2    GPON-4r2          GPON-4r2          enabled           0  0  0  0  0 
+
+2 cards found.
+N3>load backup  from-host  10.245.3.201 user  backup file-path n3-db2.provd$p  from-host  10.245.3.201 user  backup file-path n3-db2.provdb          
+Password: 
+warning ALARM for card 2 at 2015/10/10 12:27:41.13:
+    "Restore file exists"
+success: loading backup from server completed.
+N3>
+N3>switch database
+This will replace current running database, and reset the system. After this completes, reset again to ensure proper operation.
+Switch database? (yes/no): yes
+Alarm CLEARED for card 2 at 2015/10/10 12:27:43.28:
+    "Restore file exists"
+success: switching database completed.
+         resetting system to activate new database.
+
+N3>"N3" Sat Oct 10 12:31:42 2015
+
+Username: e7support
+Password: 
+N3>set ses time dis page dis
+success: session updated.
+N3>set ses time dis page dis
+success: session updated.
+N3>show alarm
+Occurred Time          Severity Alarm                                          
+---------------------- -------- -----------------------------------------------
+2015/10/10 12:31:36.03 minor    system
+                                "No standby controller"
+                                 (related object: card 1/1)
+2015/10/10 12:30:16.05 major    system
+                                "File Server Not Available"
+                                  Reason: File Transfer service not available on remote host
+2015/10/10 12:30:20.28 warning  card 1/1
+                                "Software initialization in progress"
+2015/10/10 12:30:12.21 minor    Ethernet port "1/1/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/10 12:30:17.21 warning  card 1/2
+                                "Software initialization in progress"
+2015/10/10 12:30:09.68 minor    Ethernet port "1/2/x3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/10 12:30:09.57 minor    Ethernet port "1/2/g1"
+                                "Improper removal"
+                                 (affects service)
+2015/10/10 12:30:09.44 major    Ethernet port "1/2/g2"
+                                "Loss of signal"
+                                 (affects service)
+2015/10/10 12:30:09.44 minor    Ethernet port "1/2/g3"
+                                "Improper removal"
+                                 (affects service)
+2015/10/10 12:30:09.11 minor    Ethernet port "1/2/g8"
+                                "Improper removal"
+                                 (affects service)
+2015/10/10 12:30:04.15 major    LAG interface "l11"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/10 12:30:04.15 major    LAG interface "l21"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/10 12:30:04.15 major    LAG interface "weblag"
+                                "No eth-ports for service"
+                                 (affects service)
+2015/10/10 12:30:09.55 major    LAG interface "as1"
+                                "Aggregation Interface down"
+                                 (affects service)
+
+14 alarms found.
+N3>Alarm CLEARED for system at 2015/10/10 12:31:46.32:
+    "No standby controller"
+    (related object: card 1/1)
+Alarm CLEARED for card 1/1 at 2015/10/10 12:32:05.09:
+    "Software initialization in progress"
+Alarm CLEARED for system at 2015/10/10 12:32:23.44:
+    "File Server Not Available"
+major ALARM for system at 2015/10/10 12:32:23.44:
+    "File Server Not Available --  Reason: File Transfer service not available on remote host"
+
+N3>
+N3>

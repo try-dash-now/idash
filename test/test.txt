@@ -1,0 +1,7 @@
+e7support
+admin
+set session page di tim dis
+show card
+show version
+show alarm
+exit
