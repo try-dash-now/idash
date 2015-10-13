@@ -38,6 +38,7 @@ class dut(object):
     timestampCmd   =None # record the time stamp of last interaction, to anti-idle
     loginDone   = False
     sock        =None
+    debuglevel  = 0
     def __del__(self):
         self.SessionAlive=False
 
@@ -76,7 +77,7 @@ class dut(object):
     def show(self):
         '''return the delta of streamOut from last call of function Print,
         and move idxUpdate to end of streamOut'''
-        raise NotImplementedError('please implement it in your class')
+        raise NotImplementedError('please implement function show in your class')
     def write(self, buffer):
         import time
         self.timestampCmd= time.time()
