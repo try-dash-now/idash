@@ -91,11 +91,15 @@ if __name__ == "__main__":
                 sdut, lvar, lsetup, lrun, ltear =cs.load(casefile, case_args)
                 ldut = list(sdut)
                 newduts= []
+                oldduts = []
                 for nd in ldut:
                     if dut_pool.has_key(nd):
-                        continue
+                        oldduts.append(nd)
                     else:
                         newduts.append(nd)
+
+                for od in oldduts:
+                    dut_pool[od].openLogfile(logdir)
                 errormessage =[]
                 duts= initDUT(errormessage,bench,newduts,logger, logdir)
 

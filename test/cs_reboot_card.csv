@@ -1,0 +1,13 @@
+#var
+dut,${4}
+card,${5}
+#setup
+${dut},show card detail,>,30
+${dut},try 400:show card ${card} detail,Alarms:\s*\n*\s*<none>\s*\n*\s*Conditions:\s*\n*\s*<none>,10
+#${dut},try 400:show card 2 detail,Alarms:\s*\n*\s*<none>\s*\n*\s*Conditions:\s*\n*\s*<none>,10
+,reboot card ${card},yes,30
+,yes,>,30
+,sleep(${wait}),
+,try 400:relogin(),
+,show alarm,>,30
+,show card detail,>,30
