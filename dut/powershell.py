@@ -54,7 +54,7 @@ class powershell(dut):
                     print('\nReadOutput Exception %d:'%(counter)+e.__str__()+'\n')
                 #self.lockStreamOut.release()
 
-                print("ReadDataFromSocket Exception: %s"%(str(e)))
+                print("ReadOutput Exception: %s"%(str(e)))
                 import traceback
                 msg = traceback.format_exc()
                 print(msg)
