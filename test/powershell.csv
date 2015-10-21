@@ -1,11 +1,11 @@
 #setup
-PS,rm -r c://tmp,.+,600
-,mkdir c://tmp,exist|LastWriteTime,30
-,cp \\petnaf01\TFTP2\EX24VDSL2\E7_R02.04.253_EX24VDSL2_0096.zip c://tmp/E7_R02.04.253_EX24VDSL2_0096.zip,,60
-,try 180:,>,10
-,cd c://Program Files/7-Zip/,>30
-,.\7z.exe x c://tmp/E7_R02.04.253_EX24VDSL2_0096.zip -oc:/tmp/E7_R02.04.253_EX24VDSL2_0096,Everything is Ok,60
-,.\7z.exe x c://tmp/E7_R02.04.253_EX24VDSL2_0096/rel.zip -oc://tmp/,Everything is Ok,60
+#PS,rm -r c://tmp,.+,600
+#,mkdir c://tmp,exist|LastWriteTime,30
+#,cp \\petnaf01\TFTP2\EX24VDSL2\E7_R02.04.253_EX24VDSL2_0096.zip c://tmp/E7_R02.04.253_EX24VDSL2_0096.zip,,60
+#,try 180:,>,10
+PS,cd c://\"Program Files\"/7-Zip/,>,30
+PS,c://\"Program Files\"/7-Zip/7z.exe x c://tmp/E7_R02.04.253_EX24VDSL2_0096.zip -oc:/tmp/E7_R02.04.253_EX24VDSL2_0096,Everything is Ok,60
+,c://"Program Files"/7-Zip/7z.exe x c://tmp/E7_R02.04.253_EX24VDSL2_0096/rel.zip -oc://tmp/,Everything is Ok,60
 ,cp -r c://tmp/E7_R02.04.253_EX24VDSL2_0096 //10.245.3.201/load,,60
-,try 180:>,10
+#,try 180:>,10
 ,ls //10.245.3.201/load,E7_R02.04.253_EX24VDSL2_0096,30

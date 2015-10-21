@@ -10,15 +10,56 @@ import time
 import subprocess
 class powershell(dut):
     shellsession= None
+    timestampCmd =None
     def __init__(self,name,attr,logger, logpath):
         dut.__init__(self, name,attr,logger, logpath)
 
         exe_cmd='C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\powershell.exe'
+        #self.fw= open(self.logfile.name,'wb')
+        #self.fr= open(self.logfile.name, 'r')
+        #mystdin = open(self.logfile.name+'.in','wb')
         self.shellsession = subprocess.Popen(args = exe_cmd ,shell =True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
         import threading
         self.lockStreamOut =threading.Lock()
         self.streamOut=''
+        th =threading.Thread(target=self.ReadOutput)
+        th.start()
+        self.debuglevel=0
 
+    def ReadOutput(self):
+        import time, os
+        maxInterval = 60
+        if self.timestampCmd ==None:
+            self.timestampCmd= time.time()
+        counter = 0
+        while self.SessionAlive:
+            self.lockStreamOut.acquire()
+            try:
+                #if not self.sock:
+                #    self.relogin()
+                if (time.time()-self.timestampCmd)>maxInterval:
+                    self.write(os.linesep)
+                    self.timestampCmd = time.time()
+                if self.shellsession:
+                    out = self.shellsession.stdout.readline()
+                    if len(out):
+                        self.streamOut+=out
+                if self.logfile and len(out)!=0:
+                    self.logfile.write(out)
+                    self.logfile.flush()
+                counter = 0
+            except Exception, e:
+                counter+=1
+                if self.debuglevel:
+                    print('\nReadOutput Exception %d:'%(counter)+e.__str__()+'\n')
+                #self.lockStreamOut.release()
+
+                print("ReadDataFromSocket Exception: %s"%(str(e)))
+                import traceback
+                msg = traceback.format_exc()
+                print(msg)
+                self.error(msg)
+            self.lockStreamOut.release()
 
     def show(self):
         newIndex = self.streamOut.__len__()
@@ -31,17 +72,20 @@ class powershell(dut):
 
     def singleStep(self, cmd, expect, wait, ctrl=False, noPatternFlag=False, noWait=False):
         exe_cmd='C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\powershell.exe %s'%cmd
-        self.shellsession = subprocess.Popen(args = exe_cmd ,shell =True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-        out,error =self.shellsession.communicate(wait)
-        print out
-        print error
-        self.logfile.write(out+'\n')
-        self.logfile.write(error+'\n')
-        self.logfile.flush()
-        self.lockStreamOut.acquire()
-        self.streamOut+=out+'\n'+error+'\n'
-        self.lockStreamOut.release()
-        self.find(expect,1,noPattern=noPatternFlag)
+        print exe_cmd
+        cmd ='ls'
+        #self.shellsession = subprocess.Popen(args = exe_cmd ,shell =True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+        a = self.shellsession.stdin
+        #self.shellsession.stdin.newlines='\r\n'
+        self.shellsession.stdin.write('\r\n'+cmd+'\r\n')
+        self.shellsession.stdin.flush()
+        print(self.streamOut)
+        #out,error =self.shellsession.communicate(cmd+'\r\n')#wait
+
+
+
+
+
 
 
 

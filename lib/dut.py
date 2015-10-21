@@ -41,6 +41,8 @@ class dut(object):
     debuglevel  = 0
     def __del__(self):
         self.SessionAlive=False
+        if self.logfile:
+            self.logfile.flush()
 
 
     def __init__(self, name, attr =None,logger=None, logpath= None):

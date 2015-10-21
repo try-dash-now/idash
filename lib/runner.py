@@ -270,4 +270,6 @@ def releaseDUTs(duts):
         dut = duts[name]
         if dut :
             dut.SessionAlive=False
+            if dut.logfile:
+                dut.logfile.flush()
 errorlogger = None
