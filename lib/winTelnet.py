@@ -306,7 +306,6 @@ class winTelnet(dut):#, spawn
         maxInterval = 60
         if self.timestampCmd ==None:
             self.timestampCmd= time.time()
-        import time
         counter = 0
         while self.SessionAlive:
             self.lockStreamOut.acquire()

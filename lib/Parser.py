@@ -173,7 +173,7 @@ class caseParser(object):
             reRun       = sre.compile("^[\s]*#[\s]*RUN[\s]*",sre.I)
             reTeardown  = sre.compile("^[\s]*#[\s]*TEARDOWN[\s]*",sre.I)
             #reOnFail    = sre.compile("^[\s]*#[\s]*ONFAIL[\s]*",sre.I)
-            reComment    = sre.compile("^[\s]*#[\s]*[\S]*",sre.I)
+            reComment    = sre.compile("^[\s]*#.*",sre.I|sre.DOTALL)
             from common import csvstring2array
             strcsv = substitude(global_vars,var,linestring)
             csv = csvstring2array(strcsv)[0]
@@ -213,7 +213,7 @@ class caseParser(object):
             LineNo =0
             dutname =None
             import re as sre
-            reComment    = sre.compile("^[\s]*#[\s]*[\S]*",sre.I)
+            reComment    = sre.compile("^[\s]*#.*",sre.I|sre.DOTALL)
             cstate = 0
             predut = ''
             for line in csvfile.readlines():
