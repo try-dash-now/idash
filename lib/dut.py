@@ -268,8 +268,6 @@ call function(%s)
         Ctrl, bool, default is False, if it's True, then send a key combination: Ctrl+first_char_of_cmd
         noWait, bool, defualt is False, means move searching index, otherwise doesn't move the searching index
         '''
-        if cmd.find('set ses tim dis pager dis')!=-1:
-            pass
         import os
         tmp =[]
         if Ctrl:

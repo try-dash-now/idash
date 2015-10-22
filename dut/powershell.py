@@ -14,11 +14,14 @@ class powershell(dut):
     def __init__(self,name,attr,logger, logpath):
         dut.__init__(self, name,attr,logger, logpath)
 
-        exe_cmd='C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\powershell.exe'
+        exe_cmd=['cmd.exe']
+        a  = ['C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\powershell.exe',
+                 '/c',
+                 'pwd']
         #self.fw= open(self.logfile.name,'wb')
         #self.fr= open(self.logfile.name, 'r')
         #mystdin = open(self.logfile.name+'.in','wb')
-        self.shellsession = subprocess.Popen(args = exe_cmd ,shell =True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+        self.shellsession = subprocess.Popen(args = exe_cmd ,shell =True, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
         import threading
         self.lockStreamOut =threading.Lock()
         self.streamOut=''
@@ -69,14 +72,52 @@ class powershell(dut):
         if result!='':
             print('\t%s'%(result.replace('\n', '\n\t')))
         return result
+    def send(self,cmd, Ctrl=False, noWait=False):
+        import os
+        tmp =[]
+        stdin = self.shellsession.stdin
 
-    def singleStep(self, cmd, expect, wait, ctrl=False, noPatternFlag=False, noWait=False):
+        if Ctrl:
+            ascii = ord(cmd[0]) & 0x1f
+            ch = chr(ascii)
+            stdin.write(ch)
+
+        else:
+            stdin.write(cmd)
+
+        if self.loginDone:
+            if self.attribute.get("LINESEP"):
+                LINESEP = self.attribute.get('LINESEP').replace('\\r', '\r').replace('\\n', '\n')
+                stdin.write(LINESEP)
+            else:
+                stdin.write('\n')
+        else:
+            if self.attribute.get("LOGIN_LINESEP"):
+                LINESEP = self.attribute.get('LOGIN_LINESEP').replace('\\r', '\r').replace('\\n', '\n')
+                stdin.write(LINESEP)
+            else:
+                stdin.write('\r\n')
+
+        if noWait:
+            pass
+        else:
+            self.idxSearch =self.streamOut.__len__() #move the Search window to the end of streamOut
+
+
+
+        #stdin.write('\r\n'+cmd+'\r\n')
+        #stdin.flush()
+
+    def xsingleStep(self, cmd, expect, wait, ctrl=False, noPatternFlag=False, noWait=False):
         exe_cmd='C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\powershell.exe %s'%cmd
         print exe_cmd
-        cmd ='ls'
+        #cmd ='ls'
         #self.shellsession = subprocess.Popen(args = exe_cmd ,shell =True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
         a = self.shellsession.stdin
         #self.shellsession.stdin.newlines='\r\n'
+        import sys
+        #sys.stdout.write(cmd+'\n')
+        #sys.stdout.flush()
         self.shellsession.stdin.write('\r\n'+cmd+'\r\n')
         self.shellsession.stdin.flush()
         print(self.streamOut)
