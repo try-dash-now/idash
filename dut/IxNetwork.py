@@ -16,7 +16,7 @@ import time
 pardir = os.path.dirname(os.path.realpath(os.getcwd()))
 # pardir= os.path.sep.join(pardir.split(os.path.sep)[:-1])
 sys.path.append(os.path.sep.join([pardir, 'lib']))
-sys.path.append(os.path.sep.join([pardir, 'product']))
+sys.path.append(os.path.sep.join([pardir, 'dut']))
 print('\n'.join(sys.path))
 #
 from TclInter import TclInter
@@ -33,14 +33,14 @@ class IxNetwork(TclInter):
         if attrs.get("version"):
             self.version = attrs["version"]
 
-    def OpenTcl(self):
-        super(IxNetwork, self).OpenTcl()
+    def openTcl(self):
+        super(IxNetwork, self).openTcl()
         # self.tclInter.eval('package require  base64')
         self.tclInter.eval('source ../product/ixia_tcl_lib.tcl')
         cwd = os.path.abspath('../product').replace('\\', '/')  #os.getcwd().replace('\\','/')
         IxTclNetwork_path = '"' + cwd + '/IxTclNetwork' + '"'
-        self.SendLine('set_tcl_env ' + IxTclNetwork_path + ' ' + self.iphost + ' ' + self.version)
-        self.Expect('::ixNet::OK')
+        self.send('set_tcl_env ' + IxTclNetwork_path + ' ' + self.iphost + ' ' + self.version)
+        self.find('::ixNet::OK')
 
         #         self.tcl.eval('lappend auto_path ' + IxTclNetwork_path)
         #         self.tcl.eval('package require IxTclNetwork')

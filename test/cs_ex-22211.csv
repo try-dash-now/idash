@@ -1,0 +1,24 @@
+#var
+#setup
+markli,reset database keep-craft-fe,yes,30
+,yes,default database,30
+,sleep(240)
+,try 300:relogin(),
+#run
+,s,Timezone,60
+,Hongkong,System ID,60
+,r53,location,60
+,r53,in-band,60
+,r,IP,60
+,,Subnet,60
+,,Enable DHCP server on this interface,60
+,n,Network interface to setup,60
+,d,Management gateway:,60
+,10.245.53.1,NTP,60
+,n,Current time,60
+,2015/10/23:10:46,Set up SNMP,60
+,n,Enable access to the CLI,60
+,y,Enable access to the web GUI via HTTP,60
+,y,>,120
+,set session time dis pag dis,success,60
+,show alarm,>,60

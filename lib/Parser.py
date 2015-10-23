@@ -176,7 +176,11 @@ class caseParser(object):
             reComment    = sre.compile("^[\s]*#.*",sre.I|sre.DOTALL)
             from common import csvstring2array
             strcsv = substitude(global_vars,var,linestring)
-            csv = csvstring2array(strcsv)[0]
+            rawdata = csvstring2array(strcsv)
+            if len(rawdata):
+                csv = rawdata[0]
+            else:
+                return seg, curdut
             strcsv =linestring # ','.join(csv)
 
             if sre.match(reCaseEnd, strcsv):

@@ -15,7 +15,7 @@ class TclInter(baseSession):
         except:
             pass
 
-    def OpenTcl(self):
+    def openTcl(self):
         if self.tclInter is not None:
             self.tclInter.quit()
         self.tclInter = Tcl( None, None, 'Tk', 0)
@@ -30,7 +30,7 @@ proc puts {args} {
 }
 ''')
 
-    def SendLine(self, command , Ctrl=False, Alt=False ):
+    def send(self, command , Ctrl=False, Alt=False ):
         if self.tclInter is None:
             self.OpenTcl()
         command =command.strip()
@@ -41,7 +41,7 @@ proc puts {args} {
         self.seslog.flush()
         print(output)
         return  self.output
-    def Expect(self,pattern, wait =None, noWait=False):
+    def find(self,pattern, wait =None, noWait=False):
         import re
         p =re.compile(pattern, re.I|re.M)
         m =re.search(p, self.output)
