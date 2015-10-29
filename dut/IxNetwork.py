@@ -32,12 +32,13 @@ class IxNetwork(TclInter):
             self.iphost = attrs['IP']
         if attrs.get("version"):
             self.version = attrs["version"]
+        self.streamOut =''
 
     def openTcl(self):
         super(IxNetwork, self).openTcl()
         # self.tclInter.eval('package require  base64')
-        self.tclInter.eval('source ../product/ixia_tcl_lib.tcl')
-        cwd = os.path.abspath('../product').replace('\\', '/')  #os.getcwd().replace('\\','/')
+        self.tclInter.eval('source ../dut/ixia_tcl_lib.tcl')
+        cwd = os.path.abspath('../dut').replace('\\', '/')  #os.getcwd().replace('\\','/')
         IxTclNetwork_path = '"' + cwd + '/IxTclNetwork' + '"'
         self.send('set_tcl_env ' + IxTclNetwork_path + ' ' + self.iphost + ' ' + self.version)
         self.find('::ixNet::OK')
@@ -46,14 +47,39 @@ class IxNetwork(TclInter):
         #         self.tcl.eval('package require IxTclNetwork')
         #         return '::ixNet::OK' == self.tcl.eval('ixNet connect ' + host_ip + ' -port 8009 -version 6.0')
 
+    def getColumnInView(self, viewName, colName):
+        cmd = 'read_Stats "%s" "%s"'%(viewName, colName)
+        result = self.send(cmd)
+
+
+        patList =re.compile('^\{(.*)\}$', re.DOTALL)
+        result = re.match(patList, result).group(1)
+
+        import shlex
+        result= shlex.split(result)
+        return result
+    def checkRange(self,viewName,rawName,colName, maxLimit, minLimit=0):
+        result = self.getColumnInView(viewName, colName)
+        print('checkRange:', result)
+        headline = self.getTrafficName()
+        index = headline.index(rawName)
+        print(rawName, 'index:', index)
+        checkValue = float(result[index])
+        if float(minLimit)<= checkValue and checkValue<=float(maxLimit):
+            pass
+        else:
+            self.FailFlag =True
+            if self.ErrorMessage ==None:
+                self.ErrorMessage =''
+            self.ErrorMessage +='view(%s) row(%s) item(%s) is %s, out of range [%s, %s]'%(viewName,rawName,colName, checkValue, minLimit, maxLimit)
 
     # ryi7/31/2015 begin
     def getStatsItem(self, viewName="Flow Statistics", item="Loss %"):
         name_list = []
         item_list = []
         # the variable item is aimed to get specified item in viewName,such as get "Rx Frames" statistics in "Traffic Item Statistics" page
-        item_str = self.SendLine('read_Stats "%s" "%s"' % (viewName, item)) #tclInter.eval('read_Stats "%s" "%s"' % (viewName, item))
-        name_str = self.SendLine('read_Name "%s" "%s"' % (viewName, item))
+        item_str = self.send('read_Stats "%s" "%s"' % (viewName, item)) #tclInter.eval('read_Stats "%s" "%s"' % (viewName, item))
+        name_str = self.send('read_Name "%s" "%s"' % (viewName, item))
         if viewName == "Flow Statistics":
             name_str = name_str[2:-2]
             if '} {' in name_str:
@@ -98,107 +124,54 @@ class IxNetwork(TclInter):
                         finalDict.append(item_list[start:end])
         return finalDict
 
-        # if len(args) == 0:
-        #     return [item_list]
-        # else:
-        #     total = 0
-        #     msg = ''
-        #     for i in args:
-        #         isinstance(int(i), type(0))
-        #         total += int(i)
-        #     if total > len(item_list):
-        #         msg = "given %d, but only %d avaiable, not so many flows,please input again!"%(total, len(item_list))
-        #         print msg
-        #         self.setFailFlag(msg)
-        #         self.Write2Csv(msg)
-        #     start = 0
-        #     last = 0
-        #     finalDict = []
-        #     for item in args:
-        #         last += item
-        #         finalDict.append(item_list[start:last])
-        #         start = last
-        #     return finalDict
-#ryi8/4/2015 end  8/19/2015 change
-
-    # def generate_traffic(self, config_file):
-    #     #print self.eval('puts $auto_path')
-    #     print "loading config from {} ...".format(config_file)
-    #     self.eval('source "{}"'.format(config_file))
-    #     #         print self.check_status()
-    #     print "generating traffic..."
-    #     try:
-    #         self.eval('generate_traffic')
-    #     except Exception:
-    #         print "ignoring failed sessions..."
-    #     while self.check_status() != "stopped":
-    #         self.tclInter.eval('after 50')
-    #         status = self.check_status()
-    #         print status
-
-    # def startProtocols(self):
-    #     """
-    #     start protocols
-    #     tcl interpreter throws exception if some sessions failed
-    #     :return: 0 if success
-    #     """
-    #     print "starting protocols..."
-    #     self.SendLine('generate_traffic')#tclInter.eval('generate_traffic')
-    #     while self.checkStatus() != "stopped":
-    #         self.tclInter.eval('after 50')
-    #         status = self.checkStatus()
-    #     print "sucess"
-    #     return 0
-
-    #ryi 7/16/2015 begin
     def startAllProtocols(self):
         print "start protocols..."
-        #self.seslog.write("Info:start protocols...\n")
-        status = self.SendLine('ixNetStartAllProtocols')  #tclInter.eval('ixNetStartAllProtocols')
+        #self.logfile.write("Info:start protocols...\n")
+        status = self.send('ixNetStartAllProtocols')  #tclInter.eval('ixNetStartAllProtocols')
         time.sleep(1)
         if status.find('0') == 0:
             print "protocols started"
-            #self.seslog.write("Info:protocol already started\n")
+            #self.logfile.write("Info:protocol already started\n")
         else:
             self.msg.append("fail to start all protocols")
-            #self.seslog.write("Fail:fail to start all protocol\n")
+            #self.logfile.write("Fail:fail to start all protocol\n")
         return 0
 
     def stopAllProtocols(self):
         print "stop protocols..."
-        #self.seslog.write("Info:stop protocols...\n")
-        self.SendLine('ixNetStopAllProtocols')  #tclInter.eval('ixNetStopAllProtocols')
+        #self.logfile.write("Info:stop protocols...\n")
+        self.send('ixNetStopAllProtocols')  #tclInter.eval('ixNetStopAllProtocols')
         time.sleep(1)
         status = self.checkStatus()
         if status == "stopped":
             print "Protocol already stopped"
-            #self.seslog.write("Info:Protocol already stopped\n")
+            #self.logfile.write("Info:Protocol already stopped\n")
         else:
             self.msg.append("fail to stop all protocols")
-            #self.seslog.write("Fail:fail to stop all protocols\n")
+            #self.logfile.write("Fail:fail to stop all protocols\n")
         return 0
 
         # def startTraffic(self):
         #     print "apply statistics..."
-        #     #self.seslog.write("Info:apply statistics...\n")
+        #     #self.logfile.write("Info:apply statistics...\n")
         #     #tmp = self.clearStats()
         #     #if tmp == True:
         #        # print "clearing statistics done"
         #     #time.sleep(1)
-        #     self.SendLine('ixNetApplyTraffic')#.tclInter.eval('ixNetApplyTraffic')
+        #     self.send('ixNetApplyTraffic')#.tclInter.eval('ixNetApplyTraffic')
         #     print "start traffic..."
-        #     #self.seslog.write("Info:start traffic...\n")
+        #     #self.logfile.write("Info:start traffic...\n")
         #     status = self.checkStatus()
         #     if status == "stopped":
-        #         self.SendLine('start_traffic')#.tclInter.eval('start_traffic')
+        #         self.send('start_traffic')#.tclInter.eval('start_traffic')
         #         time.sleep(5)
-        #         #self.seslog.write("Info:traffic start done\n")
+        #         #self.logfile.write("Info:traffic start done\n")
         #     elif status == "started":
         #         print "already started"
-        #         #self.seslog.write("Info:traffic already started\n")
+        #         #self.logfile.write("Info:traffic already started\n")
         #     elif status == "unapplied":
         #         print "traffic has not been generated"
-        #         #self.seslog.write("Debug:traffic has not been generated"+'\n')
+        #         #self.logfile.write("Debug:traffic has not been generated"+'\n')
         #     return
 
     #ryi 7/16/2015 end
@@ -237,7 +210,7 @@ class IxNetwork(TclInter):
         if "" == self.tclInter.eval('get_traffic_items'):
             print "traffic items do not exist"
             return 1
-        self.SendLine('regenerate_traffic')
+        self.send('regenerate_traffic')
         return 0
 
     # speng 7/21/2015 end
@@ -248,12 +221,12 @@ class IxNetwork(TclInter):
                 print "traffic items do not exist"
                 return 1
             print "applying traffic..."
-            res = self.SendLine('ixNetApplyTraffic')
+            res = self.send('ixNetApplyTraffic')
             if "::ixNet::OK" in res:
                 print("success")
         if self.checkStatus() != "started":
             print "starting traffic..."
-            self.SendLine('start_traffic')  # tclInter.eval('start_traffic')
+            self.send('start_traffic')  # tclInter.eval('start_traffic')
             # while self.checkStatus() != "started":
             #     self.tclInter.eval('after 50')
             print "success"
@@ -269,7 +242,7 @@ class IxNetwork(TclInter):
             print "already stopped"
             return 0
         if status == "started":
-            self.SendLine('stop_traffic')  # tclInter.eval('stop_traffic')
+            self.send('stop_traffic')  # tclInter.eval('stop_traffic')
             while "stopped" != self.tclInter.eval('check_status'):
                 self.tclInter.eval('after 100')
             print "traffic stopped"
@@ -281,7 +254,7 @@ class IxNetwork(TclInter):
 
 
     def clearStats(self):
-        if '::ixNet::OK' == self.SendLine('clear_stats'):  # tclInter.eval('clear_stats')
+        if '::ixNet::OK' == self.send('clear_stats'):  # tclInter.eval('clear_stats')
             return 0
         else:
             return 1
@@ -293,11 +266,11 @@ class IxNetwork(TclInter):
     def checkIxnResult(self):
         '''if failure flag is true, then case failed write error message to log file'''
         if self.FailFlag == True:
-            self.seslog.write("!!!!!!!!!!!!!!!!!!!!!!case fail in ixNetwork!!!!!!!!!!!!!!!!!!!!!!!" + '\n')
+            self.logfile.write("!!!!!!!!!!!!!!!!!!!!!!case fail in ixNetwork!!!!!!!!!!!!!!!!!!!!!!!" + '\n')
             for i in range(len(self.ErrorMessage)):
-                self.seslog.write("Fail:[" + str(i + 1) + ']:' + self.ErrorMessage[i] + '\n')
+                self.logfile.write("Fail:[" + str(i + 1) + ']:' + self.ErrorMessage[i] + '\n')
         else:
-            self.seslog.write("!!!!!!!!!!!!!!!!!!!!!!case pass in ixNetwork!!!!!!!!!!!!!!!!!!!!!!!" + '\n')
+            self.logfile.write("!!!!!!!!!!!!!!!!!!!!!!case pass in ixNetwork!!!!!!!!!!!!!!!!!!!!!!!" + '\n')
         #ryi 7/17/2015 end
 
 
@@ -327,7 +300,7 @@ class IxNetwork(TclInter):
             self.Write2Csv(msg)
 
     def getFlowName(self, row, viewName="Flow Statistics"):
-        name = self.SendLine('getFlowName "%s" "%s"' % (viewName, int(row)))
+        name = self.send('getFlowName "%s" "%s"' % (viewName, int(row)))
         return name
     #ryi 7/28/2015 end
 
@@ -386,7 +359,7 @@ class IxNetwork(TclInter):
             if len(badStreamName) != 0:
                 report = report + report2
             import os
-            path = os.path.dirname(self.seslog.name)
+            path = os.path.dirname(self.logfile.name)
             path = os.path.dirname(path)
             path = os.path.dirname(path)
             self.Write2Csv(report,'PacketLoss.csv',path)
@@ -394,9 +367,9 @@ class IxNetwork(TclInter):
         return 0
 
     def getTrafficName(self):
-        name = self.SendLine('getTrafficName')
+        name = self.send('getTrafficName')
         #from common import csvstring2array
-        #name = csvstring2array(self.SendLine('getTrafficName'))
+        #name = csvstring2array(self.send('getTrafficName'))
         name = name.split('\n')    #methods1
         #name = name.replace('{', '[').replace('}', '],')   #methods2
         #name = name.split(', ')
@@ -468,7 +441,7 @@ class IxNetwork(TclInter):
             if len(badStreamName) != 0:
                 report = report + report2
             import os
-            path = os.path.dirname(self.seslog.name)
+            path = os.path.dirname(self.logfile.name)
             path = os.path.dirname(path)
             path = os.path.dirname(path)
             self.Write2Csv(report,'PacketLoss.csv',path)
@@ -476,12 +449,3 @@ class IxNetwork(TclInter):
 #ryi 26/8/2015 end
 
 
-'''add function to check pktloss duration'''
-if __name__ == "__main__":
-    ixN = IxNetwork('ixiaNetwork', {'IP': '10.245.69.200', 'version': '7.30'})
-    ixN.OpenTcl()
-    #ixN.loadConfigFile('../case/LAGcfg/loadbalance_l2_broadcast.ixncfg')
-    #ixN.Expect('OK')
-    ixN.checkVdslTrafficAllBack()
-    #ixN.checkVdslLossDuration()
-    print 'done!!!'

@@ -114,13 +114,14 @@ if __name__ == "__main__":
 
                 seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
 
-                returncode= case_runner(casename,dut_pool,seq, case_mode)
-
+                returncode, STRerrormessage= case_runner(casename,dut_pool,seq, case_mode, logger)
+                if returncode:
+                    errormessage.append(STRerrormessage)
 
             else:
                 import subprocess
                 pp =None
-                if cmd.startswith('\w+.py') :
+                if cmd.startswith('[\w_-]+.py') :
                     exe_cmd ='python '+ cmd+" "+logdir
                     pp = subprocess.Popen(args = exe_cmd ,shell =True)
 
@@ -226,7 +227,7 @@ if __name__ == "__main__":
     for caseline in suite:
         caseStartTime = time.time()
         LineNo,FailAction,[FuncName,cmd ]=caseline
-        casename ='%d'%index
+        casename ='%d'%caseline[0]#index
         index+=1
         import os
         logpath = suitelogdir+"/%s"%casename

@@ -62,10 +62,15 @@ if __name__ == "__main__":
         #duts= initDUT(errormessage,bench,ldut,logger, casefolder)#['lnx1', 'lnx2']
         duts= initDUT(errormessage,bench, ldut,logger, casefolder)
         seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
-        case= case_runner(casename,duts,seq, mode)
+        caseFail, CaseErrorMessage= case_runner(casename,duts,seq, mode, logger)
+
         from runner import releaseDUTs
         releaseDUTs(duts)
-        print ("---------------------------------- CASE PASS ----------------------------------")
+        if caseFail:
+            print(CaseErrorMessage)
+            Exception(CaseErrorMessage)
+        else:
+            print ("---------------------------------- CASE PASS ----------------------------------")
     except Exception as e:
         print ("---------------------------------- CASE FAIL ----------------------------------")
         os._exit(1)

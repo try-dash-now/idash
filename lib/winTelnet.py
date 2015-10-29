@@ -144,6 +144,7 @@ class winTelnet(dut):#, spawn
         if host is not None:
             self.open(str(host), port, timeout)
         self.lockStreamOut =threading.Lock()
+        self.lockRelogin =threading.Lock()
         self.streamOut=''
         th =threading.Thread(target=self.ReadDataFromSocket)
         th.start()
@@ -312,9 +313,12 @@ class winTelnet(dut):#, spawn
             try:
                 #if not self.sock:
                 #    self.relogin()
-                if (time.time()-self.timestampCmd)>maxInterval:
-                    self.write(os.linesep)
-                    self.timestampCmd = time.time()
+                if self.sock:
+                    if (time.time()-self.timestampCmd)>maxInterval:
+                        self.write(os.linesep)
+                        self.timestampCmd = time.time()
+                else:
+                    raise Exception('[Errno 10053] An established connection was aborted by the software in your host machine')
                 self.fill_rawq()
                 self.cookedq=''
                 self.process_rawq()
@@ -331,8 +335,8 @@ class winTelnet(dut):#, spawn
                 if str(e)!='timed out':
                     if str(e) =='[Errno 10053] An established connection was aborted by the software in your host machine' or '[Errno 9] Bad file descriptor'==str(e):
                         #self.lockStreamOut.acquire()
+
                         try:
-                            time.sleep(7)
                             if self.sock:
                                 #self.write('quit\r\n')
                                 self.sock.close()
@@ -341,10 +345,13 @@ class winTelnet(dut):#, spawn
                                 self.iacseq = ''
                                 self.sb = 0
                             self.open(self.host,self.port,self.timeout)
+                            if self.autoReloginFlag:
+                                th =threading.Thread(target=self.relogin)
+                                th.start()
+
+
                         except Exception as e:
                             print('\nReadDataFromSocket Exception2 %d:'%(counter)+e.__str__()+'\n')
-                            pass
-                        #self.lockStreamOut.release()
                     else:
                         print("ReadDataFromSocket Exception: %s"%(str(e)))
                         import traceback
@@ -372,16 +379,29 @@ class winTelnet(dut):#, spawn
 
 
     def relogin(self):
-        self.loginDone=False
-        if self.sock:
-            #self.write('quit\n\r\n')
-            self.sock.close()
-            self.sock = 0
-            self.eof = 1
-            self.iacseq = ''
-            self.sb = 0
-        self.open(self.host,self.port,self.timeout)
-        import time
-        time.sleep(1)
-        self.login()
-        self.loginDone=True
+        #time.sleep(3)
+        self.lockRelogin.acquire()
+        try:
+            if self.counterRelogin>0:
+                self.lockRelogin.release()
+                return
+            self.counterRelogin+=1
+            self.loginDone=False
+            if self.sock:
+                #self.write('quit\n\r\n')
+                self.sock.close()
+                self.sock = 0
+                self.eof = 1
+                self.iacseq = ''
+                self.sb = 0
+            self.open(self.host,self.port,self.timeout)
+            import time
+            time.sleep(1)
+            self.login()
+            self.counterRelogin-=1
+            self.loginDone=True
+        except Exception as e:
+            self.counterRelogin-=1
+            self.lockRelogin.release()
+            raise  e
+        self.lockRelogin.release()

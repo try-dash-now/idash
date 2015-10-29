@@ -72,6 +72,8 @@ class powershell(dut):
         if result!='':
             print('\t%s'%(result.replace('\n', '\n\t')))
         return result
+
+
     def send(self,cmd, Ctrl=False, noWait=False):
         import os
         tmp =[]

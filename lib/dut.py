@@ -39,12 +39,20 @@ class dut(object):
     loginDone   = False
     sock        =None
     debuglevel  = 0
+    FailFlag    =False # the flag means in Session's perspective view, case failed
+    ErrorMessage =None # to store the error message
+    autoReloginFlag = False
+    counterRelogin =0
     def __del__(self):
         self.SessionAlive=False
         if self.logfile:
             self.logfile.flush()
 
-
+    def setAutoReloginFlag(self, flag=True):
+        if flag:
+            self.autoReloginFlag =True
+        else:
+            self.autoReloginFlag=False
     def __init__(self, name, attr =None,logger=None, logpath= None):
         '''
         initializing the term
@@ -79,7 +87,18 @@ class dut(object):
     def show(self):
         '''return the delta of streamOut from last call of function Print,
         and move idxUpdate to end of streamOut'''
-        raise NotImplementedError('please implement function show in your class')
+        if self.streamOut==None:
+            raise NotImplementedError('please implement function show in your class')
+        newIndex = self.streamOut.__len__()
+        result = self.streamOut[self.idxUpdate  :  newIndex+1]
+        self.idxUpdate= newIndex
+        #print('print::%d'%result.__len__())
+        if result!='':
+            print('\t%s'%(result.replace('\n', '\n\t')))
+        return result
+
+
+        #raise NotImplementedError('please implement function show in your class')
     def write(self, buffer):
         import time
         self.timestampCmd= time.time()
@@ -161,6 +180,7 @@ call function(%s)
         time.sleep(float(wait))
 
     def singleStep(self, cmd, expect, wait, ctrl=False, noPatternFlag=False, noWait=False):
+
         self.send(cmd, ctrl, noWait)
         self.show()
         import time
@@ -360,7 +380,18 @@ call function(%s)
             from common import csvfile2array
             seq = csvfile2array(self.attribute[login])
             lineno =0
-            for cmd, exp, wait in seq:
+            for singlestep in seq:
+                lenStep = len(singlestep)
+                if lenStep>2:
+                    cmd, exp, wait  = singlestep[:3]
+                elif lenStep ==2:
+                    cmd, exp = singlestep
+                    wait= 1
+                elif lenStep ==1:
+                    cmd = singlestep[0]
+                    exp , wait= ['.*', 1]
+                else:
+                    continue
                 lineno+=1
                 self.stepCheck(self.name, lineno, cmd, exp, wait)
                 self.show()

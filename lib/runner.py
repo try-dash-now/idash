@@ -140,6 +140,7 @@ def run(casename,duts, seqs ,mode):
 ###############################################################################"""%(datetime.datetime.now().isoformat('_'),casename,lineno,segment, stepindex,
                          dut,cmd, expect, due)
                     print(stepinfo)
+
                     session.stepCheck(casename, lineno, cmd, expect, due)
                     stepindex+=1
 
@@ -160,16 +161,26 @@ def run(casename,duts, seqs ,mode):
         while index <totalseg:
             runSegment(casename, mode, modeset[index], duts,seqlist[index],  segNamelist[index])
             index +=1
-        return 0
 
 
-def case_runner(casename, dictDUTs, case_seq, mode='full'):
+        caseFailFlag =False
+        caseErrorMessage = ''
+        for dutname in duts.keys():
+            if duts[dutname].FailFlag:
+                caseFailFlag=True
+                caseErrorMessage+=duts[dutname].ErrorMessage+'\n'
+
+
+        return caseFailFlag,caseErrorMessage
+
+
+def case_runner(casename, dictDUTs, case_seq, mode='full', logger =None):
     m =mode
     if mode :
         m =str(mode).lower()
-    response = run(casename, dictDUTs, case_seq, m)
+    caseFail, errorMessage = run(casename, dictDUTs, case_seq, m)
     #print(response)
-    return  response
+    return  caseFail, errorMessage
 
 def run_case_in_suite(casename, currentBenchfile, currentBenchinfo,logger, stop_at_fail,logdir, cmd ):
     import re
@@ -200,7 +211,7 @@ def run_case_in_suite(casename, currentBenchfile, currentBenchinfo,logger, stop_
         errormessage =[]
         duts= initDUT(errormessage,bench,ldut,logger, logdir)
         seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
-        returncode= case_runner(casename,duts,seq, mode)
+        returncode, caseErrorMessage= case_runner(casename,duts,seq, mode)
     else:
         import subprocess
         pp =None
