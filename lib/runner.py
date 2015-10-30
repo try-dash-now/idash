@@ -118,7 +118,7 @@ CASE_MODE = set(['full', 'f',
                  'notear', 'noteardown', 'nt',
                  ])
 @logAction
-def run(casename,duts, seqs ,mode):
+def run(casename,duts, seqs ,mode, logger):
         global  CASE_MODE
         import datetime
         def analyzeStep(casename, dut, commnad, expect, wait):
@@ -126,7 +126,7 @@ def run(casename,duts, seqs ,mode):
         if mode not in CASE_MODE:
             raise ValueError('case mode is wrong, should be one of %s'%(str(CASE_MODE)))
 
-        def runSegment( casename, mode, modeset, duts, seq, segName):
+        def runSegment( casename, mode, modeset, duts, seq, segName, logger):
 
             if mode in modeset:#{'full', 'setup', 'norun', 'notear', 's', 'nr', 'nt', 'f'}:
                 segment=segName#'setup'
@@ -159,7 +159,8 @@ def run(casename,duts, seqs ,mode):
         index = 0
         totalseg = len(seqlist)
         while index <totalseg:
-            runSegment(casename, mode, modeset[index], duts,seqlist[index],  segNamelist[index])
+            logger.info('starting segment:%d'%index)
+            runSegment(casename, mode, modeset[index], duts,seqlist[index],  segNamelist[index], logger)
             index +=1
 
 
@@ -178,7 +179,7 @@ def case_runner(casename, dictDUTs, case_seq, mode='full', logger =None):
     m =mode
     if mode :
         m =str(mode).lower()
-    caseFail, errorMessage = run(casename, dictDUTs, case_seq, m)
+    caseFail, errorMessage = run(casename, dictDUTs, case_seq, m, logger)
     #print(response)
     return  caseFail, errorMessage
 
@@ -274,11 +275,12 @@ def concurrent(action, cmdConcurrent):
         except:
             msgConcurrent +='%s: repeat %s failed\n'%(cmd,times)
 
-def releaseDUTs(duts):
+def releaseDUTs(duts, logger):
     if duts.keys()==None:
         return
     for name in duts.keys():
         dut = duts[name]
+        logger.info('releasing dut: %s'%name)
         if dut :
             dut.SessionAlive=False
             if dut.logfile:

@@ -41,7 +41,7 @@ class caseParser(object):
     mode        = None # string, case mode, one of {full,run, setup, tear, r,s, t, norun, nosetup, notear, nr, ns,nt}
     duts        = None # dict of DUTs
     dutnames    = None # set of DUT names
-    def __init__(self,name, mode='full',logpath='./'):
+    def __init__(self,name, mode='full',logpath='./', logger =None):
         '''
             name: string, the case's name, just letter, number and _, -, max length is 80
             duts: dict of terms/connection/sessions, on_dutA, on_dutB are instance(sessions connected to dutA, dutB...   can send commands to DUT, and check response

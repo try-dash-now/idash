@@ -52,7 +52,15 @@ if __name__ == "__main__":
 
     benchfile =''
     benchinfo ={}
-    logger =None
+    from runner import createLogger
+    logger = createLogger('suite.txt', suitelogdir)
+    logger.info('suite name\t%s'%(sys.argv[1]))
+    logger.info('suite range\t%s'%(sys.argv[2]))
+
+    index = 1
+    for i in sys.argv[3:]:
+        logger.info('arg%d\t%s'%(index, i))
+        index+=1
     report = []
     dut_pool={}
 #    3, break, run_case_in_suite, rc.py2 home_case.csv home.csv full
@@ -63,6 +71,7 @@ if __name__ == "__main__":
 
     def run1case(benchfile, benchinfo, dut_pool ):
         errormessage = ''
+        caselogger = createLogger('caselog.txt', logdir)
         try:
             import re
             patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
@@ -82,12 +91,15 @@ if __name__ == "__main__":
                 bench = benchinfo
                 if case_benchfile!=benchfile:
                     from common import bench2dict
+                    caselogger.info('loading a new bench:%s'%case_benchfile)
                     bench =bench2dict(case_benchfile)
                     benchfile = case_benchfile
-                    releaseDUTs(dut_pool)
+                    caselogger.info('releasing duts in old dut_pool')
+                    releaseDUTs(dut_pool, logger)
                     dut_pool ={}
                 from Parser import  caseParser
-                cs = caseParser(casename, case_mode, logdir)
+                caselogger.info('loading case: %s'% casename)
+                cs = caseParser(casename, case_mode, logdir, caselogger)
                 sdut, lvar, lsetup, lrun, ltear =cs.load(casefile, case_args)
                 ldut = list(sdut)
                 newduts= []
@@ -113,16 +125,22 @@ if __name__ == "__main__":
                         dut_pool[key]= duts[key]
 
                 seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
+                caselogger.info('starting to run case: %s'%cmd)
+                returncode, STRerrormessage= case_runner(casename,dut_pool,seq, case_mode, caselogger)
 
-                returncode, STRerrormessage= case_runner(casename,dut_pool,seq, case_mode, logger)
                 if returncode:
+                    caselogger.error('Case Failed:%s'%STRerrormessage)
                     errormessage.append(STRerrormessage)
+                else:
+                    caselogger.info('Case PASS')
 
             else:
                 import subprocess
                 pp =None
+
                 if cmd.startswith('[\w_-]+.py') :
                     exe_cmd ='python '+ cmd+" "+logdir
+                    caselogger.info('running case: %s'%exe_cmd)
                     pp = subprocess.Popen(args = exe_cmd ,shell =True)
 
                 import time
@@ -138,12 +156,16 @@ if __name__ == "__main__":
                         ChildRuning = False
 
                 returncode = pp.returncode
+
         except Exception as e:
 
             if returncode ==0:
                 returncode =1
+
             import traceback
             errormessage = '%s\n%s'%(e.__str__(),traceback.format_exc())
+            caselogger.error('Case FAIL')
+            caselogger.error(errormessage)
         return  returncode, errormessage, benchfile,bench, dut_pool
 
     def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN, Report):
@@ -227,10 +249,13 @@ if __name__ == "__main__":
     for caseline in suite:
         caseStartTime = time.time()
         LineNo,FailAction,[FuncName,cmd ]=caseline
+        logger.info('to run case: index %d, name: %s, failAction: %s'%(LineNo,cmd, FailAction))
+
         casename ='%d'%caseline[0]#index
         index+=1
         import os
         logpath = suitelogdir+"/%s"%casename
+        logger.info('creating logdir: %s'%logpath)
         if not os.path.exists(logpath):
             os.mkdir(logpath)
         logdir = createLogDir(casename, logpath)
@@ -241,16 +266,20 @@ if __name__ == "__main__":
             patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
             m =  re.match(patDash, cmd)
             returncode = 0
+            logger.info('running case: %s'%cmd)
             returncode , errormessage ,benchfile, benchinfo, dut_pool = run1case(benchfile, benchinfo, dut_pool )
         caseEndTime = time.time()
         ExecutionDuration = caseEndTime-caseStartTime
         caseResult = 'PASS'
 
         if returncode:
+            logger.error('FAIL\t%s'%cmd)
+            logger.error(errormessage)
             caseResult ='FAIL'
             lstFailCase.append(caseline)
             statsFail+=1
         else:
+            logger.info('PASS\t%s'%cmd)
             statsPass+=1
 
         NewRecord = [index-1,caseResult,caseline[2][1], errormessage,'../'+logdir, LineNo,ExecutionDuration]
@@ -274,7 +303,7 @@ if __name__ == "__main__":
 
 
     #if dut_pool.__len__()!={}:
-    releaseDUTs(dut_pool)
+    releaseDUTs(dut_pool, logger)
 
 
     from runner import concurrent

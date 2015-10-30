@@ -67,6 +67,8 @@ class dut(object):
             self.attribute =attr
         else:
             self.attribute = {}
+        if logger:
+            logger.info('openLogfile %s in %s'%(name,logpath))
         self.openLogfile(logpath)
     def openLogfile(self, logpath):
         '''
@@ -77,10 +79,15 @@ class dut(object):
             logpath = os.getcwd()
         log = os.path.abspath(logpath)
         log= '%s%s%s'%(log,os.path.sep,'%s.log'%self.name)
+
         if self.logfile:
             tmplog = self.logfile
             self.logfile=None
             tmplog.close()
+            self.logger.info('streamOut size is %d, to be reset to 0'%(len(self.streamOut)))
+            self.streamOut   =  ''
+            self.idxSearch   =   0
+            self.idxUpdate   =   0
         self.logfile = open(log, "wb")
 
 
