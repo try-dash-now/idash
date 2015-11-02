@@ -317,6 +317,8 @@ if __name__ == "__main__":
             for ii in i[2][1]:
                 print('\t'+str(i[0])+' '+str(ii))
                 parseResult+='\t%d, %s, %s, %s\n'%(i[0],i[2][0].func_name,ii[0].func_name, ' ,'.join([str(x) for x in ii[1:]]) )
-    print(parseResult)
+    #print(parseResult)
+    #print(report)
+    print('Pass:',statsPass, 'Fail', statsFail)
     os._exit(0)
 
