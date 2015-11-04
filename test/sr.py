@@ -209,7 +209,9 @@ if __name__ == "__main__":
             index,caseResult,caseLine, errormessage,logdir, LineNo ,ExecutionDuration=result
             if errormessage ==[]:
                 errormessage =''
-            errormessage = re.match('\*ERROR MESSAGE:(.*)\*Traceback',errormessage,re.IGNORECASE|re.DOTALL)
+            else:
+                errormessage = ''.join([x for x in errormessage])
+            errormessage = re.search('\*ERROR MESSAGE:(.*?)\*Traceback',errormessage,re.IGNORECASE|re.DOTALL)
             if errormessage:
                 errormessage= errormessage.group(1).replace('*\t','')
             bgcolor="#00FF00"
@@ -310,12 +312,12 @@ if __name__ == "__main__":
     parseResult = ''
     for i in suite:
         if i[2][0]!=concurrent:
-            print(i)
+            #print(i)
             parseResult+='%d, %s, %s, %s\n'%(i[0], i[1], i[2][0].func_name, ' ,'.join([str(x) for x in i[2][1:]]))
         else:
-            print(i)
+            #print(i)
             for ii in i[2][1]:
-                print('\t'+str(i[0])+' '+str(ii))
+                #print('\t'+str(i[0])+' '+str(ii))
                 parseResult+='\t%d, %s, %s, %s\n'%(i[0],i[2][0].func_name,ii[0].func_name, ' ,'.join([str(x) for x in ii[1:]]) )
     #print(parseResult)
     #print(report)
