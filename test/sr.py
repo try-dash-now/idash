@@ -244,18 +244,10 @@ if __name__ == "__main__":
             </tr>
     """%(index,bgcolor,logdir,caseResult,logdir,caseLine, ExecutionDuration,caseStartTime,caseEndTime, LineNo, errormessage)
 
-
-
-
         return response+"""</table>
     <br />
     <br />
     </body></html>"""
-
-
-
-
-
 
     import time
     returncode =1
@@ -282,15 +274,18 @@ if __name__ == "__main__":
         if not os.path.exists(logpath):
             os.mkdir(logpath)
         logdir = createLogDir(casename, logpath)
-
+        from runner import concurrent
         if FuncName == run_case_in_suite:
-
             import re
             patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
             m =  re.match(patDash, cmd)
             returncode = 0
             logger.info('running case: %s'%cmd)
             returncode , errormessage ,benchfile, benchinfo, dut_pool = run1case(benchfile, benchinfo, dut_pool )
+        elif FuncName == concurrent:
+            pass
+
+
         caseEndTime = time.time()
         ExecutionDuration = caseEndTime-caseStartTime
         caseResult = 'PASS'
@@ -330,7 +325,7 @@ if __name__ == "__main__":
     releaseDUTs(dut_pool, logger)
 
 
-    from runner import concurrent
+
     parseResult = ''
     for i in suite:
         if i[2][0]!=concurrent:

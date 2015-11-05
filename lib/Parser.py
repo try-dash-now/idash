@@ -308,7 +308,7 @@ class suiteParser(object):
             caserange = rangelist
             if rangelist=='all':
                 caserange = []
-
+            lastLineNoOfConcurrent=0
             with open(suitfile, 'r') as suitefile:
                 from runner import run_case_in_suite, concurrent, loop
                 previousAction = run_case_in_suite
@@ -362,10 +362,12 @@ class suiteParser(object):
 
                     tmpSuiteLine = SuiteLine
                     currentAction = previousAction
+
                     if ConcNumber>0:
                         currentAction = concurrent
                         failAction = 'break'
                         stop_on_fail = True
+                        lastLineNoOfConcurrent =lineNo
                         if newConc =='new':
                             if previousAction ==  concurrent:
                                 newSuiteLine =[currentAction,  lstConc]
@@ -385,7 +387,7 @@ class suiteParser(object):
                                 lstConc.append([action,loopCounter, loop_stop_at_fail, cmd])
                             else:
                                 action = run_case_in_suite
-                                lstConc.append([action, cmd])
+                                lstConc.append([action, cmd, failAction, lineNo-1])
                             previousAction = currentAction
                     else:
                         currentAction = None
@@ -407,7 +409,7 @@ class suiteParser(object):
                             SuiteArray.append([lineNo,failAction, newSuiteLine])
                     suiteIndex+=1
                 if lstConc !=[]:
-                    SuiteArray.append([lineNo,'break', [concurrent, lstConc]])
+                    SuiteArray.append([lastLineNoOfConcurrent,'break', [concurrent, lstConc]])
                 return SuiteArray
 
         arrSuite = loadCsvSuite2Array(suitfile, arglist, rangelist)

@@ -183,7 +183,7 @@ def case_runner(casename, dictDUTs, case_seq, mode='full', logger =None):
     #print(response)
     return  caseFail, errorMessage
 
-def run_case_in_suite(casename, currentBenchfile, currentBenchinfo,logger, stop_at_fail,logdir, cmd ):
+def run_case_in_suite(casename, currentBenchfile, currentBenchinfo,logger, stop_at_fail,logdir, cmd):
     import re
     patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s* cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
     m =  re.match(patDash, cmd)
@@ -234,7 +234,9 @@ def run_case_in_suite(casename, currentBenchfile, currentBenchinfo,logger, stop_
 
         returncode = pp.returncode
 
-def loop(counter, stop_at_fail, cmd):
+
+def loop(counter, casename, currentBenchfile, currentBenchinfo,logger,stop_at_fail, cmd):
+
     i = 0
     flagFail = False
     msgError = ''
@@ -252,16 +254,37 @@ def loop(counter, stop_at_fail, cmd):
 
     return  flagFail, msgError
 
-def concurrent(action, cmdConcurrent):
+def concurrent(cmdConcurrent):
+    import Queue,threading
+    qResult=Queue.Queue()
+    lstThread=[]
+    def runCase(key,functionName, args, qResult):
+        result =functionName(args)
+        qResult.put({
+            key: result
+            })
+    for line in cmdConcurrent:
+        [functionName, args, failAction, fork]= line
+
+        for i in range(0,fork):
+            t = threading.Thread(target=runCase, args=[functionName, args, qResult])
+            lstThread.append(t)
+
+
+
+
+
     msgError =''
-    def folder(cmd, times):
+    returncode , errormessage ,benchfile, benchinfo, dut_pool =False,msgError,'benchfile',{'benchInfo':''}, {'dut1':'dut'}
+    def folder(action, arguments, times):
         ths = []
         import threading
         import shlex
         for i in range(0,times):
-            cmdlist = shlex.split(cmd,comments=True)
+            cmdlist = shlex.split(arguments,comments=True)
             th =threading.Thread(target= action,args=cmdlist )
             ths.append(th)
+
         for i in ths:
             i.start()
         for i in ths:
