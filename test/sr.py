@@ -107,6 +107,8 @@ if __name__ == "__main__":
                 for nd in ldut:
                     if dut_pool.has_key(nd):
                         oldduts.append(nd)
+                        dut_pool[nd].FailFlag    =False # the flag means in Session's perspective view, case failed
+                        dut_pool[nd].ErrorMessage=None # to store the error message
                     else:
                         newduts.append(nd)
 
@@ -168,7 +170,11 @@ if __name__ == "__main__":
             caselogger.error(errormessage)
         return  returncode, errormessage, benchfile,bench, dut_pool
 
-    def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN, Report):
+    def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN,Report, startTime,endTime):
+        if CASERUN==0 or TOTAL==0:
+            CASERUN=1
+            TOTAL=1
+
         PPASS = '%.0f'%((CASEPASS*100.0)/CASERUN*1.0)+'''%'''
         PFAIL = '%.0f'%((CASEFAIL*100.0)/CASERUN*1.0)+'''%'''
         CASENOTRUN  = TOTAL - CASEPASS-CASEFAIL
@@ -182,7 +188,13 @@ if __name__ == "__main__":
     </HEAD>
     <BODY>
     <table cellspacing="1" cellpadding="2" border="1">
+    <tr><td>Start Time</td><td>End Time</td><td>Duration(seconds)</td></tr>
+    <tr><td>%s</td><td>%s</td><td>%f</td></tr>
+    </table>
+    <br>
+    <table cellspacing="1" cellpadding="2" border="1">
     <tr><td>SUITE NAME</td><td>ARGURMENTS</td><td>CASE RANGE</td></tr>
+
     <tr><td>%s</td><td>%s</td><td>%s</td></tr>
     </table>
     <br><br>
@@ -201,14 +213,16 @@ if __name__ == "__main__":
     <BR>
     <BR>
     <table cellspacing="1" cellpadding="2" border="1">
-    """%(reportname, CaseRangeStr, ArgStr ,TOTAL, CASEPASS, CASEFAIL, CASENOTRUN, PPASS,PFAIL,PNOTRUN)
+    """%(time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(suiteStartTime)), time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(suiteEndTime)),suiteEndTime-suiteStartTime,reportname, CaseRangeStr, ArgStr ,TOTAL, CASEPASS, CASEFAIL, CASENOTRUN, PPASS,PFAIL,PNOTRUN)
 
-        response = response+ '''<tr><td>No.</td><td>Result</td><td>Case Name</td><td>Duration(s)</td><td>Line No</td><td>Error Message</td></tr>'''
+        response = response+ '''<tr><td>No.</td><td>Result</td><td>Case Name</td><td>Duration(s)</td><td>StartTime</td><td>EndTime</td><td>Line No</td><td>Error Message</td></tr>'''
         #NewRecord = [index,caseResult,caseline[2][1], errormessage,logdir, LineNo]
         for result in Report:
-            index,caseResult,caseLine, errormessage,logdir, LineNo ,ExecutionDuration=result
+            index,caseResult,caseLine, errormessage,logdir, LineNo ,ExecutionDuration, caseStartTime,caseEndTime=result
+            caseStartTime =time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(caseStartTime))
+            caseEndTime =time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(caseEndTime))
             if errormessage ==[]:
-                errormessage =''
+                errormessage ='-'
             else:
                 errormessage = ''.join([x for x in errormessage])
             errormessage = re.search('\*ERROR MESSAGE:(.*?)\*Traceback',errormessage,re.IGNORECASE|re.DOTALL)
@@ -225,8 +239,10 @@ if __name__ == "__main__":
             <td>%s</td>
             <td>%s</td>
             <td>%s</td>
+            <td>%s</td>
+            <td>%s</td>
             </tr>
-    """%(index,bgcolor,logdir,caseResult,logdir,caseLine, ExecutionDuration, LineNo, errormessage)
+    """%(index,bgcolor,logdir,caseResult,logdir,caseLine, ExecutionDuration,caseStartTime,caseEndTime, LineNo, errormessage)
 
 
 
@@ -245,9 +261,14 @@ if __name__ == "__main__":
     returncode =1
     errormessage =''
     suiteStartTime = time.time()
+    suiteEndTime = time.time()
     statsPass =0
     statsFail =0
     lstFailCase = []
+    htmlstring = array2html(suitefile,rangelist,','.join(arglist), suite.__len__(),statsFail+statsPass,statsPass,statsFail, suite.__len__()-statsFail-statsPass,report, suiteStartTime, suiteEndTime)
+    reportfilename = './log/%s.html'%(name)
+    with open(reportfilename, 'wb') as f:
+        f.write(htmlstring.encode(encoding='utf_8', errors='strict'))
     for caseline in suite:
         caseStartTime = time.time()
         LineNo,FailAction,[FuncName,cmd ]=caseline
@@ -284,12 +305,13 @@ if __name__ == "__main__":
             logger.info('PASS\t%s'%cmd)
             statsPass+=1
 
-        NewRecord = [index-1,caseResult,caseline[2][1], errormessage,'../'+logdir, LineNo,ExecutionDuration]
+        NewRecord = [index-1,caseResult,caseline[2][1], errormessage,'../'+logdir, LineNo,ExecutionDuration,caseStartTime,caseEndTime ]
         print("RESULT:", NewRecord)
         print('Pass:',statsPass, 'Fail', statsFail)
+        suiteEndTime = time.time()
         #reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN, Report,htmllogdir
         report.append(NewRecord)
-        htmlstring = array2html(suitefile,rangelist,','.join(arglist), suite.__len__(),statsFail+statsPass,statsPass,statsFail, suite.__len__()-statsFail-statsPass,report)
+        htmlstring = array2html(suitefile,rangelist,','.join(arglist), suite.__len__(),statsFail+statsPass,statsPass,statsFail, suite.__len__()-statsFail-statsPass,report, suiteStartTime, suiteEndTime)
         reportfilename = './log/%s.html'%(name)
         with open(reportfilename, 'wb') as f:
             f.write(htmlstring.encode(encoding='utf_8', errors='strict'))
