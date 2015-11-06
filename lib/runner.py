@@ -272,19 +272,19 @@ def concurrent(startIndex, logpath, cmdConcurrent, report, suiteLogger):
     qResult=Queue.Queue()
 
     lstThread=[]
-    import time
+    import time,re
     def runCase(index, totalThread, indexInSuite,LineNo,allFailIsFail,failAction,logpath,cmd,qResult):
         LineNo =int(LineNo)
         indexInSuite=int(indexInSuite)
         caseStartTime=time.time()
-        logdir = createLogDir(str(index), logpath)
+        logdir = createLogDir(str(index+1)+"-"+ re.sub('[^\w\-._]','-',cmd)[:80], logpath)
         returncode, errormessage, benchfile,bench, dut_pool =run1case(cmd,'',None,None, logdir)
         caseEndTime=time.time()
         releaseDUTs(dut_pool, suiteLogger)
         if returncode:
-            qResult.put(['FAIL', LineNo,indexInSuite, failAction,index, 'thread %d/%d %s: '%(index+1,totalThread, logdir)+errormessage+'\n', logpath, caseStartTime,caseEndTime, cmd])
+            qResult.put(['FAIL', LineNo,indexInSuite, failAction,index, 'thread %d/%d %s: '%(index+1,totalThread, logdir)+errormessage+'\n', '../'+logpath, caseStartTime,caseEndTime, cmd,allFailIsFail])
         else:
-            qResult.put(['PASS', LineNo,indexInSuite, failAction,index, '', logpath,caseStartTime,caseEndTime, cmd])
+            qResult.put(['PASS', LineNo,indexInSuite, failAction,index, '','../'+logpath,caseStartTime,caseEndTime, cmd, allFailIsFail])
 
     lstThread=[]
     indexInSuite =startIndex
@@ -303,14 +303,22 @@ def concurrent(startIndex, logpath, cmdConcurrent, report, suiteLogger):
     for t in lstThread:
         t.join()
     dictResult={}
-
+    breakFlag =False
     while not qResult.empty():
-        caseResult, LineNo,indexInSuite, failAction,index, errormessage, logdir ,startTime, endTime, cmd= qResult.get()
+        caseResult, LineNo,indexInSuite, failAction,index, errormessage, logdir ,startTime, endTime, cmd, allFailIsFail= qResult.get()
         if dictResult.has_key(LineNo):
-            if failAction=='break' and caseResult=='FAIL':
-                breakFlag=True
+
             #True, LineNo,indexInSuite, failAction,index, 'thread %d/%d %s: '%(index,totalThread, logdir)+errormessage+'\n', logpath, caseStartTime,caseEndTime, cmd
-            [ indexInSuite,caseResult, cmd,oldErrormessage, logdir, LineNo,duration, oldStartTime, oldEndTime] = dictResult[LineNo]
+            [ indexInSuite,oldCaseResult, cmd,oldErrormessage, logdir, LineNo,duration, oldStartTime, oldEndTime, failAction] = dictResult[LineNo]
+            if allFailIsFail:
+                if caseResult=='PASS' or oldCaseResult=='PASS':
+                    caseResult='PASS'
+                else:
+                    caseResult='FAIL'
+            else:
+                if caseResult=='FAIL' or oldCaseResult=='FAIL':
+                    caseResult='FAIL'
+
             newStartTime= min(oldStartTime,startTime)
             newEndTime =max(oldEndTime,endTime)
             if oldErrormessage:
@@ -318,14 +326,12 @@ def concurrent(startIndex, logpath, cmdConcurrent, report, suiteLogger):
                     errormessage=oldErrormessage+'\n'+errormessage
                 else:
                     errormessage=oldErrormessage
-            dictResult[LineNo]=[indexInSuite,caseResult,cmd, errormessage,logdir, LineNo, newEndTime-newStartTime,newStartTime,newEndTime]
+            dictResult[LineNo]=[indexInSuite,caseResult,cmd, errormessage,logdir, LineNo, newEndTime-newStartTime,newStartTime,newEndTime, failAction]
         else:
-
-                #NewRecord = [index-1,caseResult,caseline[2][1], errormessage,'../'+logdir, LineNo,ExecutionDuration,caseStartTime,caseEndTime ]
-            dictResult[int(LineNo)] = [indexInSuite,caseResult,cmd, errormessage,logdir, LineNo, endTime-startTime,startTime,endTime]
+            dictResult[int(LineNo)] = [indexInSuite,caseResult,cmd, errormessage,logdir, LineNo, endTime-startTime,startTime,endTime, failAction]
     keys=sorted(dictResult.keys())
 
-    breakFlag =False
+
     caseFail=0
     casePass =0
     caseTotal=0
@@ -336,16 +342,20 @@ def concurrent(startIndex, logpath, cmdConcurrent, report, suiteLogger):
     for k in keys:
         newRecord = dictResult[k]
         caseResult=newRecord[1]
+        cmd = newRecord[2]
+        failAction= newRecord[9]
         caseTotal+=1
         if caseResult=='PASS':
             casePass+=1
         else:
             caseFail+=1
+            if failAction=='break':
+                breakFlag=True
             lstFailCase.append([concurrent, cmd])
         print(newRecord)
-        report.append(newRecord)
+        report.append(newRecord[:-1])
 
-    return caseTotal, casePass, caseFail, report, lstFailCase
+    return caseTotal, casePass, caseFail, report, lstFailCase, breakFlag
 
 def run1case(cmd,benchfile, benchinfo, dut_pool, logdir ):
     errormessage = ''

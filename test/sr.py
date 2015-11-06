@@ -75,7 +75,7 @@ if __name__ == "__main__":
 
 
 
-    import time
+    import time, re
     returncode =1
     errormessage =''
     suiteStartTime = time.time()
@@ -92,7 +92,7 @@ if __name__ == "__main__":
         LineNo,FailAction,[FuncName,cmd ]=caseline
         logger.info('to run case: index %d, name: %s, failAction: %s'%(LineNo,cmd, FailAction))
 
-        casename ='%d'%caseline[0]#index
+        casename ='%d-%s'%(caseline[0], re.sub('[^\w\-_.]','-',cmd[0][4])[:80])#index
         index+=1
         import os
         logpath = suitelogdir#+"/%s"%casename
@@ -129,27 +129,27 @@ if __name__ == "__main__":
 
             #reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN, Report,htmllogdir
             report.append(NewRecord)
-
+            if returncode:
+                if FailAction.strip().lower()=='break':
+                    breakFlag=True
 
         elif FuncName == concurrent:
 
-            conCaseTotal, conCasePass, conCaseFail, conReport, conLstFailCase =concurrent(index-1, logpath, caseline[2][1],report, logger)
+            conCaseTotal, conCasePass, conCaseFail, conReport, conLstFailCase , breakFlag=concurrent(index-1, logpath, caseline[2][1],report, logger)
             statsPass+=conCasePass
             statsFail+=conCaseFail
             for x in conLstFailCase:
                 lstFailCase.append(x)
+
         print('Pass:',statsPass, 'Fail', statsFail)
         suiteEndTime = time.time()
         htmlstring = array2html(suitefile,rangelist,','.join(arglist), suite.__len__(),statsFail+statsPass,statsPass,statsFail, suite.__len__()-statsFail-statsPass,report, suiteStartTime, suiteEndTime)
         reportfilename = './log/%s.html'%(name)
         with open(reportfilename, 'wb') as f:
             f.write(htmlstring.encode(encoding='utf_8', errors='strict'))
-        if returncode:
-            if FailAction.strip().lower()=='break':
-                break
-            else:
-                continue
 
+        if breakFlag:
+            break
         casename='%d'%index
         logdir ='./log/'+suitefile+'/'+casename
 
