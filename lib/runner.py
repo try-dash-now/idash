@@ -254,49 +254,7 @@ def loop(counter, casename, currentBenchfile, currentBenchinfo,logger,stop_at_fa
 
     return  flagFail, msgError
 
-def concurrent(cmdConcurrent):
-    import Queue,threading
-    qResult=Queue.Queue()
-    lstThread=[]
-    def runCase(key,functionName, args, qResult):
-        result =functionName(args)
-        qResult.put({
-            key: result
-            })
-    for line in cmdConcurrent:
-        [functionName, args, failAction, fork]= line
 
-        for i in range(0,fork):
-            t = threading.Thread(target=runCase, args=[functionName, args, qResult])
-            lstThread.append(t)
-
-
-
-
-
-    msgError =''
-    returncode , errormessage ,benchfile, benchinfo, dut_pool =False,msgError,'benchfile',{'benchInfo':''}, {'dut1':'dut'}
-    def folder(action, arguments, times):
-        ths = []
-        import threading
-        import shlex
-        for i in range(0,times):
-            cmdlist = shlex.split(arguments,comments=True)
-            th =threading.Thread(target= action,args=cmdlist )
-            ths.append(th)
-
-        for i in ths:
-            i.start()
-        for i in ths:
-            i.join()
-    msgConcurrent = ''
-    for line in cmdConcurrent:
-        cmd = line[0]
-        times = line[1]
-        try:
-            folder(cmd, times )
-        except:
-            msgConcurrent +='%s: repeat %s failed\n'%(cmd,times)
 
 def releaseDUTs(duts, logger):
     if duts.keys()==None:
@@ -309,3 +267,71 @@ def releaseDUTs(duts, logger):
             if dut.logfile:
                 dut.logfile.flush()
 errorlogger = None
+def concurrent(logpath, cmdConcurrent, report):
+    import Queue,threading
+    qResult=Queue.Queue()
+
+    lstThread=[]
+    def runCase(index, totalThread, LineNo,indexInSuite,failAction,logpath,cmd,qResult):
+        #make dir
+        caseStartTime=time.time()
+        logdir = createLogDir(str(index), logpath)
+        returncode, errormessage, benchfile,bench, dut_pool =run1case(cmd,'',None,None, logdir)
+        caseEndTime=time.time()
+        releaseDUTs(dut_pool)
+        if returncode:
+            #newRecord = [indexInSuite,failAction,cmd, errormessage,logdir, LineNo]
+            qResult.put([LineNo,indexInSuite, failAction,index, 'thread %d/%d %s: '%(index,totalThread, logdir)+errormessage+'\n', logpath, caseStartTime,caseEndTime, cmd])
+        else:
+            qResult.put([LineNo,indexInSuite, failAction,index, None, logpath,caseStartTime,caseEndTime, cmd])
+
+    lstThread=[]
+    for line in cmdConcurrent:
+        [fork, index, totalThread, LineNo,indexInSuite,failAction,logpath,cmd]= line
+        logdir = createLogDir(str(indexInSuite), logpath)
+        for i in range(0,fork):
+            key = '%d-%d'%(LineNo,i)
+            t = threading.Thread(target=runCase, args=[i,fork,LineNo,indexInSuite,failAction,logdir,cmd, qResult])
+            lstThread.append(t)
+
+    for t in lstThread:
+        t.start()
+
+    for t in lstThread:
+        t.join()
+    dictResult={}
+    breakFlag =False
+    caseFail=0
+    casePass =0
+    caseTotal=0
+    lstFailCase=[]
+    while not qResult.empty():
+        LineNo,indexInSuite, failAction,index, errormessage, logdir ,startTime, endTime, cmd= qResult.get()
+        if dictResult.has_key(LineNo):
+            if failAction=='break' and errormessage!=None:
+                breakFlag=True
+            [index,caseResult,cmd, oldErrormessage,logdir, LineNo, duration, oldStartTime, oldEndTime, cmd] = dictResult[LineNo]
+            if caseResult=='PASS' and errormessage!=None:
+                caseResult='FAIL'
+            newStartTime= min(oldStartTime,startTime)
+            newEndTime =max(oldEndTime,endTime)
+            dictResult[LineNo]=[index,caseResult,cmd, oldErrormessage+errormessage,logdir, LineNo, newEndTime-newStartTime,newStartTime,newEndTime]
+        else:
+            caseResult='FAIL'
+            caseTotal+=1
+            if errormessage==None:
+                caseResult='PASS'
+                casePass+=1
+            else:
+                caseFail+=1
+                lstFailCase.append([concurrent, cmd])
+                #NewRecord = [index-1,caseResult,caseline[2][1], errormessage,'../'+logdir, LineNo,ExecutionDuration,caseStartTime,caseEndTime ]
+            dictResult[LineNo] = [indexInSuite,caseResult,cmd, errormessage,logdir, LineNo, endTime-startTime,startTime,endTime]
+    keys=sorted(dictResult.keys())
+
+    for k in keys:
+        newRecord = dictResult[k]
+        print(newRecord)
+        report.append(newRecord)
+
+    return caseTotal, casePass, caseFail, lstFailCase

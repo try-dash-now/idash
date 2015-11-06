@@ -69,7 +69,7 @@ if __name__ == "__main__":
     index = 1
     from runner import run_case_in_suite , releaseDUTs , initDUT,case_runner, createLogDir
 
-    def run1case(benchfile, benchinfo, dut_pool ):
+    def run1case(cmd,benchfile, benchinfo, dut_pool, logdir ):
         errormessage = ''
         caselogger = createLogger('caselog.txt', logdir)
         try:
@@ -249,6 +249,11 @@ if __name__ == "__main__":
     <br />
     </body></html>"""
 
+
+
+
+
+
     import time
     returncode =1
     errormessage =''
@@ -273,39 +278,45 @@ if __name__ == "__main__":
         logger.info('creating logdir: %s'%logpath)
         if not os.path.exists(logpath):
             os.mkdir(logpath)
-        logdir = createLogDir(casename, logpath)
+
         from runner import concurrent
         if FuncName == run_case_in_suite:
+            logdir = createLogDir(casename, logpath)
             import re
             patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
             m =  re.match(patDash, cmd)
             returncode = 0
             logger.info('running case: %s'%cmd)
-            returncode , errormessage ,benchfile, benchinfo, dut_pool = run1case(benchfile, benchinfo, dut_pool )
+            returncode , errormessage ,benchfile, benchinfo, dut_pool = run1case(cmd, benchfile, benchinfo, dut_pool, logdir )
+            caseEndTime = time.time()
+            ExecutionDuration = caseEndTime-caseStartTime
+            caseResult = 'PASS'
+
+            if returncode:
+                logger.error('FAIL\t%s'%cmd)
+                logger.error(errormessage)
+                caseResult ='FAIL'
+                lstFailCase.append(caseline)
+                statsFail+=1
+            else:
+                logger.info('PASS\t%s'%cmd)
+                statsPass+=1
+
+            NewRecord = [index-1,caseResult,caseline[2][1], errormessage,'../'+logdir, LineNo,ExecutionDuration,caseStartTime,caseEndTime ]
+            print("RESULT:", NewRecord)
+            print('Pass:',statsPass, 'Fail', statsFail)
+
+            #reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN, Report,htmllogdir
+            report.append(NewRecord)
+
+
         elif FuncName == concurrent:
-            pass
+
+            concurrent(logpath, caseline[2][1],report)
 
 
-        caseEndTime = time.time()
-        ExecutionDuration = caseEndTime-caseStartTime
-        caseResult = 'PASS'
 
-        if returncode:
-            logger.error('FAIL\t%s'%cmd)
-            logger.error(errormessage)
-            caseResult ='FAIL'
-            lstFailCase.append(caseline)
-            statsFail+=1
-        else:
-            logger.info('PASS\t%s'%cmd)
-            statsPass+=1
-
-        NewRecord = [index-1,caseResult,caseline[2][1], errormessage,'../'+logdir, LineNo,ExecutionDuration,caseStartTime,caseEndTime ]
-        print("RESULT:", NewRecord)
-        print('Pass:',statsPass, 'Fail', statsFail)
         suiteEndTime = time.time()
-        #reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN, Report,htmllogdir
-        report.append(NewRecord)
         htmlstring = array2html(suitefile,rangelist,','.join(arglist), suite.__len__(),statsFail+statsPass,statsPass,statsFail, suite.__len__()-statsFail-statsPass,report, suiteStartTime, suiteEndTime)
         reportfilename = './log/%s.html'%(name)
         with open(reportfilename, 'wb') as f:

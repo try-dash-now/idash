@@ -310,7 +310,7 @@ class suiteParser(object):
                 caserange = []
             lastLineNoOfConcurrent=0
             with open(suitfile, 'r') as suitefile:
-                from runner import run_case_in_suite, concurrent, loop
+                from runner import run_case_in_suite, loop, concurrent
                 previousAction = run_case_in_suite
                 lineNo = 0
                 suiteIndex = 0
