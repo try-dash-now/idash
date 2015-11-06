@@ -284,7 +284,7 @@ class suiteParser(object):
 
         def parserConcurent(lineNo, ConcurrentAction):
             import re
-            pat = '\s*(new|)\s*concurrent\s*(\d+|)\s*' #cocurent 0
+            pat = '\s*(new|)\s*concurrent\s*(\d+|)(\s*|\s+allpass|\s+allfail)' #cocurent 0
             pConcurrent = re.compile(pat, re.IGNORECASE)
             m = re.match(pConcurrent, ConcurrentAction)
             if m:
@@ -293,7 +293,12 @@ class suiteParser(object):
                     concNumber = 1
                 else:
                     concNumber = int(m.group(2))
-                return newConc, concNumber
+
+                if m.group(3).strip()=='':
+                    allFailIsFail=True
+                else:
+                    allFailIsFail=False
+                return newConc, concNumber, allFailIsFail
             else:
                 errormsg = 'Line: %d, ConcurrentAction(%s) doesn\'t match pattern(%s)'%(lineNo,ConcurrentAction,pat)
                 raise ValueError(errormsg)
@@ -357,7 +362,7 @@ class suiteParser(object):
                         pass
                     cmd, failAction, loopAction, ConcAction = SuiteLine
                     failAction = parseFailAction(lineNo, failAction)
-                    newConc,ConcNumber = parserConcurent(lineNo, ConcAction)
+                    newConc,ConcNumber, flagAllFailIsFail = parserConcurent(lineNo, ConcAction)
                     loopCounter , loop_stop_at_fail = parserLoop(lineNo, loopAction)
 
                     tmpSuiteLine = SuiteLine
@@ -387,7 +392,9 @@ class suiteParser(object):
                                 lstConc.append([action,loopCounter, loop_stop_at_fail, cmd])
                             else:
                                 action = run_case_in_suite
-                                lstConc.append([action, cmd, failAction, lineNo-1])
+                                lstConc.append([ConcNumber, lineNo-1, failAction,action, cmd, flagAllFailIsFail])
+                                #fork, LineNo,failAction,cmd, allFailIsFail
+                                #fork, index, totalThread, LineNo,indexInSuite,failAction,logpath,cmd, allFailIsFail
                             previousAction = currentAction
                     else:
                         currentAction = None

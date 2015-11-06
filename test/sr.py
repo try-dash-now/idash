@@ -67,187 +67,8 @@ if __name__ == "__main__":
 #	9, concurrent, loop, 2 ,no_stop ,rc.py5 home_case.csv home.csv full
 #	9, concurren,FailAction,FuncName,cmd =case, run_case_in_suite, rc.py7 home_case.csv home.csv full
     index = 1
-    from runner import run_case_in_suite , releaseDUTs , initDUT,case_runner, createLogDir
+    from runner import run_case_in_suite , releaseDUTs , initDUT,case_runner, createLogDir, array2html, run1case
 
-    def run1case(cmd,benchfile, benchinfo, dut_pool, logdir ):
-        errormessage = ''
-        caselogger = createLogger('caselog.txt', logdir)
-        try:
-            import re
-            patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
-            m =  re.match(patDash, cmd)
-            returncode = 0
-            if m:
-
-                argstring = m.group(2)
-                import shlex
-                lstArg = shlex.split(argstring)
-                #0-case.csv, 1-bench, 2-mode, 4...-2- args
-                casefile = lstArg[0]
-                case_benchfile = lstArg[1]
-                case_mode       = lstArg[2]
-                case_args= lstArg
-                case_args.insert(0,'cr.py')
-                bench = benchinfo
-                if case_benchfile!=benchfile:
-                    from common import bench2dict
-                    caselogger.info('loading a new bench:%s'%case_benchfile)
-                    bench =bench2dict(case_benchfile)
-                    benchfile = case_benchfile
-                    caselogger.info('releasing duts in old dut_pool')
-                    releaseDUTs(dut_pool, logger)
-                    dut_pool ={}
-                from Parser import  caseParser
-                caselogger.info('loading case: %s'% casename)
-                cs = caseParser(casename, case_mode, logdir, caselogger)
-                sdut, lvar, lsetup, lrun, ltear =cs.load(casefile, case_args)
-                ldut = list(sdut)
-                newduts= []
-                oldduts = []
-                for nd in ldut:
-                    if dut_pool.has_key(nd):
-                        oldduts.append(nd)
-                        dut_pool[nd].FailFlag    =False # the flag means in Session's perspective view, case failed
-                        dut_pool[nd].ErrorMessage=None # to store the error message
-                    else:
-                        newduts.append(nd)
-
-                for od in oldduts:
-                    dut_pool[od].openLogfile(logdir)
-                errormessage =[]
-                duts= initDUT(errormessage,bench,newduts,logger, logdir)
-
-                for k in duts.keys():
-                    dut_pool[k]=duts[k]
-
-                for key in duts.keys():
-                    if dut_pool.has_key(key):
-                        continue
-                    else:
-                        dut_pool[key]= duts[key]
-
-                seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
-                caselogger.info('starting to run case: %s'%cmd)
-                returncode, STRerrormessage= case_runner(casename,dut_pool,seq, case_mode, caselogger)
-
-                if returncode:
-                    caselogger.error('Case Failed:%s'%STRerrormessage)
-                    errormessage.append(STRerrormessage)
-                else:
-                    caselogger.info('Case PASS')
-
-            else:
-                import subprocess
-                pp =None
-
-                if cmd.startswith('[\w_-]+.py') :
-                    exe_cmd ='python '+ cmd+" "+logdir
-                    caselogger.info('running case: %s'%exe_cmd)
-                    pp = subprocess.Popen(args = exe_cmd ,shell =True)
-
-                import time
-                ChildRuning = True
-                first =True
-                while ChildRuning:
-                    if pp.poll() is None:
-                        interval = 1
-                        if first:
-                            first=False
-                        time.sleep(interval)
-                    else:
-                        ChildRuning = False
-
-                returncode = pp.returncode
-
-        except Exception as e:
-
-            if returncode ==0:
-                returncode =1
-
-            import traceback
-            errormessage = '%s\n%s'%(e.__str__(),traceback.format_exc())
-            caselogger.error('Case FAIL')
-            caselogger.error(errormessage)
-        return  returncode, errormessage, benchfile,bench, dut_pool
-
-    def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN,Report, startTime,endTime):
-        if CASERUN==0 or TOTAL==0:
-            CASERUN=1
-            TOTAL=1
-
-        PPASS = '%.0f'%((CASEPASS*100.0)/CASERUN*1.0)+'''%'''
-        PFAIL = '%.0f'%((CASEFAIL*100.0)/CASERUN*1.0)+'''%'''
-        CASENOTRUN  = TOTAL - CASEPASS-CASEFAIL
-        PNOTRUN = '%.0f'%((CASENOTRUN*100.0) /TOTAL*1.0)+'''%'''
-
-
-        response ="""
-    <HTML>
-    <HEAD>
-    <TITLE>Suite Test Report</TITLE>
-    </HEAD>
-    <BODY>
-    <table cellspacing="1" cellpadding="2" border="1">
-    <tr><td>Start Time</td><td>End Time</td><td>Duration(seconds)</td></tr>
-    <tr><td>%s</td><td>%s</td><td>%f</td></tr>
-    </table>
-    <br>
-    <table cellspacing="1" cellpadding="2" border="1">
-    <tr><td>SUITE NAME</td><td>ARGURMENTS</td><td>CASE RANGE</td></tr>
-
-    <tr><td>%s</td><td>%s</td><td>%s</td></tr>
-    </table>
-    <br><br>
-
-    <table cellspacing="1" cellpadding="2" border="1">
-    <tr>
-    <td>TOTAL CASE</td><td bgcolor="#00FF00">PASS</td><td bgcolor="#FF0000">FAIL</td><td bgcolor="#0000FF">NOT RUN</td>
-    </tr>
-    <tr>
-    <td>%d</td><td bgcolor="#00FF00" >%d</td><td bgcolor="#FF0000">%d</td><td  bgcolor="#0000FF">%d</td>
-    </tr>
-    <tr>
-    <td> </td><td>%s</td><td>%s</td><td>%s</td>
-    </tr>
-    </table>
-    <BR>
-    <BR>
-    <table cellspacing="1" cellpadding="2" border="1">
-    """%(time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(suiteStartTime)), time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(suiteEndTime)),suiteEndTime-suiteStartTime,reportname, CaseRangeStr, ArgStr ,TOTAL, CASEPASS, CASEFAIL, CASENOTRUN, PPASS,PFAIL,PNOTRUN)
-
-        response = response+ '''<tr><td>No.</td><td>Result</td><td>Case Name</td><td>Duration(s)</td><td>StartTime</td><td>EndTime</td><td>Line No</td><td>Error Message</td></tr>'''
-        #NewRecord = [index,caseResult,caseline[2][1], errormessage,logdir, LineNo]
-        for result in Report:
-            index,caseResult,caseLine, errormessage,logdir, LineNo ,ExecutionDuration, caseStartTime,caseEndTime=result
-            caseStartTime =time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(caseStartTime))
-            caseEndTime =time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(caseEndTime))
-            if errormessage ==[]:
-                errormessage ='-'
-            else:
-                errormessage = ''.join([x for x in errormessage])
-            errormessage = re.search('\*ERROR MESSAGE:(.*?)\*Traceback',errormessage,re.IGNORECASE|re.DOTALL)
-            if errormessage:
-                errormessage= errormessage.group(1).replace('*\t','')
-            bgcolor="#00FF00"
-            if caseResult=='FAIL':
-                bgcolor = "#FF0000"
-
-            response = response +"""<tr>
-            <td>%d</td>
-            <td bgcolor="%s"><a target="+BLANK" href="%s">%s</td>
-            <td><a target="+BLANK" href="%s">%s</td>
-            <td>%s</td>
-            <td>%s</td>
-            <td>%s</td>
-            <td>%s</td>
-            <td>%s</td>
-            </tr>
-    """%(index,bgcolor,logdir,caseResult,logdir,caseLine, ExecutionDuration,caseStartTime,caseEndTime, LineNo, errormessage)
-
-        return response+"""</table>
-    <br />
-    <br />
-    </body></html>"""
 
 
 
@@ -274,14 +95,14 @@ if __name__ == "__main__":
         casename ='%d'%caseline[0]#index
         index+=1
         import os
-        logpath = suitelogdir+"/%s"%casename
+        logpath = suitelogdir#+"/%s"%casename
         logger.info('creating logdir: %s'%logpath)
         if not os.path.exists(logpath):
             os.mkdir(logpath)
 
         from runner import concurrent
         if FuncName == run_case_in_suite:
-            logdir = createLogDir(casename, logpath)
+            logdir =createLogDir(casename, logpath)# logpath#
             import re
             patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
             m =  re.match(patDash, cmd)
@@ -304,7 +125,7 @@ if __name__ == "__main__":
 
             NewRecord = [index-1,caseResult,caseline[2][1], errormessage,'../'+logdir, LineNo,ExecutionDuration,caseStartTime,caseEndTime ]
             print("RESULT:", NewRecord)
-            print('Pass:',statsPass, 'Fail', statsFail)
+
 
             #reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN, Report,htmllogdir
             report.append(NewRecord)
@@ -312,10 +133,12 @@ if __name__ == "__main__":
 
         elif FuncName == concurrent:
 
-            concurrent(logpath, caseline[2][1],report)
-
-
-
+            conCaseTotal, conCasePass, conCaseFail, conReport, conLstFailCase =concurrent(index-1, logpath, caseline[2][1],report, logger)
+            statsPass+=conCasePass
+            statsFail+=conCaseFail
+            for x in conLstFailCase:
+                lstFailCase.append(x)
+        print('Pass:',statsPass, 'Fail', statsFail)
         suiteEndTime = time.time()
         htmlstring = array2html(suitefile,rangelist,','.join(arglist), suite.__len__(),statsFail+statsPass,statsPass,statsFail, suite.__len__()-statsFail-statsPass,report, suiteStartTime, suiteEndTime)
         reportfilename = './log/%s.html'%(name)
@@ -336,19 +159,6 @@ if __name__ == "__main__":
     releaseDUTs(dut_pool, logger)
 
 
-
-    parseResult = ''
-    for i in suite:
-        if i[2][0]!=concurrent:
-            #print(i)
-            parseResult+='%d, %s, %s, %s\n'%(i[0], i[1], i[2][0].func_name, ' ,'.join([str(x) for x in i[2][1:]]))
-        else:
-            #print(i)
-            for ii in i[2][1]:
-                #print('\t'+str(i[0])+' '+str(ii))
-                parseResult+='\t%d, %s, %s, %s\n'%(i[0],i[2][0].func_name,ii[0].func_name, ' ,'.join([str(x) for x in ii[1:]]) )
-    #print(parseResult)
-    #print(report)
     print('Pass:',statsPass, 'Fail', statsFail)
     os._exit(0)
 
