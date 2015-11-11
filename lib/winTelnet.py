@@ -307,7 +307,7 @@ class winTelnet(dut):#, spawn
         maxInterval = 60
         if self.timestampCmd ==None:
             self.timestampCmd= time.time()
-        counter = 0
+        fail_counter = 0
         while self.SessionAlive:
             self.lockStreamOut.acquire()
             try:
@@ -326,14 +326,14 @@ class winTelnet(dut):#, spawn
                 if self.logfile and self.cookedq.__len__()!=0:
                     self.logfile.write(self.cookedq)
                     self.logfile.flush()
-                counter = 0
+                fail_counter = 0
             except Exception, e:
-                counter+=1
+                fail_counter+=1
                 if self.debuglevel:
                     print('\nReadDataFromSocket Exception %d:'%(counter)+e.__str__()+'\n')
                 #self.lockStreamOut.release()
                 if str(e)!='timed out':
-                    if str(e) =='[Errno 10053] An established connection was aborted by the software in your host machine' or '[Errno 9] Bad file descriptor'==str(e):
+                    if str(e) =='[Errno 10053] An established connection was aborted by the software in your host machine' or '[Errno 9] Bad file descriptor'==str(e) or str(e) =='[Errno 10054] An existing connection was forcibly closed by the remote host':
                         #self.lockStreamOut.acquire()
 
                         try:
@@ -405,3 +405,5 @@ class winTelnet(dut):#, spawn
             self.lockRelogin.release()
             raise  e
         self.lockRelogin.release()
+
+

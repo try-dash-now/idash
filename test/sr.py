@@ -88,11 +88,16 @@ if __name__ == "__main__":
     with open(reportfilename, 'wb') as f:
         f.write(htmlstring.encode(encoding='utf_8', errors='strict'))
     for caseline in suite:
+        breakFlag=False
         caseStartTime = time.time()
         LineNo,FailAction,[FuncName,cmd ]=caseline
         logger.info('to run case: index %d, name: %s, failAction: %s'%(LineNo,cmd, FailAction))
-
-        casename ='%d-%s'%(caseline[0], re.sub('[^\w\-_.]','-',cmd[0][4])[:80])#index
+        from runner import concurrent
+        print cmd
+        if FuncName == run_case_in_suite:
+            casename ='%d-%s'%(caseline[0], re.sub('[^\w\-_.]','-',cmd[:80]))#index
+        elif FuncName == concurrent:
+            casename ='%d-%s'%(caseline[0], re.sub('[^\w\-_.]','-',cmd[0][4][:80]))#index
         index+=1
         import os
         logpath = suitelogdir#+"/%s"%casename
@@ -100,7 +105,7 @@ if __name__ == "__main__":
         if not os.path.exists(logpath):
             os.mkdir(logpath)
 
-        from runner import concurrent
+
         if FuncName == run_case_in_suite:
             logdir =createLogDir(casename, logpath)# logpath#
             import re
@@ -108,7 +113,7 @@ if __name__ == "__main__":
             m =  re.match(patDash, cmd)
             returncode = 0
             logger.info('running case: %s'%cmd)
-            returncode , errormessage ,benchfile, benchinfo, dut_pool = run1case(cmd, benchfile, benchinfo, dut_pool, logdir )
+            returncode , errormessage ,benchfile, benchinfo, dut_pool = run1case(casename, cmd, benchfile, benchinfo, dut_pool, logdir, logger )
             caseEndTime = time.time()
             ExecutionDuration = caseEndTime-caseStartTime
             caseResult = 'PASS'

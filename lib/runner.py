@@ -48,6 +48,24 @@ def createLogger(name, logpath='./'):
     return logger
 @logAction
 def createLogDir(name,logpath='./'):
+    import os
+    def listDir(path):
+        folders = []
+        while 1:
+            path, folder = os.path.split(path)
+
+            if folder != "":
+                folders.insert(0, folder)
+            else:
+                if path != "":
+                    folders.insert(0,path)
+                break
+        return  folders
+    old_cwd= os.getcwd()
+    old_cwd = listDir(old_cwd)
+    logpath = listDir(logpath)
+
+
     import re, datetime
     fullname = name[:80]
     removelist = '\-_.'
@@ -55,11 +73,18 @@ def createLogDir(name,logpath='./'):
     name = re.sub(pat, '', fullname)
     tm = datetime.datetime.now().isoformat('_')
     tm =  re.sub(pat, '', tm)
-    name = name+'-'+tm
-    logpath = logpath+'/'+ name
-    if not os.path.exists(logpath):
-        os.mkdir(logpath)
-    return logpath
+    fullname = fullname+'-'+tm
+    for dir in logpath:
+        if os.path.exists(dir):
+            os.chdir(dir)
+
+    if not os.path.exists(fullname):
+        os.mkdir(fullname)
+    print("old_cwd:",old_cwd)
+    for dir in old_cwd:
+        os.chdir(dir)
+
+    return '/'.join(logpath)
 
 @logAction
 def openDutLogfile(duts, logpath, logger):
@@ -273,12 +298,12 @@ def concurrent(startIndex, logpath, cmdConcurrent, report, suiteLogger):
 
     lstThread=[]
     import time,re
-    def runCase(index, totalThread, indexInSuite,LineNo,allFailIsFail,failAction,logpath,cmd,qResult):
+    def runCase(index, totalThread, indexInSuite,LineNo,allFailIsFail,failAction,logpath,casename,suitelogger, cmd,qResult):
         LineNo =int(LineNo)
         indexInSuite=int(indexInSuite)
         caseStartTime=time.time()
         logdir = createLogDir(str(index+1)+"-"+ re.sub('[^\w\-._]','-',cmd)[:80], logpath)
-        returncode, errormessage, benchfile,bench, dut_pool =run1case(cmd,'',None,None, logdir)
+        returncode, errormessage, benchfile,bench, dut_pool =run1case(casename, cmd,'',None,None, logdir, suiteLogger)
         caseEndTime=time.time()
         releaseDUTs(dut_pool, suiteLogger)
         if returncode:
@@ -290,10 +315,11 @@ def concurrent(startIndex, logpath, cmdConcurrent, report, suiteLogger):
     indexInSuite =startIndex
     for line in cmdConcurrent:
         [fork, LineNo,failAction,action, cmd, allFailIsFail]= line
-        logdir = createLogDir(str(indexInSuite), logpath)#logpath #logpath #
+        logdir = createLogDir(str(indexInSuite)[:80], logpath)#logpath #logpath #
         for i in range(0,fork):
-            key = '%d-%d'%(LineNo,i)
-            t = threading.Thread(target=runCase, args=[i,fork, indexInSuite,LineNo,allFailIsFail,failAction,logdir,cmd, qResult])
+            #key = '%d-%d'%(LineNo,i)
+            casename ='%d-%s'%(indexInSuite, re.sub('[^\w\-_.]','-',cmd[:80]))
+            t = threading.Thread(target=runCase, args=[i,fork, indexInSuite,LineNo,allFailIsFail,failAction,logdir,casename, suiteLogger,cmd, qResult])
             lstThread.append(t)
         indexInSuite+=1
 
@@ -357,7 +383,7 @@ def concurrent(startIndex, logpath, cmdConcurrent, report, suiteLogger):
 
     return caseTotal, casePass, caseFail, report, lstFailCase, breakFlag
 
-def run1case(cmd,benchfile, benchinfo, dut_pool, logdir ):
+def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger ):
     errormessage = ''
     caselogger = createLogger('caselog.txt', logdir)
     bench = benchinfo
@@ -475,7 +501,7 @@ def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAI
     CASENOTRUN  = TOTAL - CASEPASS-CASEFAIL
     PNOTRUN = '%.0f'%((CASENOTRUN*100.0) /TOTAL*1.0)+'''%'''
 
-
+    import datetime
     response ="""
 <HTML>
 <HEAD>
@@ -483,8 +509,8 @@ def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAI
 </HEAD>
 <BODY>
 <table cellspacing="1" cellpadding="2" border="1">
-<tr><td>Start Time</td><td>End Time</td><td>Duration(seconds)</td></tr>
-<tr><td>%s</td><td>%s</td><td>%f</td></tr>
+<tr><td>Start Time</td><td>End Time</td><td>Duration(H:M:S)</td></tr>
+<tr><td>%s</td><td>%s</td><td>%s</td></tr>
 </table>
 <br>
 <table cellspacing="1" cellpadding="2" border="1">
@@ -508,7 +534,7 @@ def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAI
 <BR>
 <BR>
 <table cellspacing="1" cellpadding="2" border="1">
-"""%(time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(suiteStartTime)), time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(suiteEndTime)),suiteEndTime-suiteStartTime,reportname, CaseRangeStr, ArgStr ,TOTAL, CASEPASS, CASEFAIL, CASENOTRUN, PPASS,PFAIL,PNOTRUN)
+"""%(time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(suiteStartTime)), time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(suiteEndTime)),str(datetime.timedelta(seconds=suiteEndTime-suiteStartTime)),reportname, CaseRangeStr, ArgStr ,TOTAL, CASEPASS, CASEFAIL, CASENOTRUN, PPASS,PFAIL,PNOTRUN)
 
     response = response+ '''<tr><td>No.</td><td>Result</td><td>Case Name</td><td>Duration(s)</td><td>StartTime</td><td>EndTime</td><td>Line No</td><td>Error Message</td></tr>'''
     #NewRecord = [index,caseResult,caseline[2][1], errormessage,logdir, LineNo]
