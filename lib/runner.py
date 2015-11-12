@@ -49,6 +49,7 @@ def createLogger(name, logpath='./'):
 @logAction
 def createLogDir(name,logpath='./'):
     import os
+    old_logpath=logpath
     def listDir(path):
         folders = []
         while 1:
@@ -63,28 +64,42 @@ def createLogDir(name,logpath='./'):
         return  folders
     old_cwd= os.getcwd()
     old_cwd = listDir(old_cwd)
-    logpath = listDir(logpath)
+    logpath = listDir(os.path.abspath(logpath))
 
 
     import re, datetime
-    fullname = name[:80]
+    fullname = name[:60]
     removelist = '\-_.'
     pat = r'[^\w'+removelist+']'
     name = re.sub(pat, '', fullname)
     tm = datetime.datetime.now().isoformat('_')
     tm =  re.sub(pat, '', tm)
-    fullname = fullname+'-'+tm
+    fullname = name+'-'+tm
     for dir in logpath:
+        print(os.getcwd())
         if os.path.exists(dir):
             os.chdir(dir)
+            print(os.getcwd())
+        else:
+            errormsg= 'dir: %s does not exist, please create it first'%dir
+            for dir in old_cwd:
+                os.chdir(dir)
+                print(os.getcwd())
+            print(errormsg)
+            raise Exception(errormsg)
 
     if not os.path.exists(fullname):
+        print(len(fullname))
+        if len(fullname)>30:
+            pass
         os.mkdir(fullname)
+    logpath.append(fullname)
     print("old_cwd:",old_cwd)
     for dir in old_cwd:
         os.chdir(dir)
+        print(os.getcwd())
 
-    return '/'.join(logpath)
+    return old_logpath+'/'+fullname
 
 @logAction
 def openDutLogfile(duts, logpath, logger):
