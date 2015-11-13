@@ -110,7 +110,6 @@ def openDutLogfile(duts, logpath, logger):
 @logAction
 def initDUT(errormessage ,bench, dutnames, logger=None, casepath='./'):
     dictDUTs={}
-    #global  gInitErrorMessage
 
     def connect2dut(InitErrorMessage , dutname, dut_attr, logger=None,path='./'):
         msg = ''

@@ -1,4 +1,7 @@
 e7support,word,
 admin,>,
-show version,2\.4\.0\.187,1
-exit,host lost,
+show interface as10 mem
+show stat eth-port 1/1/x3
+show stat eth-port 1/2/x3
+clear stat eth-port 1/1/x3
+clear stat eth-port 1/2/x3
