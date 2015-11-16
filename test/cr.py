@@ -43,8 +43,9 @@ if __name__ == "__main__":
             os.mkdir(defaultlogdir)
         #defaultlogdir+='/ut_runner'
         casename = sys.argv[1]
-        logger = createLogger(casename, defaultlogdir)
         casefolder = createLogDir(casename,defaultlogdir)
+        logger = createLogger(casename, casefolder)
+
 
         from common import bench2dict
         benchfile = sys.argv[2]
@@ -65,7 +66,7 @@ if __name__ == "__main__":
         caseFail, CaseErrorMessage= case_runner(casename,duts,seq, mode, logger)
 
         from runner import releaseDUTs
-        releaseDUTs(duts)
+        releaseDUTs(duts, logger)
         if caseFail:
             print(CaseErrorMessage)
             Exception(CaseErrorMessage)

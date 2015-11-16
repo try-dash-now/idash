@@ -202,7 +202,8 @@ call function(%s)
 #            self.show()
             #raise RuntimeError('found pattern(%s) within %s'%(expect,wait))
 
-
+    def test(self,cmd, expect, wait):
+        self.stepCheck('tc', '', cmd, expect,wait)
     def stepCheck(self, CaseName, lineNo, cmd, expect, wait):
         def analyzeStep(casename, command, expect, wait):
             import re
@@ -274,7 +275,11 @@ call function(%s)
             while(counter<maxtry):
                 #maxtry-=1
                 counter +=1
+                if funName!='singleStep':
+                    print('try %d/%d:%s'%(counter,maxtry, str(funName)))
                 try:
+                    if not fun:
+                        print('FunName(%s) is NOT defined'%FunName)
                     fun(*arg, **kwarg)
                     IsFail=False
                     break

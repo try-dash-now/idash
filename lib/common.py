@@ -87,9 +87,9 @@ def csvfile2array(csvfile, Delimiter = ',', Newline = '', Quoting=csv.QUOTE_ALL)
     for row in reader:
         a.append(row)
     return a
-def array2csvfile(array, csvfile, Newline = ''):
-    with open(csvfile, 'w',newline =Newline) as f:  #,newline =''
-        writer = csv.writer(f)
+def array2csvfile(array, csvfile, Newline = '\n'):
+    with open(csvfile, 'w') as f:  #,newline ='',newline =Newline
+        writer = csv.writer(f, lineterminator = Newline)
         for row in array:
             writer.writerow(row)
 
