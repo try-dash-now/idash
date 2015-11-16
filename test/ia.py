@@ -14,6 +14,7 @@ import traceback
 from runner import *
 import re
 class ia(Cmd, object):
+    tmCreated=None
     record= None
     cp = 0
     sut=None
@@ -23,6 +24,8 @@ class ia(Cmd, object):
     flagEndCase = False
     quoting = '"'
     def __init__(self, benchfile, dutname):
+        import datetime
+        self.tmCreated = datetime.datetime.now()
         Cmd.__init__(self, 'tab', sys.stdin, sys.stdout)
         self.tcName = 'tc'
         self.sutname='tc'
@@ -262,12 +265,12 @@ class ia(Cmd, object):
         if not name :
             name = 'tc'
 
-        import re, datetime
+        import re
         fullname = name[:60]
         removelist = '\-_.'
         pat = r'[^\w'+removelist+']'
         name = re.sub(pat, '', fullname)
-        tm = datetime.datetime.now().isoformat('_')
+        tm = self.tmCreated.isoformat('_')
         tm =  re.sub(pat, '', tm)
         fullname = name+'-'+tm
         self.tcName = fullname
