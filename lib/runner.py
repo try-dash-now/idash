@@ -4,9 +4,11 @@ import unittest
 import os
 import sys
 pardir =os.path.dirname(os.path.realpath(os.getcwd()))
-#pardir= os.path.sep.join(pardir.split(os.path.sep)[:-1])
-
-sys.path.append(os.path.sep.join([pardir,'dut']))
+subfolder = ['lib', 'dut']
+for sub in subfolder:
+    libpath = os.path.sep.join([pardir,sub])
+    if libpath not in sys.path:
+        sys.path.insert(0,libpath)
 import os
 def logAction(fun):
     def inner(*arg, **kwargs):

@@ -51,6 +51,7 @@ class ia(Cmd, object):
         self.cmdbank=[]
         for sut in self.sut.keys():
             self.CreateDoc4Sut(sut)
+
     def CreateDoc4Sut(self, sutname=None):
         if not sutname:
             self.sutname =sutname
@@ -127,11 +128,15 @@ class ia(Cmd, object):
         if self.flagEndCase:
             stop =True
         return stop
+    def completenames(self, text, *ignored):
+        print('hello')
+        dotext = 'do_'+text
+        return [a[3:] for a in self.get_names() if a.startswith(dotext)]
 
 
     def completedefault(self, *ignored):
         #print(ignored)
-
+        print('complete default')
         if self.sutname!='tc':
             #
             self.onecmd(ignored[1]+'\t')
@@ -205,7 +210,7 @@ class ia(Cmd, object):
         return response
     def RunCmd(self, cmd):
         try:
-
+            cmd='sh\t'
             reIA = re.compile('\s*i\.(.+)')
             m = re.match(reIA, cmd)
             if m :
@@ -225,7 +230,9 @@ class ia(Cmd, object):
                 lex.quotes = '"'
                 lex.whitespace_split = True
                 newcmd=list(lex)
-                m = re.match(reFun, newcmd[0])
+                m=None
+                if len(newcmd):
+                    m = re.match(reFun, newcmd[0])
                 if m:
 
                     funname = m.group(1)
@@ -247,7 +254,11 @@ class ia(Cmd, object):
                     cmd = newcmd
 
                 self.cp+=1
+
                 expectPat = '>|#'
+
+                if self.sut[self.sutname].attribute.has_key('PROMPT'):
+                    expectPat=self.sut[self.sutname].attribute['PROMPT']
                 timeout = '2'
                 if retryCounter!=1:
                     cmd ='try %d: %s'%(retryCounter, cmd)
@@ -284,7 +295,50 @@ class ia(Cmd, object):
         from runner import releaseDUTs
         releaseDUTs(self.sut, self.logger)
         self.flagEndCase =True
+    def complete(self, text, state):
+        """Return the next possible completion for 'text'.
 
+        If a command has not been entered, then complete against command list.
+        Otherwise try to call complete_<command> to get list of completions.
+        """
+        print('complete function hell')
+        print(text)
+        print(state)
+        if state == 0:
+            import readline
+            origline = readline.get_line_buffer()
+            line = origline.lstrip()
+            stripped = len(origline) - len(line)
+            begidx = readline.get_begidx() - stripped
+            endidx = readline.get_endidx() - stripped
+            if begidx>0:
+                cmd, args, foo = self.parseline(line)
+                if cmd == '':
+                    compfunc = self.completedefault
+                else:
+                    try:
+                        compfunc = getattr(self, 'complete_' + cmd)
+                    except AttributeError:
+                        compfunc = self.completedefault
+            else:
+                compfunc = self.completenames
+            self.completion_matches = compfunc(text, line, begidx, endidx)
+        try:
+            print(self.completion_matches)
+            print(state)
+            print(type(text))
+
+            self.RunCmd(str(text)+'\t')
+            return self.completion_matches[state]
+
+        except Exception as e :#IndexError :
+            print(e)
+            import traceback
+            print(traceback.format_exc())
+            print('hit here!!!')
+            print('text: %s'%(str(text)))
+            self.RunCmd(str(text)+'\t')
+            return None
 print('ia.exe/ia.py bench_file DUT1 [DUT2, DUT3 ...]')
 benchfile = sys.argv[1]
 dutNames = sys.argv[2:]
@@ -300,3 +354,5 @@ while not i.flagEndCase:
         msg = traceback.format_exc()
         print(msg)
         i.save2file()
+
+os._exit(0)

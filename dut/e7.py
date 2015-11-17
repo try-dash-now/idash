@@ -9,4 +9,5 @@ from winTelnet import winTelnet
 class e7(winTelnet):
     def __init__(self,name,attr,logger, logpath):
         winTelnet.__init__(self, name,attr,logger, logpath)
+        self.attribute['PROMPT']='>|#|>>>'
 
