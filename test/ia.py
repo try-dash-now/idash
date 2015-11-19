@@ -52,6 +52,7 @@ class ia(Cmd, object):
         for sut in self.sut.keys():
             self.CreateDoc4Sut(sut)
 
+
     def CreateDoc4Sut(self, sutname=None):
         if not sutname:
             self.sutname =sutname
@@ -116,7 +117,7 @@ class ia(Cmd, object):
             sutname='tc'
         if self.sut.get(sutname) or sutname =='tc' or sutname =='__case__':
             self.sutname=sutname
-            self.prompt= '%s(%s)>>>'%(os.linesep, self.sutname)
+            self.prompt= '%s(%s)###'%(os.linesep, self.sutname)
             return 'current SUT: %s'%(self.sutname)
         else:
             return 'sutsut(\'%s\') is not defined'%sutname
@@ -128,15 +129,32 @@ class ia(Cmd, object):
         if self.flagEndCase:
             stop =True
         return stop
+    def sut_complete(self, text):
+        sutresponse=None
+        if self.sutname!='tc':
+            sut = self.sut[self.sutname]
+            sutresponse = sut.write(str(text)+'\t')
+            sut.timestampCmd=time.time()
+            time.sleep(1)
+            try:
+                sutresponse = sut.find('%s\S+\s'%text, 1)
+            except:
+                sutresponse=None
+        return sutresponse
+
     def completenames(self, text, *ignored):
-        print('hello')
-        dotext = 'do_'+text
-        return [a[3:] for a in self.get_names() if a.startswith(dotext)]
+        #print('hello')
+        dotext = 'do_'+ text
+        resp = [a[3:] for a in self.get_names() if a.startswith(dotext)]
+        sutresp = self.sut_complete(text)
+        if sutresp:
+            resp.append(sutresp)
+        return resp
 
 
     def completedefault(self, *ignored):
         #print(ignored)
-        print('complete default')
+        #print('complete default')
         if self.sutname!='tc':
             #
             self.onecmd(ignored[1]+'\t')
@@ -149,6 +167,7 @@ class ia(Cmd, object):
     def precmd(self,line):
         #print('line:',line)
         #linetemp = line.strip()
+        #line='\t'
         temp =line.strip().lstrip()
 
         if self.sutname!='tc':
@@ -210,7 +229,7 @@ class ia(Cmd, object):
         return response
     def RunCmd(self, cmd):
         try:
-            cmd='sh\t'
+            #cmd='sh\t'
             reIA = re.compile('\s*i\.(.+)')
             m = re.match(reIA, cmd)
             if m :
@@ -262,9 +281,13 @@ class ia(Cmd, object):
                 timeout = '2'
                 if retryCounter!=1:
                     cmd ='try %d: %s'%(retryCounter, cmd)
-
-                self.sut[self.sutname].stepCheck('casename', self.cp, cmd, expectPat,timeout)
-                self.record.append([self.sutname,cmd, expectPat,timeout])
+                #print('cmd:%s'%cmd)
+                #print('len:%d'%len(cmd))
+                if cmd.endswith('?'):
+                    self.sut_complete(cmd)
+                else:
+                    self.sut[self.sutname].stepCheck('casename', self.cp, cmd+'\t', expectPat,timeout)
+                    self.record.append([self.sutname,cmd, expectPat,timeout])
         except Exception as e:
             print(e)
     def show(self):
@@ -301,9 +324,9 @@ class ia(Cmd, object):
         If a command has not been entered, then complete against command list.
         Otherwise try to call complete_<command> to get list of completions.
         """
-        print('complete function hell')
-        print(text)
-        print(state)
+        #print('complete function hell')
+        #print(text)
+        #print(state)
         if state == 0:
             import readline
             origline = readline.get_line_buffer()
@@ -324,20 +347,20 @@ class ia(Cmd, object):
                 compfunc = self.completenames
             self.completion_matches = compfunc(text, line, begidx, endidx)
         try:
-            print(self.completion_matches)
-            print(state)
-            print(type(text))
+            #print(self.completion_matches)
+            #print(state)
+            #print(type(text))
 
-            self.RunCmd(str(text)+'\t')
+            #self.RunCmd(str(text)+'\t')
             return self.completion_matches[state]
 
         except Exception as e :#IndexError :
-            print(e)
-            import traceback
-            print(traceback.format_exc())
-            print('hit here!!!')
-            print('text: %s'%(str(text)))
-            self.RunCmd(str(text)+'\t')
+            #print(e)
+            #import traceback
+            #print(traceback.format_exc())
+            #print('hit here!!!')
+            #print('text: %s'%(str(text)))
+            #return  str(text)+'\t'
             return None
 print('ia.exe/ia.py bench_file DUT1 [DUT2, DUT3 ...]')
 benchfile = sys.argv[1]

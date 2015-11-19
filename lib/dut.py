@@ -7,7 +7,7 @@ provides:
 2. show the output, just the updated recently
 3. searching given pattern from a given range, e.g. right after last command entered
 '''
-
+import time
 class dut(object):
     '''
     streamOut:  string of Software/Device's output, __init__ will set it to ''
@@ -101,7 +101,9 @@ class dut(object):
         self.idxUpdate= newIndex
         #print('print::%d'%result.__len__())
         if result!='':
-            print('\t%s'%(result.replace('\n', '\n\t')))
+            import sys
+            sys.stdout.write('\t%s'%(result.replace('\n', '\n\t')))
+            #print('\t%s'%(result.replace('\n', '\n\t')))
         return result
 
 
@@ -284,7 +286,8 @@ call function(%s)
                     IsFail=False
                     break
                 except Exception as e:
-                    #import traceback
+                    import traceback
+                    print(traceback.format_exc())
                     errormessage=e.__str__()#+'\n'+traceback.format_exc()
                     continue
             if IsFail:
@@ -327,6 +330,7 @@ call function(%s)
             pass
         else:
             self.idxSearch =self.streamOut.__len__() #move the Search window to the end of streamOut
+        self.timestampCmd=time.time()
     def find(self, pattern, timeout = 1.0, flags=0x18, noPattern=False):
         '''find a given patten within given time(timeout),
         if pattern found, move idxSearch to index where is right after the pattern in streamOut

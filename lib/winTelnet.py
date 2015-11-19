@@ -175,6 +175,7 @@ class winTelnet(dut):#, spawn
         socket.error if the connection is closed.
 
         """
+        buffer =buffer.encode(encoding='utf-8')
         if IAC in buffer:
             buffer = buffer.replace(IAC, IAC+IAC)
         self.msg("send %r", buffer)
