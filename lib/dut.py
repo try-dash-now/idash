@@ -101,9 +101,9 @@ class dut(object):
         self.idxUpdate= newIndex
         #print('print::%d'%result.__len__())
         if result!='':
-            import sys
-            sys.stdout.write('\t%s'%(result.replace('\n', '\n\t')))
-            #print('\t%s'%(result.replace('\n', '\n\t')))
+            #import sys
+            #sys.stdout.write('\t%s'%(result.replace('\n', '\n\t')))
+            print('\t%s'%(result.replace('\n', '\n\t'))),
         return result
 
 

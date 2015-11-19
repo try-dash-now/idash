@@ -13,6 +13,7 @@ import sys,time
 import traceback
 from runner import *
 import re
+gDefaultTimeout = '2'
 class ia(Cmd, object):
     tmCreated=None
     record= None
@@ -30,7 +31,7 @@ class ia(Cmd, object):
         self.tcName = 'tc'
         self.sutname='tc'
         self.tabend = 'disable'
-        self.record =[['#var'], ['#setup']]
+        self.record =[['#var'], ['defaultTime', gDefaultTimeout],['#setup']]
 
         logpath = './log'
         logpath =   createLogDir('ia',logpath)
@@ -122,7 +123,8 @@ class ia(Cmd, object):
         else:
             return 'sutsut(\'%s\') is not defined'%sutname
     def postcmd(self,stop, line):
-        if stop!=None and len(str(stop))!=0:
+        if stop!=None and len(str(stop))!=0 and self.sutname!='tc':
+
             out = self.sut[self.sutname].show()+'\n'+self.prompt+str(stop)+self.prompt
             #print(self.InteractionOutput,end='')
         stop = False
@@ -144,11 +146,14 @@ class ia(Cmd, object):
 
     def completenames(self, text, *ignored):
         #print('hello')
-        dotext = 'do_'+ text
-        resp = [a[3:] for a in self.get_names() if a.startswith(dotext)]
-        sutresp = self.sut_complete(text)
-        if sutresp:
-            resp.append(sutresp)
+        resp=[]
+        if self.sutname=='tc':
+            dotext = 'do_'+ text
+            resp = [a[3:] for a in self.get_names() if a.startswith(dotext)]
+        else:
+            sutresp = self.sut_complete(text)
+            if sutresp:
+                resp.append(sutresp)
         return resp
 
 
@@ -161,7 +166,10 @@ class ia(Cmd, object):
             #i.cmdqueue=[]
             #pass
             #self.RunCmd(ignored[1]+'\t')
-        return []#Cmd.completedefault(self ,ignored)
+
+            return []#Cmd.completedefault(self ,ignored)
+        else:
+            return Cmd.completedefault(self, ignored)
 
 
     def precmd(self,line):
@@ -278,7 +286,8 @@ class ia(Cmd, object):
 
                 if self.sut[self.sutname].attribute.has_key('PROMPT'):
                     expectPat=self.sut[self.sutname].attribute['PROMPT']
-                timeout = '2'
+                timeout = gDefaultTimeout
+                strTimeout = '${defaultTime}'
                 if retryCounter!=1:
                     cmd ='try %d: %s'%(retryCounter, cmd)
                 #print('cmd:%s'%cmd)
@@ -286,14 +295,17 @@ class ia(Cmd, object):
                 if cmd.endswith('?'):
                     self.sut_complete(cmd)
                 else:
-                    self.sut[self.sutname].stepCheck('casename', self.cp, cmd+'\t', expectPat,timeout)
-                    self.record.append([self.sutname,cmd, expectPat,timeout])
+                    self.sut[self.sutname].stepCheck('casename', self.cp, cmd+'\t', expectPat,str(timeout))
+                    self.record.append([self.sutname,cmd, expectPat,strTimeout])
         except Exception as e:
             print(e)
     def show(self):
         while not self.flagEndCase:
             if self.sutname!='tc':
-                self.sut[self.sutname].show()
+                try:
+                    self.sut[self.sutname].show()
+                except:
+                    pass
             time.sleep(0.1)
     def save2file(self, name=None):
         if not name :
