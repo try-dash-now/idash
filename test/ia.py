@@ -10,6 +10,7 @@ for sub in subfolder:
         sys.path.insert(0,libpath)
 from cmd import Cmd
 import sys,time
+import datetime
 import traceback
 from runner import *
 import re
@@ -24,15 +25,23 @@ class ia(Cmd, object):
     tcName = None
     flagEndCase = False
     quoting = '"'
+    lenCompleteBuffer=0
+    tmTimeStampOfLastCmd=None
+    cmdLineBuffer=''
+    def emptyline(self):
+        return ''
+
     def __init__(self, benchfile, dutname):
-        import datetime
+
         self.tmCreated = datetime.datetime.now()
+        self.tmTimeStampOfLastCmd = self.tmCreated
         Cmd.__init__(self, 'tab', sys.stdin, sys.stdout)
         self.tcName = 'tc'
         self.sutname='tc'
         self.tabend = 'disable'
-        self.record =[['#var'], ['defaultTime', gDefaultTimeout],['#setup']]
-
+        self.record =[['#var'], ['defaultTime', gDefaultTimeout],['#setup'],
+                      ['#SUT_Name','Command_or_Function', 'Expect', 'Max_Wait_Time','TimeStamp','Interval']]
+        self.intro = '''welcome to InterAction of DasH'''
         logpath = './log'
         logpath =   createLogDir('ia',logpath)
         self.logger = createLogger('ia',logpath)
@@ -118,7 +127,7 @@ class ia(Cmd, object):
             sutname='tc'
         if self.sut.get(sutname) or sutname =='tc' or sutname =='__case__':
             self.sutname=sutname
-            self.prompt= '%s(%s)###'%(os.linesep, self.sutname)
+            self.prompt= '%s@%s::>'%(os.linesep, self.sutname)
             return 'current SUT: %s'%(self.sutname)
         else:
             return 'sutsut(\'%s\') is not defined'%sutname
@@ -132,16 +141,51 @@ class ia(Cmd, object):
             stop =True
         return stop
     def sut_complete(self, text):
+        #print('sut_complet', text)
         sutresponse=None
         if self.sutname!='tc':
+
             sut = self.sut[self.sutname]
-            sutresponse = sut.write(str(text)+'\t')
+            sutresponse = str(text)
+            sut.write(str(text)+'\t')
             sut.timestampCmd=time.time()
             time.sleep(1)
+            self.lenCompleteBuffer = len(text)
             try:
-                sutresponse = sut.find('%s\S+\s'%text, 1)
-            except:
+                sutresponse = sut.find('%s.+'%text, 1)
+                #print('here is sut response', sutresponse)
+                #print('here is sut response end')
+                #lresp= sutresponse.split('\n')
+                #line = lresp[-1]
+
+                sutresponse=re.search('.*(%s.+).*$'%text,sutresponse).group(1)
+                self.lenCompleteBuffer = len(sutresponse)
+
+                #print(self.prompt)
+                #sutresponse = '\b'*self.lenCompleteBuffer+sutresponse
+                #print('2here is sut response', sutresponse)
+                #print('2here is sut response end')
+                #import readline
+                #print('####hello###1',readline.get_line_buffer())
+                #readline.insert_text(sutresponse)
+                #print('####hello###2',readline.get_line_buffer())
+                #print('sutresponse1', sutresponse)
+                sutresponse = sutresponse.strip()
+                sutresponse=sutresponse.split(' ')
+
+                #print('sutresponse2', sutresponse)
+                sutresponse=sutresponse[-1]+' '
+            except Exception as e:
+                print(e)
                 sutresponse=None
+        if self.lenCompleteBuffer:
+            for i in range(0,self.lenCompleteBuffer):
+                #print('Backspace!!!')
+                self.sut[self.sutname].write('\b')
+            self.lenCompleteBuffer=0
+        #print('3here is sut response', sutresponse)
+        #print('3here is sut response end')
+
         return sutresponse
 
     def completenames(self, text, *ignored):
@@ -161,14 +205,22 @@ class ia(Cmd, object):
         #print(ignored)
         #print('complete default')
         if self.sutname!='tc':
-            #
-            self.onecmd(ignored[1]+'\t')
+            #print('ignored', ignored)
+            response = self.sut_complete(ignored[1])
+            #print('response here:', response)
+            #lResp = ignored[1].split(' ')
+            #lenResp = len(lResp)
+            #response =
+            #response =' '.join(lResp[lenResp/2:-1])
+            #response+=' '+ lResp[-1]
+            #self.onecmd(ignored[1])#+'\t'
             #i.cmdqueue=[]
             #pass
             #self.RunCmd(ignored[1]+'\t')
 
-            return []#Cmd.completedefault(self ,ignored)
+            return [response]#Cmd.completedefault(self ,ignored)
         else:
+            #print('ignored', ignored)
             return Cmd.completedefault(self, ignored)
 
 
@@ -176,6 +228,7 @@ class ia(Cmd, object):
         #print('line:',line)
         #linetemp = line.strip()
         #line='\t'
+        #print('')
         temp =line.strip().lstrip()
 
         if self.sutname!='tc':
@@ -235,6 +288,7 @@ class ia(Cmd, object):
 
         response =fun(*real_vars)
         return response
+
     def RunCmd(self, cmd):
         try:
             #cmd='sh\t'
@@ -292,11 +346,25 @@ class ia(Cmd, object):
                     cmd ='try %d: %s'%(retryCounter, cmd)
                 #print('cmd:%s'%cmd)
                 #print('len:%d'%len(cmd))
+                sut = self.sut[self.sutname]
                 if cmd.endswith('?'):
-                    self.sut_complete(cmd)
+                    sut.stepCheck('casename', self.cp, cmd, expectPat,str(timeout))
+                    sutresponse = str(cmd).strip()[:-1]+' '
+                    self.cmdLineBuffer=sutresponse
+                    #import  readline
+                    #print('inert text to readline :',sutresponse)
+                    #readline.clear_history()
+                    #readline.insert_text(sutresponse)
+                    #print(readline.get_line_buffer())
+                    #self.sut_complete(cmd)
                 else:
                     self.sut[self.sutname].stepCheck('casename', self.cp, cmd+'\t', expectPat,str(timeout))
-                    self.record.append([self.sutname,cmd, expectPat,strTimeout])
+                    now = datetime.datetime.now()
+                    lastSut, lastCmd, lastExp, lastTimeout = self.record[-1][:4]
+                    if lastSut !=self.sutname or lastCmd!= cmd or lastExp != expectPat or lastTimeout!= strTimeout:
+                        self.record.append([self.sutname,cmd, expectPat,strTimeout,now.isoformat('_'), now -self.tmTimeStampOfLastCmd ])
+                        self.tmTimeStampOfLastCmd=now
+
         except Exception as e:
             print(e)
     def show(self):
@@ -306,6 +374,7 @@ class ia(Cmd, object):
                     self.sut[self.sutname].show()
                 except:
                     pass
+
             time.sleep(0.1)
     def save2file(self, name=None):
         if not name :
@@ -341,7 +410,7 @@ class ia(Cmd, object):
         #print(state)
         if state == 0:
             import readline
-            origline = readline.get_line_buffer()
+            origline = readline.get_line_buffer() #('show alar\t'#
             line = origline.lstrip()
             stripped = len(origline) - len(line)
             begidx = readline.get_begidx() - stripped
@@ -374,6 +443,61 @@ class ia(Cmd, object):
             #print('text: %s'%(str(text)))
             #return  str(text)+'\t'
             return None
+
+    def cmdloop(self, intro=None):
+        """Repeatedly issue a prompt, accept input, parse an initial prefix
+        off the received input, and dispatch to action methods, passing them
+        the remainder of the line as argument.
+
+        """
+
+        self.preloop()
+        if self.use_rawinput and self.completekey:
+            try:
+                import readline
+                self.old_completer = readline.get_completer()
+                readline.set_completer(self.complete)
+                readline.parse_and_bind(self.completekey+": complete")
+                #readline.parse_and_bind('?: completeQuestion')
+            except ImportError:
+                pass
+        try:
+            if intro is not None:
+                self.intro = intro
+            if self.intro:
+                self.stdout.write(str(self.intro)+"\n")
+            stop = None
+            while not stop:
+                if self.cmdqueue:
+                    line = self.cmdqueue.pop(0)
+                else:
+                    if self.use_rawinput:
+                        try:
+                            line = raw_input(self.prompt+self.cmdLineBuffer)
+                        except EOFError:
+                            line = 'EOF'
+                    else:
+                        self.stdout.write(self.prompt)
+                        self.stdout.flush()
+                        line = self.stdin.readline()
+                        if not len(line):
+                            line = 'EOF'
+                        else:
+                            line = line.rstrip('\r\n')
+                if len(self.cmdLineBuffer):
+                    line =self.cmdLineBuffer+line
+                    self.cmdLineBuffer=''
+                line = self.precmd(line)
+                stop = self.onecmd(line)
+                stop = self.postcmd(stop, line)
+            self.postloop()
+        finally:
+            if self.use_rawinput and self.completekey:
+                try:
+                    import readline
+                    readline.set_completer(self.old_completer)
+                except ImportError:
+                    pass
 print('ia.exe/ia.py bench_file DUT1 [DUT2, DUT3 ...]')
 benchfile = sys.argv[1]
 dutNames = sys.argv[2:]
@@ -383,6 +507,7 @@ print('#'*80)
 flagEndCase = False
 while not i.flagEndCase:
     try:
+        #i.complete('show alar\t', 0)
         i.cmdloop()
         time.sleep(.1)
     except Exception as e:
