@@ -16,12 +16,13 @@ for sub in subfolder:
         sys.path.insert(0,libpath)
 if __name__ == "__main__":
     #sr.py suite_file range [arg1 arg2 ...]
-    import re
+    import re,datetime
     from Parser import suiteParser
     from runner import createLogDir
+
     suitefile =sys.argv[1]
     name = '-'.join(sys.argv[1:])
-    name = re.sub('[^\w\-_]','-',name)
+    name = re.sub('[^\w\-_]','-',name)[:60]+' '+datetime.datetime.now().isoformat(':').replace(':','').replace('-','')
     def  GetRange(caserange='all'):
         if str(caserange).strip().lower()=='all':
             caserange = 'all'
