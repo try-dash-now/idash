@@ -1,0 +1,44 @@
+clear_stats
+::ixNet::OK
+clear_stats
+::ixNet::OK
+read_Stats "Traffic Item Statistics" "Packet Loss Duration (ms)"
+{78.678 5.4 14.56}
+getTrafficName
+client->server
+server->client
+multicast UDP
+read_Stats "Traffic Item Statistics" "Packet Loss Duration (ms)"
+{78.678 5.4 14.56}
+getTrafficName
+client->server
+server->client
+multicast UDP
+read_Stats "Traffic Item Statistics" "Packet Loss Duration (ms)"
+{78.678 5.4 14.56}
+getTrafficName
+client->server
+server->client
+multicast UDP
+clear_stats
+::ixNet::OK
+clear_stats
+::ixNet::OK
+read_Stats "Traffic Item Statistics" "Packet Loss Duration (ms)"
+{70.772 44.992 72.966}
+getTrafficName
+client->server
+server->client
+multicast UDP
+read_Stats "Traffic Item Statistics" "Packet Loss Duration (ms)"
+{70.772 44.992 72.966}
+getTrafficName
+client->server
+server->client
+multicast UDP
+read_Stats "Traffic Item Statistics" "Packet Loss Duration (ms)"
+{70.772 44.992 72.966}
+getTrafficName
+client->server
+server->client
+multicast UDP

@@ -1,0 +1,283 @@
+2015-11-20 14:27:57,947 -INFO:    loading case: 72-cr.py--aalag_switchtime_reboot_card_fcs.csv--bench.csv-full-pet2-ix-syu-1-1-1-1-
+2015-11-20 14:27:57,957 -INFO:    starting to run case: cr.py  aalag_switchtime_reboot_card_fcs.csv  bench.csv full pet2 ix-syu 1/1 1/1 1/2
+2015-11-20 14:27:57,957 -INFO:    starting segment:0
+2015-11-20 14:28:30,418 -ERROR:    Case FAIL
+2015-11-20 14:28:30,418 -ERROR:    
+*********************************ERROR DUMP************************************
+*logAction dump:
+*	Function Name: 		run
+*	Arguments: 		
+*		72-cr.py--aalag_switchtime_reboot_card_fcs.csv--bench.csv-full-pet2-ix-syu-1-1-1-1-
+*		{'ix-syu': <IxNetwork.IxNetwork object at 0x02972210>, 'pet2': <e7.e7 object at 0x029722F0>}
+*		[[['pet2', 'setAutoReloginFlag(1)', '', '0', 8], ['pet2', 'try 180:show card 1/1 detail', 'Alarms:\\s*\n*\\s*<none>\\s*\n*\\s*Conditions:\\s*\n*\\s*<none>', '30', 9], ['pet2', 'try 180:show card 1/2 detail', 'Alarms:\\s*\n*\\s*<none>\\s*\n*\\s*Conditions:\\s*\n*\\s*<none>', '30', 10], ['pet2', 'show alarm', 'no:LACP Fault on Port', '30', 11], ['pet2', 'enable eth-port 1/1/x3', 'success', '30', 12], ['pet2', 'enable eth-port 1/2/x3', 'success', '30', 13], ['pet2', 'show interface as10 member', '1/1/x3\\s+enabled\\s+up in bundle', '30', 14], ['pet2', 'show interface as10 member', '1/2/x3\\s+enabled\\s+up in bundle', '30', 15]], [['pet2', 'reboot card 1/1', 'yes', '30', 22], ['pet2', 'yes', '>', '30', 23], ['pet2', 'sleep(60)', '', '0', 24], ['ix-syu', 'sleep(10)', '', '0', 31], ['pet2', 'try 180:relogin()', '', '0', 33], ['pet2', 'try 240:show card 1/1 detail', 'Alarms:\\s*\n*\\s*<none>\\s*\n*\\s*Conditions:\\s*\n*\\s*<none>', '30', 34], ['pet2', 'show alarm', 'no:LACP Fault on Port', '30', 35]], []]
+*		full
+*		<logging.Logger object at 0x029722D0>
+*	Keyword Arguments: 		
+*-------------------------------------------------------------------------------
+*ERROR MESSAGE:
+*   tried 1 time(s), failed in function(singleStep),
+*	arg( ['show alarm', 'LACP Fault on Port', '30', False, True, False])
+*	kwarg ({})
+*
+*Exception:pattern(LACP Fault on Port) found with 30.000000, buffer is:
+*--buffer start--
+*show alarm
+*Occurred Time          Severity Alarm                                          
+*---------------------- -------- -----------------------------------------------
+*2015/11/19 09:48:57.89 minor    Ethernet port "1/1/x3"
+*                                "LACP Fault on Port"
+*                                 (affects service)
+*2015/11/19 09:48:56.01 major    DSL port "1/1/v1"
+*                                "Loss of signal"
+*                                 (affects service)
+*2015/11/19 09:48:56.01 major    DSL port "1/1/v2"
+*                                "Loss of signal"
+*                                 (affects service)
+*2015/11/19 09:48:56.01 major    DSL port "1/1/v3"
+*                                "Loss of signal"
+*                                 (affects service)
+*2015/11/19 09:48:56.01 major    DSL port "1/1/v4"
+*                                "Loss of signal"
+*                                 (affects service)
+*2015/11/19 09:48:56.01 major    DSL port "1/1/v5"
+*                                "Loss of signal"
+*                                 (affects service)
+*
+*--buffer end here--
+*
+*
+*Traceback (most recent call last):
+*  File "runner.pyo", line 16, in inner
+*  File "runner.pyo", line 202, in run
+*  File "runner.pyo", line 183, in runSegment
+*  File "dut.pyo", line 295, in stepCheck
+*  File "dut.pyo", line 291, in retry
+*ValueError: tried 1 time(s), failed in function(singleStep),
+*	arg( ['show alarm', 'LACP Fault on Port', '30', False, True, False])
+*	kwarg ({})
+*
+*Exception:pattern(LACP Fault on Port) found with 30.000000, buffer is:
+*--buffer start--
+*show alarm
+*Occurred Time          Severity Alarm                                          
+*---------------------- -------- -----------------------------------------------
+*2015/11/19 09:48:57.89 minor    Ethernet port "1/1/x3"
+*                                "LACP Fault on Port"
+*                                 (affects service)
+*2015/11/19 09:48:56.01 major    DSL port "1/1/v1"
+*                                "Loss of signal"
+*                                 (affects service)
+*2015/11/19 09:48:56.01 major    DSL port "1/1/v2"
+*                                "Loss of signal"
+*                                 (affects service)
+*2015/11/19 09:48:56.01 major    DSL port "1/1/v3"
+*                                "Loss of signal"
+*                                 (affects service)
+*2015/11/19 09:48:56.01 major    DSL port "1/1/v4"
+*                                "Loss of signal"
+*                                 (affects service)
+*2015/11/19 09:48:56.01 major    DSL port "1/1/v5"
+*                                "Loss of signal"
+*                                 (affects service)
+*
+*--buffer end here--
+*
+*
+*-------------------------------------------------------------------------------
+*globals=>
+*	'__author__': 'Sean Yu'
+*	'__doc__': None
+*	'__file__': 'c:\workspace\idash\build\bin\.\dut.pyo'
+*	'__name__': 'dut'
+*	'__package__': None
+*	'dut': <class 'dut.dut'>
+*
+*locals =>
+*	'FunName': 'singleStep'
+*	'GetFunctionbyName': <function GetFunctionbyName at 0x02845D70>
+*	'IsFail': True
+*	'arg': ['show alarm', 'LACP Fault on Port', '30', False, True, False]
+*	'casename': '72-cr.py--aalag_switchtime_reboot_card_fcs.csv--bench.csv-full-pet2-ix-syu-1-1-1-1-'
+*	'counter': 1
+*	'e': RuntimeError('pattern(LACP Fault on Port) found with 30.000000, buffer is:\n--buffer start--\nshow alarm\r\nOccurred Time          Severity Alarm                                          \r\n---------------------- -------- -----------------------------------------------\r\n2015/11/19 09:48:57.89 minor    Ethernet port "1/1/x3"\r\n                                "LACP Fault on Port"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v1"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v2"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v3"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v4"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v5"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n\n--buffer end here--\n',)
+*	'errormessage': 'pattern(LACP Fault on Port) found with 30.000000, buffer is:\n--buffer start--\nshow alarm\r\nOccurred Time          Severity Alarm                                          \r\n---------------------- -------- -----------------------------------------------\r\n2015/11/19 09:48:57.89 minor    Ethernet port "1/1/x3"\r\n                                "LACP Fault on Port"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v1"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v2"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v3"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v4"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v5"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n\n--buffer end here--\n'
+*	'fun': <bound method e7.singleStep of <e7.e7 object at 0x029722F0>>
+*	'funName': 'singleStep'
+*	'kwarg': {}
+*	'maxtry': 1
+*	'self': <e7.e7 object at 0x029722F0>
+*		'ErrorMessage': None
+*		'FailFlag': False
+*		'_has_poll': False
+*		'attribute': {'LOGIN': '../bench/e7.login', 'SUT': 'e7', 'CMD': 'telnet 10.202.107.221'}
+*		'autoReloginFlag': True
+*		'cookedq': 'Roy>'
+*		'counterRelogin': 0
+*		'debuglevel': 0
+*		'eof': False
+*		'host': '10.202.107.221'
+*		'iacseq': ''
+*		'idxSearch': 2017
+*		'idxUpdate': 1735
+*		'irawq': 0
+*		'lockRelogin': <thread.lock object at 0x02372180>
+*		'lockStreamOut': <thread.lock object at 0x023721C0>
+*		'logfile': <open file 'c:\workspace\idash\build\bin\log\st_fcs-csv-1-300-pet2-2015-11-20_131304.338000\72-cr.py--aalag_switchtime_reboot_card_fcs.csv--bench.csv-fu-2015-11-20_142757.817000\pet2.log', mode 'wb' at 0x02855F40>
+*		'logger': <logging.Logger object at 0x028C3F70>
+*		'loginDone': True
+*		'name': 'pet2'
+*		'option_callback': None
+*		'port': 23
+*		'rawq': ''
+*		'sb': 0
+*		'sbdataq': ''
+*		'sock': <socket._socketobject object at 0x027FBAE8>
+*		'streamOut': 'show card 1/1 detail\r\nInformation for card 1/1:\r\nProvisioned type        : VDSL2-48Cr2\r\nActual type             : VDSL2-48Cr2\r\nPart number             : 100-03880\r\nCLEI                    : CALIXCALIX\r\nSerial number           : 211509602928\r\nApplication version     : 2.4.45.13\r\nDatabase created        : 2015/11/19 04:25:04\r\nDatabase last updated   : 2015/11/19 09:46:14\r\nController candidate    : enabled\r\nMAC address start       : 00:02:5d:eb:27:01\r\nMAC address end         : 00:02:5d:eb:27:3c\r\nTemperature level       : fine\r\nAdmin status            : enabled\r\nOperational status      : enabled\r\nAdditional status info  : child provisioned, default provisioned, standby\r\nCritical alarms         : 0\r\nMajor alarms            : 0\r\nMinor alarms            : 0\r\nWarning conditions      : 0\r\nInfo conditions         : 0\r\n\r\nAlarms:\r\n\t<none>\r\n\r\nConditions:\r\n\t<none>\r\nRoy>show card 1/2 detail\r\nInformation for card 1/2:\r\nProvisioned type        : VDSL2-48Dr2\r\nActual type             : VDSL2-48Dr2\r\nPart number             : 100-03882\r\nCLEI                    : CALIXCALIX\r\nSerial number           : 211503600311\r\nApplication version     : 2.4.45.13\r\nDatabase created        : 2015/11/19 04:25:04\r\nDatabase last updated   : 2015/11/19 09:46:14\r\nController candidate    : enabled\r\nMAC address start       : 00:02:5d:e1:ba:58\r\nMAC address end         : 00:02:5d:e1:ba:93\r\nTemperature level       : cool\r\nAdmin status            : enabled\r\nOperational status      : enabled\r\nAdditional status info  : child provisioned, default provisioned, active\r\nCritical alarms         : 0\r\nMajor alarms            : 0\r\nMinor alarms            : 0\r\nWarning conditions      : 0\r\nInfo conditions         : 0\r\n\r\nAlarms:\r\n\t<none>\r\n\r\nConditions:\r\n\t<none>\r\nRoy>show alarm\r\nOccurred Time          Severity Alarm                                          \r\n---------------------- -------- -----------------------------------------------\r\n2015/11/19 09:48:57.89 minor    Ethernet port "1/1/x3"\r\n                                "LACP Fault on Port"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v1"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v2"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v3"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v4"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v5"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v6"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v7"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v8"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v9"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v10"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v11"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v12"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v13"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v14"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v15"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v16"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v17"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v18"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v19"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v20"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v21"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v22"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v23"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v24"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v25"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v26"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v27"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v28"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v29"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v30"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v31"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v32"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v33"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v34"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v35"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v36"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v37"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v38"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v39"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v40"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v41"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v42"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v43"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v44"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v45"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v46"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v47"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v48"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n\r\n49 alarms found.\r\nRoy>\r\nRoy>'
+*		'timeout': 0.5
+*		'timestampCmd': 1448000901.519
+*
+**********************************EREOR END*************************************
+
+
+Traceback (most recent call last):
+  File "runner.pyo", line 460, in run1case
+  File "runner.pyo", line 221, in case_runner
+  File "runner.pyo", line 34, in inner
+Exception: 
+*********************************ERROR DUMP************************************
+*logAction dump:
+*	Function Name: 		run
+*	Arguments: 		
+*		72-cr.py--aalag_switchtime_reboot_card_fcs.csv--bench.csv-full-pet2-ix-syu-1-1-1-1-
+*		{'ix-syu': <IxNetwork.IxNetwork object at 0x02972210>, 'pet2': <e7.e7 object at 0x029722F0>}
+*		[[['pet2', 'setAutoReloginFlag(1)', '', '0', 8], ['pet2', 'try 180:show card 1/1 detail', 'Alarms:\\s*\n*\\s*<none>\\s*\n*\\s*Conditions:\\s*\n*\\s*<none>', '30', 9], ['pet2', 'try 180:show card 1/2 detail', 'Alarms:\\s*\n*\\s*<none>\\s*\n*\\s*Conditions:\\s*\n*\\s*<none>', '30', 10], ['pet2', 'show alarm', 'no:LACP Fault on Port', '30', 11], ['pet2', 'enable eth-port 1/1/x3', 'success', '30', 12], ['pet2', 'enable eth-port 1/2/x3', 'success', '30', 13], ['pet2', 'show interface as10 member', '1/1/x3\\s+enabled\\s+up in bundle', '30', 14], ['pet2', 'show interface as10 member', '1/2/x3\\s+enabled\\s+up in bundle', '30', 15]], [['pet2', 'reboot card 1/1', 'yes', '30', 22], ['pet2', 'yes', '>', '30', 23], ['pet2', 'sleep(60)', '', '0', 24], ['ix-syu', 'sleep(10)', '', '0', 31], ['pet2', 'try 180:relogin()', '', '0', 33], ['pet2', 'try 240:show card 1/1 detail', 'Alarms:\\s*\n*\\s*<none>\\s*\n*\\s*Conditions:\\s*\n*\\s*<none>', '30', 34], ['pet2', 'show alarm', 'no:LACP Fault on Port', '30', 35]], []]
+*		full
+*		<logging.Logger object at 0x029722D0>
+*	Keyword Arguments: 		
+*-------------------------------------------------------------------------------
+*ERROR MESSAGE:
+*   tried 1 time(s), failed in function(singleStep),
+*	arg( ['show alarm', 'LACP Fault on Port', '30', False, True, False])
+*	kwarg ({})
+*
+*Exception:pattern(LACP Fault on Port) found with 30.000000, buffer is:
+*--buffer start--
+*show alarm
+*Occurred Time          Severity Alarm                                          
+*---------------------- -------- -----------------------------------------------
+*2015/11/19 09:48:57.89 minor    Ethernet port "1/1/x3"
+*                                "LACP Fault on Port"
+*                                 (affects service)
+*2015/11/19 09:48:56.01 major    DSL port "1/1/v1"
+*                                "Loss of signal"
+*                                 (affects service)
+*2015/11/19 09:48:56.01 major    DSL port "1/1/v2"
+*                                "Loss of signal"
+*                                 (affects service)
+*2015/11/19 09:48:56.01 major    DSL port "1/1/v3"
+*                                "Loss of signal"
+*                                 (affects service)
+*2015/11/19 09:48:56.01 major    DSL port "1/1/v4"
+*                                "Loss of signal"
+*                                 (affects service)
+*2015/11/19 09:48:56.01 major    DSL port "1/1/v5"
+*                                "Loss of signal"
+*                                 (affects service)
+*
+*--buffer end here--
+*
+*
+*Traceback (most recent call last):
+*  File "runner.pyo", line 16, in inner
+*  File "runner.pyo", line 202, in run
+*  File "runner.pyo", line 183, in runSegment
+*  File "dut.pyo", line 295, in stepCheck
+*  File "dut.pyo", line 291, in retry
+*ValueError: tried 1 time(s), failed in function(singleStep),
+*	arg( ['show alarm', 'LACP Fault on Port', '30', False, True, False])
+*	kwarg ({})
+*
+*Exception:pattern(LACP Fault on Port) found with 30.000000, buffer is:
+*--buffer start--
+*show alarm
+*Occurred Time          Severity Alarm                                          
+*---------------------- -------- -----------------------------------------------
+*2015/11/19 09:48:57.89 minor    Ethernet port "1/1/x3"
+*                                "LACP Fault on Port"
+*                                 (affects service)
+*2015/11/19 09:48:56.01 major    DSL port "1/1/v1"
+*                                "Loss of signal"
+*                                 (affects service)
+*2015/11/19 09:48:56.01 major    DSL port "1/1/v2"
+*                                "Loss of signal"
+*                                 (affects service)
+*2015/11/19 09:48:56.01 major    DSL port "1/1/v3"
+*                                "Loss of signal"
+*                                 (affects service)
+*2015/11/19 09:48:56.01 major    DSL port "1/1/v4"
+*                                "Loss of signal"
+*                                 (affects service)
+*2015/11/19 09:48:56.01 major    DSL port "1/1/v5"
+*                                "Loss of signal"
+*                                 (affects service)
+*
+*--buffer end here--
+*
+*
+*-------------------------------------------------------------------------------
+*globals=>
+*	'__author__': 'Sean Yu'
+*	'__doc__': None
+*	'__file__': 'c:\workspace\idash\build\bin\.\dut.pyo'
+*	'__name__': 'dut'
+*	'__package__': None
+*	'dut': <class 'dut.dut'>
+*
+*locals =>
+*	'FunName': 'singleStep'
+*	'GetFunctionbyName': <function GetFunctionbyName at 0x02845D70>
+*	'IsFail': True
+*	'arg': ['show alarm', 'LACP Fault on Port', '30', False, True, False]
+*	'casename': '72-cr.py--aalag_switchtime_reboot_card_fcs.csv--bench.csv-full-pet2-ix-syu-1-1-1-1-'
+*	'counter': 1
+*	'e': RuntimeError('pattern(LACP Fault on Port) found with 30.000000, buffer is:\n--buffer start--\nshow alarm\r\nOccurred Time          Severity Alarm                                          \r\n---------------------- -------- -----------------------------------------------\r\n2015/11/19 09:48:57.89 minor    Ethernet port "1/1/x3"\r\n                                "LACP Fault on Port"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v1"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v2"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v3"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v4"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v5"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n\n--buffer end here--\n',)
+*	'errormessage': 'pattern(LACP Fault on Port) found with 30.000000, buffer is:\n--buffer start--\nshow alarm\r\nOccurred Time          Severity Alarm                                          \r\n---------------------- -------- -----------------------------------------------\r\n2015/11/19 09:48:57.89 minor    Ethernet port "1/1/x3"\r\n                                "LACP Fault on Port"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v1"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v2"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v3"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v4"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v5"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n\n--buffer end here--\n'
+*	'fun': <bound method e7.singleStep of <e7.e7 object at 0x029722F0>>
+*	'funName': 'singleStep'
+*	'kwarg': {}
+*	'maxtry': 1
+*	'self': <e7.e7 object at 0x029722F0>
+*		'ErrorMessage': None
+*		'FailFlag': False
+*		'_has_poll': False
+*		'attribute': {'LOGIN': '../bench/e7.login', 'SUT': 'e7', 'CMD': 'telnet 10.202.107.221'}
+*		'autoReloginFlag': True
+*		'cookedq': 'Roy>'
+*		'counterRelogin': 0
+*		'debuglevel': 0
+*		'eof': False
+*		'host': '10.202.107.221'
+*		'iacseq': ''
+*		'idxSearch': 2017
+*		'idxUpdate': 1735
+*		'irawq': 0
+*		'lockRelogin': <thread.lock object at 0x02372180>
+*		'lockStreamOut': <thread.lock object at 0x023721C0>
+*		'logfile': <open file 'c:\workspace\idash\build\bin\log\st_fcs-csv-1-300-pet2-2015-11-20_131304.338000\72-cr.py--aalag_switchtime_reboot_card_fcs.csv--bench.csv-fu-2015-11-20_142757.817000\pet2.log', mode 'wb' at 0x02855F40>
+*		'logger': <logging.Logger object at 0x028C3F70>
+*		'loginDone': True
+*		'name': 'pet2'
+*		'option_callback': None
+*		'port': 23
+*		'rawq': ''
+*		'sb': 0
+*		'sbdataq': ''
+*		'sock': <socket._socketobject object at 0x027FBAE8>
+*		'streamOut': 'show card 1/1 detail\r\nInformation for card 1/1:\r\nProvisioned type        : VDSL2-48Cr2\r\nActual type             : VDSL2-48Cr2\r\nPart number             : 100-03880\r\nCLEI                    : CALIXCALIX\r\nSerial number           : 211509602928\r\nApplication version     : 2.4.45.13\r\nDatabase created        : 2015/11/19 04:25:04\r\nDatabase last updated   : 2015/11/19 09:46:14\r\nController candidate    : enabled\r\nMAC address start       : 00:02:5d:eb:27:01\r\nMAC address end         : 00:02:5d:eb:27:3c\r\nTemperature level       : fine\r\nAdmin status            : enabled\r\nOperational status      : enabled\r\nAdditional status info  : child provisioned, default provisioned, standby\r\nCritical alarms         : 0\r\nMajor alarms            : 0\r\nMinor alarms            : 0\r\nWarning conditions      : 0\r\nInfo conditions         : 0\r\n\r\nAlarms:\r\n\t<none>\r\n\r\nConditions:\r\n\t<none>\r\nRoy>show card 1/2 detail\r\nInformation for card 1/2:\r\nProvisioned type        : VDSL2-48Dr2\r\nActual type             : VDSL2-48Dr2\r\nPart number             : 100-03882\r\nCLEI                    : CALIXCALIX\r\nSerial number           : 211503600311\r\nApplication version     : 2.4.45.13\r\nDatabase created        : 2015/11/19 04:25:04\r\nDatabase last updated   : 2015/11/19 09:46:14\r\nController candidate    : enabled\r\nMAC address start       : 00:02:5d:e1:ba:58\r\nMAC address end         : 00:02:5d:e1:ba:93\r\nTemperature level       : cool\r\nAdmin status            : enabled\r\nOperational status      : enabled\r\nAdditional status info  : child provisioned, default provisioned, active\r\nCritical alarms         : 0\r\nMajor alarms            : 0\r\nMinor alarms            : 0\r\nWarning conditions      : 0\r\nInfo conditions         : 0\r\n\r\nAlarms:\r\n\t<none>\r\n\r\nConditions:\r\n\t<none>\r\nRoy>show alarm\r\nOccurred Time          Severity Alarm                                          \r\n---------------------- -------- -----------------------------------------------\r\n2015/11/19 09:48:57.89 minor    Ethernet port "1/1/x3"\r\n                                "LACP Fault on Port"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v1"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v2"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v3"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v4"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v5"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v6"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v7"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v8"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v9"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v10"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v11"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v12"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v13"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v14"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v15"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v16"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v17"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v18"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v19"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v20"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v21"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v22"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v23"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v24"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v25"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v26"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v27"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v28"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v29"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v30"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v31"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v32"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v33"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v34"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v35"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v36"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v37"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v38"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v39"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v40"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v41"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v42"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v43"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v44"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v45"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v46"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v47"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n2015/11/19 09:48:56.01 major    DSL port "1/1/v48"\r\n                                "Loss of signal"\r\n                                 (affects service)\r\n\r\n49 alarms found.\r\nRoy>\r\nRoy>'
+*		'timeout': 0.5
+*		'timestampCmd': 1448000901.519
+*
+**********************************EREOR END*************************************
+
+
+

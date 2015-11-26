@@ -1,0 +1,48 @@
+#var
+defaultTime,2
+#setup
+N6,clear stat dhcp,>|#|>>>,${defaultTime}
+N6,show stat dhcp,>|#|>>>,${defaultTime}
+N6,show stat dhcp,>|#|>>>,${defaultTime}
+N6,show stat dhcp,>|#|>>>,${defaultTime}
+N6,,>|#|>>>,${defaultTime}
+N6,show stat dhcp,>|#|>>>,${defaultTime}
+N6,show stat eth-port 1/2/g1,>|#|>>>,${defaultTime}
+N6,show vlan 1025 me,>|#|>>>,${defaultTime}
+N6,show vlan 1025 me,>|#|>>>,${defaultTime}
+N6,show ethp,>|#|>>>,${defaultTime}
+N6,show eth-port 1/1/g2,>|#|>>>,${defaultTime}
+N6,show eth-port 1/2/g2,>|#|>>>,${defaultTime}
+N6,show eth-port 1/2/g1,>|#|>>>,${defaultTime}
+N6,,>|#|>>>,${defaultTime}
+N6,show eth-port 1/2/g1,>|#|>>>,${defaultTime}
+N6,clear stat eth-po 1/2/g1,>|#|>>>,${defaultTime}
+N6,show stat eth-port 1/2/g1,>|#|>>>,${defaultTime}
+N6,show stat eth-port 1/2/g1,>|#|>>>,${defaultTime}
+N6,show stat eth-port 1/2/g1,>|#|>>>,${defaultTime}
+N6,show stat dhcp,>|#|>>>,${defaultTime}
+N6,,>|#|>>>,${defaultTime}
+N6,show stat dhcp,>|#|>>>,${defaultTime}
+N6,show stat eth-port 1/2/g1,>|#|>>>,${defaultTime}
+N6,,>|#|>>>,${defaultTime}
+N6,show stat eth-port 1/2/g1,>|#|>>>,${defaultTime}
+N6,et,>|#|>>>,${defaultTime}
+N6,,>|#|>>>,${defaultTime}
+N6,et,>|#|>>>,${defaultTime}
+N6,show stat eth-port 1/1/g2,>|#|>>>,${defaultTime}
+N6,clear stat eth-p 1/1/g2,>|#|>>>,${defaultTime}
+N6,show stat eth-port 1/1/g2,>|#|>>>,${defaultTime}
+N6,show stat eth-port 1/1/g2,>|#|>>>,${defaultTime}
+N6,show stat eth-port 1/1/g2,>|#|>>>,${defaultTime}
+N6,show stat eth-port 1/1/g2,>|#|>>>,${defaultTime}
+N6,show stat eth-port 1/1/g2,>|#|>>>,${defaultTime}
+N6,clear stat eth-p 1/1/g2,>|#|>>>,${defaultTime}
+N6,show stat eth-port 1/1/g2,>|#|>>>,${defaultTime}
+N6,show stat eth-port 1/1/g2,>|#|>>>,${defaultTime}
+N6,show stat eth-port 1/1/g2,>|#|>>>,${defaultTime}
+N6,show stat eth-port 1/1/g2,>|#|>>>,${defaultTime}
+N6,show stat eth-port 1/1/g2,>|#|>>>,${defaultTime}
+N6,show stat eth-port 1/1/g2,>|#|>>>,${defaultTime}
+N6,show dhcp leas,>|#|>>>,${defaultTime}
+N6,,>|#|>>>,${defaultTime}
+N6,show dhcp leas,>|#|>>>,${defaultTime}

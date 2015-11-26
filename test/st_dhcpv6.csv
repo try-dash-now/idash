@@ -1,0 +1,3 @@
+cr.py loadSync_cs.csv bench.csv full ${1},break,,
+cr.py upgradeE7.csv bench.csv full N6 e7 e7 600 ${1} ${2},break,,concurrent
+cr.py upgradeE7.csv bench.csv full N3 e7 e7 600 ${1} ${2},break,,concurrent

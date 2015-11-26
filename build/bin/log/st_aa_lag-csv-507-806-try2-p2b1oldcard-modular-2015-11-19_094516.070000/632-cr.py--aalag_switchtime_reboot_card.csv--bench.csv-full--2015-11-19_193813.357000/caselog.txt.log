@@ -1,0 +1,160 @@
+2015-11-19 19:38:13,454 -INFO:    loading case: 632-cr.py--aalag_switchtime_reboot_card.csv--bench.csv-full-N3-ix-syu-1-1-1-1-1-2
+2015-11-19 19:38:13,464 -INFO:    starting to run case: cr.py  aalag_switchtime_reboot_card.csv  bench.csv full N3 ix-syu 1/1 1/1 1/2
+2015-11-19 19:38:13,464 -INFO:    starting segment:0
+2015-11-19 19:38:31,947 -INFO:    starting segment:1
+2015-11-19 19:42:52,947 -ERROR:    Case FAIL
+2015-11-19 19:42:52,947 -ERROR:    
+*********************************ERROR DUMP************************************
+*logAction dump:
+*	Function Name: 		run
+*	Arguments: 		
+*		632-cr.py--aalag_switchtime_reboot_card.csv--bench.csv-full-N3-ix-syu-1-1-1-1-1-2
+*		{'N3': <e7.e7 object at 0x028C8D30>, 'ix-syu': <IxNetwork.IxNetwork object at 0x0281FD90>}
+*		[[['N3', 'setAutoReloginFlag(1)', '', '0', 8], ['N3', 'try 180:show card 1/1 detail', 'Alarms:\\s*\n*\\s*<none>\\s*\n*\\s*Conditions:\\s*\n*\\s*<none>', '30', 9], ['N3', 'try 180:show card 1/2 detail', 'Alarms:\\s*\n*\\s*<none>\\s*\n*\\s*Conditions:\\s*\n*\\s*<none>', '30', 10], ['N3', 'show alarm', 'No alarms found', '30', 11], ['N3', 'enable eth-port 1/1/x3', 'success', '30', 12], ['N3', 'enable eth-port 1/2/x3', 'success', '30', 13], ['N3', 'show interface as10 member', '1/1/x3\\s+enabled\\s+up in bundle', '30', 14], ['N3', 'show interface as10 member', '1/2/x3\\s+enabled\\s+up in bundle', '30', 15], ['ix-syu', 'clearStats()', '', '0', 17], ['ix-syu', 'clearStats()', '', '0', 18], ['ix-syu', 'sleep(10)', '', '0', 19]], [['N3', 'reboot card 1/1', 'yes', '30', 22], ['N3', 'yes', '>', '30', 23], ['N3', 'sleep(60)', '', '0', 24], ['ix-syu', 'checkRange("Traffic Item Statistics","multicast UDP", "Packet Loss Duration (ms)", 2000)', '', '0', 25], ['ix-syu', 'checkRange("Traffic Item Statistics","client->server", "Packet Loss Duration (ms)", 2000)', '', '0', 26], ['ix-syu', 'checkRange("Traffic Item Statistics","server->client", "Packet Loss Duration (ms)", 2000)', '', '0', 27], ['ix-syu', 'clearStats()', '', '0', 29], ['ix-syu', 'clearStats()', '', '0', 30], ['ix-syu', 'sleep(10)', '', '0', 31], ['N3', 'try 180:relogin()', '', '0', 33], ['N3', 'try 240:show card 1/1 detail', 'Alarms:\\s*\n*\\s*<none>\\s*\n*\\s*Conditions:\\s*\n*\\s*<none>', '30', 34], ['N3', 'show alarm', 'No alarms found', '30', 35], ['ix-syu', 'checkRange("Traffic Item Statistics","multicast UDP", "Packet Loss Duration (ms)", 2000)', '', '0', 36], ['ix-syu', 'checkRange("Traffic Item Statistics","client->server", "Packet Loss Duration (ms)", 2000)', '', '0', 37], ['ix-syu', 'checkRange("Traffic Item Statistics","server->client", "Packet Loss Duration (ms)", 2000)', '', '0', 38]], []]
+*		full
+*		<logging.Logger object at 0x027B1970>
+*	Keyword Arguments: 		
+*-------------------------------------------------------------------------------
+*ERROR MESSAGE:
+*   tried 1 time(s), failed in function(checkRange),
+*	arg( ['Traffic Item Statistics', 'multicast UDP', 'Packet Loss Duration (ms)', 2000])
+*	kwarg ({})
+*
+*Exception:could not convert string to float: {}
+*
+*Traceback (most recent call last):
+*  File "runner.pyo", line 16, in inner
+*  File "runner.pyo", line 202, in run
+*  File "runner.pyo", line 183, in runSegment
+*  File "dut.pyo", line 295, in stepCheck
+*  File "dut.pyo", line 291, in retry
+*ValueError: tried 1 time(s), failed in function(checkRange),
+*	arg( ['Traffic Item Statistics', 'multicast UDP', 'Packet Loss Duration (ms)', 2000])
+*	kwarg ({})
+*
+*Exception:could not convert string to float: {}
+*
+*-------------------------------------------------------------------------------
+*globals=>
+*	'__author__': 'Sean Yu'
+*	'__doc__': None
+*	'__file__': 'c:\workspace\idash\build\bin\.\dut.pyo'
+*	'__name__': 'dut'
+*	'__package__': None
+*	'dut': <class 'dut.dut'>
+*
+*locals =>
+*	'FunName': 'checkRange'
+*	'GetFunctionbyName': <function GetFunctionbyName at 0x027B7D70>
+*	'IsFail': True
+*	'arg': ['Traffic Item Statistics', 'multicast UDP', 'Packet Loss Duration (ms)', 2000]
+*	'casename': '632-cr.py--aalag_switchtime_reboot_card.csv--bench.csv-full-N3-ix-syu-1-1-1-1-1-2'
+*	'counter': 1
+*	'e': ValueError('could not convert string to float: {}',)
+*	'errormessage': 'could not convert string to float: {}'
+*	'fun': <bound method IxNetwork.checkRange of <IxNetwork.IxNetwork object at 0x0281FD90>>
+*	'funName': 'checkRange'
+*	'kwarg': {}
+*	'maxtry': 1
+*	'self': <IxNetwork.IxNetwork object at 0x0281FD90>
+*		'ErrorMessage': None
+*		'FailFlag': False
+*		'attribute': {'IP': '192.168.37.112', 'LOGIN': '../bench/ixiaNetwork.login', 'SUT': 'IxNetwork', 'version': '7.30', 'WAIT': '5'}
+*		'debuglevel': 0
+*		'idxSearch': 679
+*		'idxUpdate': 0
+*		'iphost': '192.168.37.112'
+*		'lockStreamOut': <thread.lock object at 0x008641B0>
+*		'logfile': <open file 'c:\workspace\idash\build\bin\log\st_aa_lag-csv-507-806-try2-p2b1oldcard-modular-2015-11-19_094516.070000\632-cr.py--aalag_switchtime_reboot_card.csv--bench.csv-full--2015-11-19_193813.357000\ix-syu.log', mode 'wb' at 0x028C7F98>
+*		'logger': <logging.Logger object at 0x028A4F30>
+*		'loginDone': True
+*		'msg': []
+*		'name': 'ix-syu'
+*		'output': 'client->server\nserver->client\nmulticast UDP'
+*		'streamOut': 'clear_stats\n::ixNet::OK\nclear_stats\n::ixNet::OK\nread_Stats "Traffic Item Statistics" "Packet Loss Duration (ms)"\n{103.662 5.694 14.851}\ngetTrafficName\nclient->server\nserver->client\nmulticast UDP\nread_Stats "Traffic Item Statistics" "Packet Loss Duration (ms)"\n{103.662 5.694 14.851}\ngetTrafficName\nclient->server\nserver->client\nmulticast UDP\nread_Stats "Traffic Item Statistics" "Packet Loss Duration (ms)"\n{103.662 5.694 14.851}\ngetTrafficName\nclient->server\nserver->client\nmulticast UDP\nclear_stats\n::ixNet::OK\nclear_stats\n::ixNet::OK\nread_Stats "Traffic Item Statistics" "Packet Loss Duration (ms)"\n{71.68 42.432 {}}\ngetTrafficName\nclient->server\nserver->client\nmulticast UDP\n'
+*		'tclInter': <Tkinter.Tk instance at 0x02D619B8>
+*		'version': '7.30'
+*
+**********************************EREOR END*************************************
+
+
+Traceback (most recent call last):
+  File "runner.pyo", line 460, in run1case
+  File "runner.pyo", line 221, in case_runner
+  File "runner.pyo", line 34, in inner
+Exception: 
+*********************************ERROR DUMP************************************
+*logAction dump:
+*	Function Name: 		run
+*	Arguments: 		
+*		632-cr.py--aalag_switchtime_reboot_card.csv--bench.csv-full-N3-ix-syu-1-1-1-1-1-2
+*		{'N3': <e7.e7 object at 0x028C8D30>, 'ix-syu': <IxNetwork.IxNetwork object at 0x0281FD90>}
+*		[[['N3', 'setAutoReloginFlag(1)', '', '0', 8], ['N3', 'try 180:show card 1/1 detail', 'Alarms:\\s*\n*\\s*<none>\\s*\n*\\s*Conditions:\\s*\n*\\s*<none>', '30', 9], ['N3', 'try 180:show card 1/2 detail', 'Alarms:\\s*\n*\\s*<none>\\s*\n*\\s*Conditions:\\s*\n*\\s*<none>', '30', 10], ['N3', 'show alarm', 'No alarms found', '30', 11], ['N3', 'enable eth-port 1/1/x3', 'success', '30', 12], ['N3', 'enable eth-port 1/2/x3', 'success', '30', 13], ['N3', 'show interface as10 member', '1/1/x3\\s+enabled\\s+up in bundle', '30', 14], ['N3', 'show interface as10 member', '1/2/x3\\s+enabled\\s+up in bundle', '30', 15], ['ix-syu', 'clearStats()', '', '0', 17], ['ix-syu', 'clearStats()', '', '0', 18], ['ix-syu', 'sleep(10)', '', '0', 19]], [['N3', 'reboot card 1/1', 'yes', '30', 22], ['N3', 'yes', '>', '30', 23], ['N3', 'sleep(60)', '', '0', 24], ['ix-syu', 'checkRange("Traffic Item Statistics","multicast UDP", "Packet Loss Duration (ms)", 2000)', '', '0', 25], ['ix-syu', 'checkRange("Traffic Item Statistics","client->server", "Packet Loss Duration (ms)", 2000)', '', '0', 26], ['ix-syu', 'checkRange("Traffic Item Statistics","server->client", "Packet Loss Duration (ms)", 2000)', '', '0', 27], ['ix-syu', 'clearStats()', '', '0', 29], ['ix-syu', 'clearStats()', '', '0', 30], ['ix-syu', 'sleep(10)', '', '0', 31], ['N3', 'try 180:relogin()', '', '0', 33], ['N3', 'try 240:show card 1/1 detail', 'Alarms:\\s*\n*\\s*<none>\\s*\n*\\s*Conditions:\\s*\n*\\s*<none>', '30', 34], ['N3', 'show alarm', 'No alarms found', '30', 35], ['ix-syu', 'checkRange("Traffic Item Statistics","multicast UDP", "Packet Loss Duration (ms)", 2000)', '', '0', 36], ['ix-syu', 'checkRange("Traffic Item Statistics","client->server", "Packet Loss Duration (ms)", 2000)', '', '0', 37], ['ix-syu', 'checkRange("Traffic Item Statistics","server->client", "Packet Loss Duration (ms)", 2000)', '', '0', 38]], []]
+*		full
+*		<logging.Logger object at 0x027B1970>
+*	Keyword Arguments: 		
+*-------------------------------------------------------------------------------
+*ERROR MESSAGE:
+*   tried 1 time(s), failed in function(checkRange),
+*	arg( ['Traffic Item Statistics', 'multicast UDP', 'Packet Loss Duration (ms)', 2000])
+*	kwarg ({})
+*
+*Exception:could not convert string to float: {}
+*
+*Traceback (most recent call last):
+*  File "runner.pyo", line 16, in inner
+*  File "runner.pyo", line 202, in run
+*  File "runner.pyo", line 183, in runSegment
+*  File "dut.pyo", line 295, in stepCheck
+*  File "dut.pyo", line 291, in retry
+*ValueError: tried 1 time(s), failed in function(checkRange),
+*	arg( ['Traffic Item Statistics', 'multicast UDP', 'Packet Loss Duration (ms)', 2000])
+*	kwarg ({})
+*
+*Exception:could not convert string to float: {}
+*
+*-------------------------------------------------------------------------------
+*globals=>
+*	'__author__': 'Sean Yu'
+*	'__doc__': None
+*	'__file__': 'c:\workspace\idash\build\bin\.\dut.pyo'
+*	'__name__': 'dut'
+*	'__package__': None
+*	'dut': <class 'dut.dut'>
+*
+*locals =>
+*	'FunName': 'checkRange'
+*	'GetFunctionbyName': <function GetFunctionbyName at 0x027B7D70>
+*	'IsFail': True
+*	'arg': ['Traffic Item Statistics', 'multicast UDP', 'Packet Loss Duration (ms)', 2000]
+*	'casename': '632-cr.py--aalag_switchtime_reboot_card.csv--bench.csv-full-N3-ix-syu-1-1-1-1-1-2'
+*	'counter': 1
+*	'e': ValueError('could not convert string to float: {}',)
+*	'errormessage': 'could not convert string to float: {}'
+*	'fun': <bound method IxNetwork.checkRange of <IxNetwork.IxNetwork object at 0x0281FD90>>
+*	'funName': 'checkRange'
+*	'kwarg': {}
+*	'maxtry': 1
+*	'self': <IxNetwork.IxNetwork object at 0x0281FD90>
+*		'ErrorMessage': None
+*		'FailFlag': False
+*		'attribute': {'IP': '192.168.37.112', 'LOGIN': '../bench/ixiaNetwork.login', 'SUT': 'IxNetwork', 'version': '7.30', 'WAIT': '5'}
+*		'debuglevel': 0
+*		'idxSearch': 679
+*		'idxUpdate': 0
+*		'iphost': '192.168.37.112'
+*		'lockStreamOut': <thread.lock object at 0x008641B0>
+*		'logfile': <open file 'c:\workspace\idash\build\bin\log\st_aa_lag-csv-507-806-try2-p2b1oldcard-modular-2015-11-19_094516.070000\632-cr.py--aalag_switchtime_reboot_card.csv--bench.csv-full--2015-11-19_193813.357000\ix-syu.log', mode 'wb' at 0x028C7F98>
+*		'logger': <logging.Logger object at 0x028A4F30>
+*		'loginDone': True
+*		'msg': []
+*		'name': 'ix-syu'
+*		'output': 'client->server\nserver->client\nmulticast UDP'
+*		'streamOut': 'clear_stats\n::ixNet::OK\nclear_stats\n::ixNet::OK\nread_Stats "Traffic Item Statistics" "Packet Loss Duration (ms)"\n{103.662 5.694 14.851}\ngetTrafficName\nclient->server\nserver->client\nmulticast UDP\nread_Stats "Traffic Item Statistics" "Packet Loss Duration (ms)"\n{103.662 5.694 14.851}\ngetTrafficName\nclient->server\nserver->client\nmulticast UDP\nread_Stats "Traffic Item Statistics" "Packet Loss Duration (ms)"\n{103.662 5.694 14.851}\ngetTrafficName\nclient->server\nserver->client\nmulticast UDP\nclear_stats\n::ixNet::OK\nclear_stats\n::ixNet::OK\nread_Stats "Traffic Item Statistics" "Packet Loss Duration (ms)"\n{71.68 42.432 {}}\ngetTrafficName\nclient->server\nserver->client\nmulticast UDP\n'
+*		'tclInter': <Tkinter.Tk instance at 0x02D619B8>
+*		'version': '7.30'
+*
+**********************************EREOR END*************************************
+
+
+

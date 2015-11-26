@@ -1,0 +1,340 @@
+show card 1/1 detail
+Information for card 1/1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211503600306
+Application version     : 2.4.45.14
+Database created        : 2015/10/12 18:20:54
+Database last updated   : 2015/11/21 06:00:24
+Controller candidate    : enabled
+MAC address start       : 00:02:fd:e1:ba:1c
+MAC address end         : 00:02:fd:e1:ba:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, standby
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	<none>
+N6>show card 1/2 detail
+Information for card 1/2:
+Provisioned type        : VDSL2-48c
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.45.14
+Database created        : 2015/10/12 18:20:54
+Database last updated   : 2015/11/21 06:00:24
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	<none>
+N6>show alarm
+Occurred Time          Severity Alarm                                          
+---------------------- -------- -----------------------------------------------
+2015/11/20 16:38:53.89 minor    Ethernet port "1/2/g1"
+                                "Improper removal"
+                                 (affects service)
+
+1 alarm found.
+N6>enable eth-port 1/1/x3
+success: Enable Ethernet port "1/1/x3".
+N6>enable eth-port 1/2/x3
+success: Enable Ethernet port "1/2/x3".
+N6>show interface as10 member
+
+Ethernet Port                    Status          LACP Status
+-------------------------------- --------------- -------------
+1/1/x3                           enabled         up in bundle
+1/1/x4                           enabled         up in bundle
+1/2/x3                           enabled         up in bundle
+
+3 members found.
+N6>show interface as10 member
+
+Ethernet Port                    Status          LACP Status
+-------------------------------- --------------- -------------
+1/1/x3                           enabled         up in bundle
+1/1/x4                           enabled         up in bundle
+1/2/x3                           enabled         up in bundle
+
+3 members found.
+N6>reboot card 1/1
+card 1/1 will immediately reboot and continue with the last committed software version.
+This will interrupt service. Continue? (yes/no): yes
+N6>EVENT for card 1/1 at 2015/11/21 06:06:13.22:
+    "Reboot: In Progress -- Version=2.4.45.14"
+critical ALARM for card 1/1 at 2015/11/21 06:06:23.58:
+    "Unequipped"
+    (affects service)
+EVENT for card 1/1 at 2015/11/21 06:06:23.60:
+    "Card Event: Departure"
+minor ALARM for system at 2015/11/21 06:06:23.63:
+    "No standby controller"
+    (related object: card 1/1)
+
+N6>"N6" Sat Nov 21 06:07:22 2015
+
+Username: 
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>show card 1/1 detail
+Information for card 1/1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : empty
+Part number             : 000-00000
+CLEI                    : 
+Serial number           : 0
+Application version     : 0.0.0.0
+Database created        : <unknown>
+Database last updated   : <unknown>
+Controller candidate    : enabled
+MAC address start       : 00:00:00:00:00:00
+MAC address end         : 00:00:00:00:00:00
+Temperature level       : UNKNOWN
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned, default provisioned
+Critical alarms         : 1
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	Unequipped
+
+Conditions:
+	<none>
+N6>
+N6>show card 1/1 detail
+Information for card 1/1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : empty
+Part number             : 000-00000
+CLEI                    : 
+Serial number           : 0
+Application version     : 0.0.0.0
+Database created        : <unknown>
+Database last updated   : <unknown>
+Controller candidate    : enabled
+MAC address start       : 00:00:00:00:00:00
+MAC address end         : 00:00:00:00:00:00
+Temperature level       : UNKNOWN
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned, default provisioned
+Critical alarms         : 1
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	Unequipped
+
+Conditions:
+	<none>
+N6>show card 1/1 detail
+Information for card 1/1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : empty
+Part number             : 000-00000
+CLEI                    : 
+Serial number           : 0
+Application version     : 0.0.0.0
+Database created        : <unknown>
+Database last updated   : <unknown>
+Controller candidate    : enabled
+MAC address start       : 00:00:00:00:00:00
+MAC address end         : 00:00:00:00:00:00
+Temperature level       : UNKNOWN
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned, default provisioned
+Critical alarms         : 1
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	Unequipped
+
+Conditions:
+	<none>
+N6>
+N6>Alarm CLEARED for card 1/1 at 2015/11/21 06:08:46.59:
+    "Unequipped"
+EVENT for card 1/1 at 2015/11/21 06:08:46.61:
+    "Card Event: Arrival"
+critical ALARM for card 1/1 at 2015/11/21 06:08:46.61:
+    "Not Operational"
+    (affects service)
+warning ALARM for card 1/1 at 2015/11/21 06:08:46.62:
+    "Software initialization in progress"
+EVENT for Ethernet port "1/1/x4" at 2015/11/21 06:08:49.66:
+    "LLDP Neighbor Update"
+EVENT for Ethernet port "1/1/x3" at 2015/11/21 06:08:52.27:
+    "LLDP Neighbor Update"
+EVENT for Ethernet port "1/1/x4" at 2015/11/21 06:08:52.31:
+    "LLDP Neighbor Update"
+show card 1/1 detail
+Information for card 1/1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211503600306
+Application version     : 2.4.45.14
+Database created        : 2015/10/12 18:20:54
+Database last updated   : 2015/11/21 06:06:11
+Controller candidate    : enabled
+MAC address start       : 00:02:fd:e1:ba:1c
+MAC address end         : 00:02:fd:e1:ba:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned, default provisioned
+Critical alarms         : 1
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+
+Conditions:
+	Software initialization in progress
+N6>show card 1/1 detail
+Information for card 1/1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211503600306
+Application version     : 2.4.45.14
+Database created        : 2015/10/12 18:20:54
+Database last updated   : 2015/11/21 06:06:11
+Controller candidate    : enabled
+MAC address start       : 00:02:fd:e1:ba:1c
+MAC address end         : 00:02:fd:e1:ba:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned, default provisioned
+Critical alarms         : 1
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+
+Conditions:
+	Software initialization in progress
+N6>
+N6>Alarm CLEARED for card 1/1 at 2015/11/21 06:09:43.03:
+    "Not Operational"
+Alarm CLEARED for system at 2015/11/21 06:09:55.92:
+    "No standby controller"
+    (related object: card 1/1)
+show card 1/1 detail
+Information for card 1/1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211503600306
+Application version     : 2.4.45.14
+Database created        : 2015/10/12 18:20:54
+Database last updated   : 2015/11/21 06:06:11
+Controller candidate    : enabled
+MAC address start       : 00:02:fd:e1:ba:1c
+MAC address end         : 00:02:fd:e1:ba:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, standby
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N6>Alarm CLEARED for card 1/1 at 2015/11/21 06:10:13.70:
+    "Software initialization in progress"
+EVENT for card 1/1 at 2015/11/21 06:10:13.72:
+    "Reboot: Success -- Version=2.4.45.14"
+show card 1/1 detail
+Information for card 1/1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211503600306
+Application version     : 2.4.45.14
+Database created        : 2015/10/12 18:20:54
+Database last updated   : 2015/11/21 06:06:11
+Controller candidate    : enabled
+MAC address start       : 00:02:fd:e1:ba:1c
+MAC address end         : 00:02:fd:e1:ba:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, standby
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	<none>
+N6>show alarm
+Occurred Time          Severity Alarm                                          
+---------------------- -------- -----------------------------------------------
+2015/11/20 16:38:53.89 minor    Ethernet port "1/2/g1"
+                                "Improper removal"
+                                 (affects service)
+
+1 alarm found.
+N6>
+N6>

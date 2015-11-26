@@ -1,0 +1,5 @@
+2015-11-25 14:23:48,138 -INFO:    loading a new bench:bench.csv
+2015-11-25 14:23:48,138 -INFO:    releasing duts in old dut_pool
+2015-11-25 14:23:48,138 -INFO:    loading case: 1-cr.py-loadSync_cs.csv-bench.csv-full---1-
+2015-11-25 14:23:48,730 -INFO:    starting to run case: cr.py loadSync_cs.csv bench.csv full ${1}
+2015-11-25 14:23:48,730 -INFO:    starting segment:0

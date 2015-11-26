@@ -1,0 +1,178 @@
+"Roy" Thu Nov 19 07:45:45 2015
+
+Username: 
+Username: e7support
+Password: 
+Roy>set ses time dis page dis
+success: session updated.
+Roy>show card 1/1 detail
+Information for card 1/1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03880
+CLEI                    : CALIXCALIX
+Serial number           : 211509602928
+Application version     : 2.4.45.13
+Database created        : 2015/11/19 04:25:04
+Database last updated   : 2015/11/19 06:08:33
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:eb:27:01
+MAC address end         : 00:02:5d:eb:27:3c
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : degraded
+Additional status info  : child provisioned, default provisioned, standby
+Critical alarms         : 0
+Major alarms            : 1
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	Power B Failure
+
+Conditions:
+	<none>
+Roy>show card 1/1 detail
+Information for card 1/1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03880
+CLEI                    : CALIXCALIX
+Serial number           : 211509602928
+Application version     : 2.4.45.13
+Database created        : 2015/11/19 04:25:04
+Database last updated   : 2015/11/19 06:08:33
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:eb:27:01
+MAC address end         : 00:02:5d:eb:27:3c
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : degraded
+Additional status info  : child provisioned, default provisioned, standby
+Critical alarms         : 0
+Major alarms            : 1
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	Power B Failure
+
+Conditions:
+	<none>
+Roy>
+Roy>show card 1/1 detail
+Information for card 1/1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03880
+CLEI                    : CALIXCALIX
+Serial number           : 211509602928
+Application version     : 2.4.45.13
+Database created        : 2015/11/19 04:25:04
+Database last updated   : 2015/11/19 06:08:33
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:eb:27:01
+MAC address end         : 00:02:5d:eb:27:3c
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : degraded
+Additional status info  : child provisioned, default provisioned, standby
+Critical alarms         : 0
+Major alarms            : 1
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	Power B Failure
+
+Conditions:
+	<none>
+Roy>show card 1/1 detail
+Information for card 1/1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03880
+CLEI                    : CALIXCALIX
+Serial number           : 211509602928
+Application version     : 2.4.45.13
+Database created        : 2015/11/19 04:25:04
+Database last updated   : 2015/11/19 06:08:33
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:eb:27:01
+MAC address end         : 00:02:5d:eb:27:3c
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : degraded
+Additional status info  : child provisioned, default provisioned, standby
+Critical alarms         : 0
+Major alarms            : 1
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	Power B Failure
+
+Conditions:
+	<none>
+Roy>
+Roy>show card 1/1 detail
+Information for card 1/1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03880
+CLEI                    : CALIXCALIX
+Serial number           : 211509602928
+Application version     : 2.4.45.13
+Database created        : 2015/11/19 04:25:04
+Database last updated   : 2015/11/19 06:08:33
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:eb:27:01
+MAC address end         : 00:02:5d:eb:27:3c
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : degraded
+Additional status info  : child provisioned, default provisioned, standby
+Critical alarms         : 0
+Major alarms            : 1
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	Power B Failure
+
+Conditions:
+	<none>
+Roy>show card 1/1 detail
+Information for card 1/1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03880
+CLEI                    : CALIXCALIX
+Serial number           : 211509602928
+Application version     : 2.4.45.13
+Database created        : 2015/11/19 04:25:04
+Database last updated   : 2015/11/19 06:08:33
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:eb:27:01
+MAC address end         : 00:02:5d:eb:27:3c
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : degraded
+Additional status info  : child provisioned, default provisioned, standby
+Critical alarms         : 0
+Major alarms            : 1
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	Power B Failure
+
+Conditions:
+	<none>
+Roy>

@@ -1,0 +1,247 @@
+2015-11-21 22:44:34,230 -INFO:    loading case: 391-cr.py--aalag_switchtime_reboot_card_fcs.csv--bench.csv-full-N6-ix-syu-1-1-1-1-1-
+2015-11-21 22:44:34,239 -INFO:    starting to run case: cr.py  aalag_switchtime_reboot_card_fcs.csv  bench.csv full N6 ix-syu 1/1 1/1 1/2
+2015-11-21 22:44:34,240 -INFO:    starting segment:0
+2015-11-21 22:45:05,519 -ERROR:    Case FAIL
+2015-11-21 22:45:05,519 -ERROR:    
+*********************************ERROR DUMP************************************
+*logAction dump:
+*	Function Name: 		run
+*	Arguments: 		
+*		391-cr.py--aalag_switchtime_reboot_card_fcs.csv--bench.csv-full-N6-ix-syu-1-1-1-1-1-
+*		{'N6': <e7.e7 object at 0x027A7CD0>, 'ix-syu': <IxNetwork.IxNetwork object at 0x027BED30>}
+*		[[['N6', 'setAutoReloginFlag(1)', '', '0', 8], ['N6', 'try 180:show card 1/1 detail', 'Alarms:\\s*\n*\\s*<none>\\s*\n*\\s*Conditions:\\s*\n*\\s*<none>', '30', 9], ['N6', 'try 180:show card 1/2 detail', 'Alarms:\\s*\n*\\s*<none>\\s*\n*\\s*Conditions:\\s*\n*\\s*<none>', '30', 10], ['N6', 'show alarm', 'no:LACP Fault on Port', '30', 11], ['N6', 'enable eth-port 1/1/x3', 'success', '30', 12], ['N6', 'enable eth-port 1/2/x3', 'success', '30', 13], ['N6', 'show interface as10 member', '1/1/x3\\s+enabled\\s+up in bundle', '30', 14], ['N6', 'show interface as10 member', '1/2/x3\\s+enabled\\s+up in bundle', '30', 15]], [['N6', 'reboot card 1/1', 'yes', '30', 22], ['N6', 'yes', '>', '30', 23], ['N6', 'sleep(60)', '', '0', 24], ['ix-syu', 'sleep(10)', '', '0', 31], ['N6', 'try 180:relogin()', '', '0', 33], ['N6', 'try 240:show card 1/1 detail', 'Alarms:\\s*\n*\\s*<none>\\s*\n*\\s*Conditions:\\s*\n*\\s*<none>', '30', 34], ['N6', 'show alarm', 'no:LACP Fault on Port', '30', 35]], []]
+*		full
+*		<logging.Logger object at 0x02774F90>
+*	Keyword Arguments: 		
+*-------------------------------------------------------------------------------
+*ERROR MESSAGE:
+*   tried 1 time(s), failed in function(singleStep),
+*	arg( ['show alarm', 'LACP Fault on Port', '30', False, True, False])
+*	kwarg ({})
+*
+*Exception:pattern(LACP Fault on Port) found with 30.000000, buffer is:
+*--buffer start--
+*show alarm
+*Occurred Time          Severity Alarm                                          
+*---------------------- -------- -----------------------------------------------
+*2015/11/21 22:07:08.42 minor    Ethernet port "1/1/x3"
+*                                "LACP Fault on Port"
+*                                 (affects service)
+*2015/11/21 22:07:07.33 minor    Ethernet port "1/1/x4"
+*                                "LACP Fault on Port"
+*                                 (affects service)
+*2015/11/20 16:38:53.89 minor    Ethernet port "1/2/g1"
+*                                "Improper removal"
+*                                 (affects service)
+*
+*--buffer end here--
+*
+*
+*Traceback (most recent call last):
+*  File "runner.pyo", line 16, in inner
+*  File "runner.pyo", line 202, in run
+*  File "runner.pyo", line 183, in runSegment
+*  File "dut.pyo", line 295, in stepCheck
+*  File "dut.pyo", line 291, in retry
+*ValueError: tried 1 time(s), failed in function(singleStep),
+*	arg( ['show alarm', 'LACP Fault on Port', '30', False, True, False])
+*	kwarg ({})
+*
+*Exception:pattern(LACP Fault on Port) found with 30.000000, buffer is:
+*--buffer start--
+*show alarm
+*Occurred Time          Severity Alarm                                          
+*---------------------- -------- -----------------------------------------------
+*2015/11/21 22:07:08.42 minor    Ethernet port "1/1/x3"
+*                                "LACP Fault on Port"
+*                                 (affects service)
+*2015/11/21 22:07:07.33 minor    Ethernet port "1/1/x4"
+*                                "LACP Fault on Port"
+*                                 (affects service)
+*2015/11/20 16:38:53.89 minor    Ethernet port "1/2/g1"
+*                                "Improper removal"
+*                                 (affects service)
+*
+*--buffer end here--
+*
+*
+*-------------------------------------------------------------------------------
+*globals=>
+*	'__author__': 'Sean Yu'
+*	'__doc__': None
+*	'__file__': 'c:\workspace\idash\build\bin\.\dut.pyo'
+*	'__name__': 'dut'
+*	'__package__': None
+*	'dut': <class 'dut.dut'>
+*
+*locals =>
+*	'FunName': 'singleStep'
+*	'GetFunctionbyName': <function GetFunctionbyName at 0x026BBDB0>
+*	'IsFail': True
+*	'arg': ['show alarm', 'LACP Fault on Port', '30', False, True, False]
+*	'casename': '391-cr.py--aalag_switchtime_reboot_card_fcs.csv--bench.csv-full-N6-ix-syu-1-1-1-1-1-'
+*	'counter': 1
+*	'e': RuntimeError('pattern(LACP Fault on Port) found with 30.000000, buffer is:\n--buffer start--\nshow alarm\r\nOccurred Time          Severity Alarm                                          \r\n---------------------- -------- -----------------------------------------------\r\n2015/11/21 22:07:08.42 minor    Ethernet port "1/1/x3"\r\n                                "LACP Fault on Port"\r\n                                 (affects service)\r\n2015/11/21 22:07:07.33 minor    Ethernet port "1/1/x4"\r\n                                "LACP Fault on Port"\r\n                                 (affects service)\r\n2015/11/20 16:38:53.89 minor    Ethernet port "1/2/g1"\r\n                                "Improper removal"\r\n                                 (affects service)\r\n\n--buffer end here--\n',)
+*	'errormessage': 'pattern(LACP Fault on Port) found with 30.000000, buffer is:\n--buffer start--\nshow alarm\r\nOccurred Time          Severity Alarm                                          \r\n---------------------- -------- -----------------------------------------------\r\n2015/11/21 22:07:08.42 minor    Ethernet port "1/1/x3"\r\n                                "LACP Fault on Port"\r\n                                 (affects service)\r\n2015/11/21 22:07:07.33 minor    Ethernet port "1/1/x4"\r\n                                "LACP Fault on Port"\r\n                                 (affects service)\r\n2015/11/20 16:38:53.89 minor    Ethernet port "1/2/g1"\r\n                                "Improper removal"\r\n                                 (affects service)\r\n\n--buffer end here--\n'
+*	'fun': <bound method e7.singleStep of <e7.e7 object at 0x027A7CD0>>
+*	'funName': 'singleStep'
+*	'kwarg': {}
+*	'maxtry': 1
+*	'self': <e7.e7 object at 0x027A7CD0>
+*		'ErrorMessage': None
+*		'FailFlag': False
+*		'_has_poll': False
+*		'attribute': {'LOGIN': '../bench/e7.login', 'SUT': 'e7', 'CMD': 'telnet 10.245.3.19'}
+*		'autoReloginFlag': True
+*		'cookedq': 'N6>'
+*		'counterRelogin': 0
+*		'debuglevel': 0
+*		'eof': False
+*		'host': '10.245.3.19'
+*		'iacseq': ''
+*		'idxSearch': 2011
+*		'idxUpdate': 1729
+*		'irawq': 0
+*		'lockRelogin': <thread.lock object at 0x007B4190>
+*		'lockStreamOut': <thread.lock object at 0x007B4180>
+*		'logfile': <open file 'c:\workspace\idash\build\bin\log\st_fcs-csv-1-806-N6-try2-n6-oldcard-modular-2015-11-20_172134.490000\391-cr.py--aalag_switchtime_reboot_card_fcs.csv--bench.csv-f-2015-11-21_224434.207000\N6.log', mode 'wb' at 0x026CBEE8>
+*		'logger': <logging.Logger object at 0x0279BF10>
+*		'loginDone': True
+*		'name': 'N6'
+*		'option_callback': None
+*		'port': 23
+*		'rawq': ''
+*		'sb': 0
+*		'sbdataq': ''
+*		'sock': <socket._socketobject object at 0x027CC650>
+*		'streamOut': 'show card 1/1 detail\r\nInformation for card 1/1:\r\nProvisioned type        : VDSL2-48Cr2\r\nActual type             : VDSL2-48Cr2\r\nPart number             : 100-03882\r\nCLEI                    : CALIXCALIX\r\nSerial number           : 211503600306\r\nApplication version     : 2.4.45.14\r\nDatabase created        : 2015/10/12 18:20:54\r\nDatabase last updated   : 2015/11/21 22:04:29\r\nController candidate    : enabled\r\nMAC address start       : 00:02:fd:e1:ba:1c\r\nMAC address end         : 00:02:fd:e1:ba:57\r\nTemperature level       : cool\r\nAdmin status            : enabled\r\nOperational status      : enabled\r\nAdditional status info  : child provisioned, default provisioned, standby\r\nCritical alarms         : 0\r\nMajor alarms            : 0\r\nMinor alarms            : 0\r\nWarning conditions      : 0\r\nInfo conditions         : 0\r\n\r\nAlarms:\r\n\t<none>\r\n\r\nConditions:\r\n\t<none>\r\nN6>show card 1/2 detail\r\nInformation for card 1/2:\r\nProvisioned type        : VDSL2-48c\r\nActual type             : VDSL2-48c\r\nPart number             : 100-01908\r\nCLEI                    : BVL3A5FFTA\r\nSerial number           : 211412601514\r\nApplication version     : 2.4.45.14\r\nDatabase created        : 2015/10/12 18:20:54\r\nDatabase last updated   : 2015/11/21 22:04:29\r\nController candidate    : enabled\r\nMAC address start       : 00:02:5d:dc:72:dc\r\nMAC address end         : 00:02:5d:dc:73:17\r\nTemperature level       : fine\r\nAdmin status            : enabled\r\nOperational status      : enabled\r\nAdditional status info  : child provisioned, default provisioned, active\r\nCritical alarms         : 0\r\nMajor alarms            : 0\r\nMinor alarms            : 0\r\nWarning conditions      : 0\r\nInfo conditions         : 0\r\n\r\nAlarms:\r\n\t<none>\r\n\r\nConditions:\r\n\t<none>\r\nN6>show alarm\r\nOccurred Time          Severity Alarm                                          \r\n---------------------- -------- -----------------------------------------------\r\n2015/11/21 22:07:08.42 minor    Ethernet port "1/1/x3"\r\n                                "LACP Fault on Port"\r\n                                 (affects service)\r\n2015/11/21 22:07:07.33 minor    Ethernet port "1/1/x4"\r\n                                "LACP Fault on Port"\r\n                                 (affects service)\r\n2015/11/20 16:38:53.89 minor    Ethernet port "1/2/g1"\r\n                                "Improper removal"\r\n                                 (affects service)\r\n\r\n3 alarms found.\r\nN6>'
+*		'timeout': 0.5
+*		'timestampCmd': 1448117046.716
+*
+**********************************EREOR END*************************************
+
+
+Traceback (most recent call last):
+  File "runner.pyo", line 460, in run1case
+  File "runner.pyo", line 221, in case_runner
+  File "runner.pyo", line 34, in inner
+Exception: 
+*********************************ERROR DUMP************************************
+*logAction dump:
+*	Function Name: 		run
+*	Arguments: 		
+*		391-cr.py--aalag_switchtime_reboot_card_fcs.csv--bench.csv-full-N6-ix-syu-1-1-1-1-1-
+*		{'N6': <e7.e7 object at 0x027A7CD0>, 'ix-syu': <IxNetwork.IxNetwork object at 0x027BED30>}
+*		[[['N6', 'setAutoReloginFlag(1)', '', '0', 8], ['N6', 'try 180:show card 1/1 detail', 'Alarms:\\s*\n*\\s*<none>\\s*\n*\\s*Conditions:\\s*\n*\\s*<none>', '30', 9], ['N6', 'try 180:show card 1/2 detail', 'Alarms:\\s*\n*\\s*<none>\\s*\n*\\s*Conditions:\\s*\n*\\s*<none>', '30', 10], ['N6', 'show alarm', 'no:LACP Fault on Port', '30', 11], ['N6', 'enable eth-port 1/1/x3', 'success', '30', 12], ['N6', 'enable eth-port 1/2/x3', 'success', '30', 13], ['N6', 'show interface as10 member', '1/1/x3\\s+enabled\\s+up in bundle', '30', 14], ['N6', 'show interface as10 member', '1/2/x3\\s+enabled\\s+up in bundle', '30', 15]], [['N6', 'reboot card 1/1', 'yes', '30', 22], ['N6', 'yes', '>', '30', 23], ['N6', 'sleep(60)', '', '0', 24], ['ix-syu', 'sleep(10)', '', '0', 31], ['N6', 'try 180:relogin()', '', '0', 33], ['N6', 'try 240:show card 1/1 detail', 'Alarms:\\s*\n*\\s*<none>\\s*\n*\\s*Conditions:\\s*\n*\\s*<none>', '30', 34], ['N6', 'show alarm', 'no:LACP Fault on Port', '30', 35]], []]
+*		full
+*		<logging.Logger object at 0x02774F90>
+*	Keyword Arguments: 		
+*-------------------------------------------------------------------------------
+*ERROR MESSAGE:
+*   tried 1 time(s), failed in function(singleStep),
+*	arg( ['show alarm', 'LACP Fault on Port', '30', False, True, False])
+*	kwarg ({})
+*
+*Exception:pattern(LACP Fault on Port) found with 30.000000, buffer is:
+*--buffer start--
+*show alarm
+*Occurred Time          Severity Alarm                                          
+*---------------------- -------- -----------------------------------------------
+*2015/11/21 22:07:08.42 minor    Ethernet port "1/1/x3"
+*                                "LACP Fault on Port"
+*                                 (affects service)
+*2015/11/21 22:07:07.33 minor    Ethernet port "1/1/x4"
+*                                "LACP Fault on Port"
+*                                 (affects service)
+*2015/11/20 16:38:53.89 minor    Ethernet port "1/2/g1"
+*                                "Improper removal"
+*                                 (affects service)
+*
+*--buffer end here--
+*
+*
+*Traceback (most recent call last):
+*  File "runner.pyo", line 16, in inner
+*  File "runner.pyo", line 202, in run
+*  File "runner.pyo", line 183, in runSegment
+*  File "dut.pyo", line 295, in stepCheck
+*  File "dut.pyo", line 291, in retry
+*ValueError: tried 1 time(s), failed in function(singleStep),
+*	arg( ['show alarm', 'LACP Fault on Port', '30', False, True, False])
+*	kwarg ({})
+*
+*Exception:pattern(LACP Fault on Port) found with 30.000000, buffer is:
+*--buffer start--
+*show alarm
+*Occurred Time          Severity Alarm                                          
+*---------------------- -------- -----------------------------------------------
+*2015/11/21 22:07:08.42 minor    Ethernet port "1/1/x3"
+*                                "LACP Fault on Port"
+*                                 (affects service)
+*2015/11/21 22:07:07.33 minor    Ethernet port "1/1/x4"
+*                                "LACP Fault on Port"
+*                                 (affects service)
+*2015/11/20 16:38:53.89 minor    Ethernet port "1/2/g1"
+*                                "Improper removal"
+*                                 (affects service)
+*
+*--buffer end here--
+*
+*
+*-------------------------------------------------------------------------------
+*globals=>
+*	'__author__': 'Sean Yu'
+*	'__doc__': None
+*	'__file__': 'c:\workspace\idash\build\bin\.\dut.pyo'
+*	'__name__': 'dut'
+*	'__package__': None
+*	'dut': <class 'dut.dut'>
+*
+*locals =>
+*	'FunName': 'singleStep'
+*	'GetFunctionbyName': <function GetFunctionbyName at 0x026BBDB0>
+*	'IsFail': True
+*	'arg': ['show alarm', 'LACP Fault on Port', '30', False, True, False]
+*	'casename': '391-cr.py--aalag_switchtime_reboot_card_fcs.csv--bench.csv-full-N6-ix-syu-1-1-1-1-1-'
+*	'counter': 1
+*	'e': RuntimeError('pattern(LACP Fault on Port) found with 30.000000, buffer is:\n--buffer start--\nshow alarm\r\nOccurred Time          Severity Alarm                                          \r\n---------------------- -------- -----------------------------------------------\r\n2015/11/21 22:07:08.42 minor    Ethernet port "1/1/x3"\r\n                                "LACP Fault on Port"\r\n                                 (affects service)\r\n2015/11/21 22:07:07.33 minor    Ethernet port "1/1/x4"\r\n                                "LACP Fault on Port"\r\n                                 (affects service)\r\n2015/11/20 16:38:53.89 minor    Ethernet port "1/2/g1"\r\n                                "Improper removal"\r\n                                 (affects service)\r\n\n--buffer end here--\n',)
+*	'errormessage': 'pattern(LACP Fault on Port) found with 30.000000, buffer is:\n--buffer start--\nshow alarm\r\nOccurred Time          Severity Alarm                                          \r\n---------------------- -------- -----------------------------------------------\r\n2015/11/21 22:07:08.42 minor    Ethernet port "1/1/x3"\r\n                                "LACP Fault on Port"\r\n                                 (affects service)\r\n2015/11/21 22:07:07.33 minor    Ethernet port "1/1/x4"\r\n                                "LACP Fault on Port"\r\n                                 (affects service)\r\n2015/11/20 16:38:53.89 minor    Ethernet port "1/2/g1"\r\n                                "Improper removal"\r\n                                 (affects service)\r\n\n--buffer end here--\n'
+*	'fun': <bound method e7.singleStep of <e7.e7 object at 0x027A7CD0>>
+*	'funName': 'singleStep'
+*	'kwarg': {}
+*	'maxtry': 1
+*	'self': <e7.e7 object at 0x027A7CD0>
+*		'ErrorMessage': None
+*		'FailFlag': False
+*		'_has_poll': False
+*		'attribute': {'LOGIN': '../bench/e7.login', 'SUT': 'e7', 'CMD': 'telnet 10.245.3.19'}
+*		'autoReloginFlag': True
+*		'cookedq': 'N6>'
+*		'counterRelogin': 0
+*		'debuglevel': 0
+*		'eof': False
+*		'host': '10.245.3.19'
+*		'iacseq': ''
+*		'idxSearch': 2011
+*		'idxUpdate': 1729
+*		'irawq': 0
+*		'lockRelogin': <thread.lock object at 0x007B4190>
+*		'lockStreamOut': <thread.lock object at 0x007B4180>
+*		'logfile': <open file 'c:\workspace\idash\build\bin\log\st_fcs-csv-1-806-N6-try2-n6-oldcard-modular-2015-11-20_172134.490000\391-cr.py--aalag_switchtime_reboot_card_fcs.csv--bench.csv-f-2015-11-21_224434.207000\N6.log', mode 'wb' at 0x026CBEE8>
+*		'logger': <logging.Logger object at 0x0279BF10>
+*		'loginDone': True
+*		'name': 'N6'
+*		'option_callback': None
+*		'port': 23
+*		'rawq': ''
+*		'sb': 0
+*		'sbdataq': ''
+*		'sock': <socket._socketobject object at 0x027CC650>
+*		'streamOut': 'show card 1/1 detail\r\nInformation for card 1/1:\r\nProvisioned type        : VDSL2-48Cr2\r\nActual type             : VDSL2-48Cr2\r\nPart number             : 100-03882\r\nCLEI                    : CALIXCALIX\r\nSerial number           : 211503600306\r\nApplication version     : 2.4.45.14\r\nDatabase created        : 2015/10/12 18:20:54\r\nDatabase last updated   : 2015/11/21 22:04:29\r\nController candidate    : enabled\r\nMAC address start       : 00:02:fd:e1:ba:1c\r\nMAC address end         : 00:02:fd:e1:ba:57\r\nTemperature level       : cool\r\nAdmin status            : enabled\r\nOperational status      : enabled\r\nAdditional status info  : child provisioned, default provisioned, standby\r\nCritical alarms         : 0\r\nMajor alarms            : 0\r\nMinor alarms            : 0\r\nWarning conditions      : 0\r\nInfo conditions         : 0\r\n\r\nAlarms:\r\n\t<none>\r\n\r\nConditions:\r\n\t<none>\r\nN6>show card 1/2 detail\r\nInformation for card 1/2:\r\nProvisioned type        : VDSL2-48c\r\nActual type             : VDSL2-48c\r\nPart number             : 100-01908\r\nCLEI                    : BVL3A5FFTA\r\nSerial number           : 211412601514\r\nApplication version     : 2.4.45.14\r\nDatabase created        : 2015/10/12 18:20:54\r\nDatabase last updated   : 2015/11/21 22:04:29\r\nController candidate    : enabled\r\nMAC address start       : 00:02:5d:dc:72:dc\r\nMAC address end         : 00:02:5d:dc:73:17\r\nTemperature level       : fine\r\nAdmin status            : enabled\r\nOperational status      : enabled\r\nAdditional status info  : child provisioned, default provisioned, active\r\nCritical alarms         : 0\r\nMajor alarms            : 0\r\nMinor alarms            : 0\r\nWarning conditions      : 0\r\nInfo conditions         : 0\r\n\r\nAlarms:\r\n\t<none>\r\n\r\nConditions:\r\n\t<none>\r\nN6>show alarm\r\nOccurred Time          Severity Alarm                                          \r\n---------------------- -------- -----------------------------------------------\r\n2015/11/21 22:07:08.42 minor    Ethernet port "1/1/x3"\r\n                                "LACP Fault on Port"\r\n                                 (affects service)\r\n2015/11/21 22:07:07.33 minor    Ethernet port "1/1/x4"\r\n                                "LACP Fault on Port"\r\n                                 (affects service)\r\n2015/11/20 16:38:53.89 minor    Ethernet port "1/2/g1"\r\n                                "Improper removal"\r\n                                 (affects service)\r\n\r\n3 alarms found.\r\nN6>'
+*		'timeout': 0.5
+*		'timestampCmd': 1448117046.716
+*
+**********************************EREOR END*************************************
+
+
+

@@ -1,0 +1,60 @@
+
+<HTML>
+<HEAD>
+<TITLE>Suite Test Report</TITLE>
+</HEAD>
+<BODY>
+<table cellspacing="1" cellpadding="2" border="1">
+<tr><td>Start Time</td><td>End Time</td><td>Duration(H:M:S)</td></tr>
+<tr><td>2015-11-20:11:53:38</td><td>2015-11-20:11:54:44</td><td>0:01:06.846000</td></tr>
+</table>
+<br>
+<table cellspacing="1" cellpadding="2" border="1">
+<tr><td>SUITE NAME</td><td>ARGURMENTS</td><td>CASE RANGE</td></tr>
+
+<tr><td>st_fcs.csv</td><td>pet2</td><td>1</td></tr>
+</table>
+<br><br>
+
+<table cellspacing="1" cellpadding="2" border="1">
+<tr>
+<td>TOTAL CASE</td><td bgcolor="#00FF00">PASS</td><td bgcolor="#FF0000">FAIL</td><td bgcolor="#0000FF">NOT RUN</td>
+</tr>
+<tr>
+<td>1</td><td bgcolor="#00FF00" >0</td><td bgcolor="#FF0000">1</td><td  bgcolor="#0000FF">0</td>
+</tr>
+<tr>
+<td> </td><td>0%</td><td>100%</td><td>0%</td>
+</tr>
+</table>
+<BR>
+<BR>
+<table cellspacing="1" cellpadding="2" border="1">
+<tr><td>No.</td><td>Result</td><td>Case Name</td><td>Duration(s)</td><td>StartTime</td><td>EndTime</td><td>Line No</td><td>Error Message</td></tr><tr>
+        <td>1</td>
+        <td bgcolor="#FF0000"><a target="+BLANK" href=".././log/st_fcs-csv-1-pet2-2015-11-20_115337.998000/1-cr.py--aalag_switchtime_reboot_card_fcs.csv--bench.csv-ful-2015-11-20_115338.053000">FAIL</td>
+        <td><a target="+BLANK" href=".././log/st_fcs-csv-1-pet2-2015-11-20_115337.998000/1-cr.py--aalag_switchtime_reboot_card_fcs.csv--bench.csv-ful-2015-11-20_115338.053000">cr.py  aalag_switchtime_reboot_card_fcs.csv  bench.csv full pet2 ix-syu 1/1 1/1 1/2</td>
+        <td>65.5709998608</td>
+        <td>2015-11-20:11:53:38</td>
+        <td>2015-11-20:11:54:43</td>
+        <td>1</td>
+        <td>
+*   tried 1 time(s), failed in function(singleStep),
+arg( ['show interface as10 member', '1/1/x3\\s+enabled\\s+up in bundle', '30', False, False, False])
+kwarg ({})
+*
+*Exception:pattern(1/1/x3\s+enabled\s+up in bundle) doesn't find with 30.000000, buffer is:
+*--buffer start--
+*show interface as10 member
+*failed: LAG interface named "as10" not found.
+*Roy>
+*Roy>
+*--buffer end here--
+*
+*
+</td>
+        </tr>
+</table>
+<br />
+<br />
+</body></html>

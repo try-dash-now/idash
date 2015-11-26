@@ -1,0 +1,50 @@
+"N6" Wed Nov 25 14:04:01 2015
+
+Username: 
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>show version
+* = active controller.
+
+Card       Present Running Vers.   Committed Vers. Alt. Vers.     
+---------- ------- --------------- --------------- ---------------
+ 1/1       yes     2.4.45.14       2.4.45.14       2.4.45.13      
+*1/2       yes     2.4.45.14       2.4.45.14       2.4.45.13      
+N6>set sess page en
+success: session updated.
+N6>show card
+* = active controller
+                                                           Alarms          
+Card  Provisioned Type  Actual Type       Status           (Cr Mj Mn Wn In)
+----- ----------------- ----------------- ---------------- ----------------
+ 1/1  VDSL2-48Cr2       VDSL2-48Cr2       enabled           0  0  0  0  0 
+*1/2  VDSL2-48c         VDSL2-48c         enabled           0  0  0  0  0 
+
+2 cards found.
+N6>show dhcp lease
+                Outer  IP Address/Mask                           
+Subscriber Port VLAN     MAC Address       Expiration            
+--------------- ------ ------------------------------------------
+Intf 1/1/g2     1025   ::10.11.1.2/128                           
+                         54:f3:e8:72:00:0f expires in 1w 9h 19m 19s
+Intf 1/1/g2     1025   ::10.11.1.10/128                          
+                         42:1d:25:ce:00:30 expires in 1w 9h 18m 49s
+Intf 1/1/g2     1025   ::10.11.1.17/128                          
+                         68:3a:b3:b8:00:26 expires in 1w 9h 18m 29s
+Intf 1/1/g2     1025   ::10.11.1.18/128                          
+                         54:b2:fd:5a:00:27 expires in 1w 9h 17m 32s
+Intf 1/1/g2     1025   ::10.11.1.19/128                          
+                         68:3a:b3:b8:00:2c expires in 1w 9h 18m 30s
+Intf 1/1/g2     1025   ::10.11.1.21/128                          
+                         68:3a:b3:b8:00:14 expires in 1w 9h 18m 27s
+Intf 1/1/g2     1025   ::10.11.1.28/128                          
+                         22:01:57:7d:00:17 expires in 1w 9h 17m 42s
+Intf 1/1/g2     1025   ::10.11.1.30/128                          
+                         42:1d:25:ce:00:2e expires in 1w 9h 18m 50s
+Intf 1/1/g2     1025   ::10.11.1.31/128                          
+                         42:1d:25:ce:00:16 expires in 1w 9h 18m 47s
+Intf 1/1/g2     1025   ::10.11.1.32/128                          
+                         58:15:c1:69:00:24 expires in 1w 9h 18m 8s
+--MORE--

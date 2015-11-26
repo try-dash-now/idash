@@ -1,0 +1,7 @@
+2015-11-19 16:50:28,594 -INFO:    loading case: 597-cr.py--aalag_switchtime_reboot_card.csv--bench.csv-full-N3-ix-syu-1-1-1-1-1-2
+2015-11-19 16:50:28,614 -INFO:    starting to run case: cr.py  aalag_switchtime_reboot_card.csv  bench.csv full N3 ix-syu 1/1 1/1 1/2
+2015-11-19 16:50:28,621 -INFO:    starting segment:0
+2015-11-19 16:50:47,269 -INFO:    starting segment:1
+2015-11-19 16:55:38,717 -INFO:    starting segment:2
+2015-11-19 16:55:38,717 -ERROR:    Case Failed:view(Traffic Item Statistics) row(multicast UDP) item(Packet Loss Duration (ms)) is 28896.982, out of range [0, 2000]view(Traffic Item Statistics) row(client->server) item(Packet Loss Duration (ms)) is 22721.038, out of range [0, 2000]view(Traffic Item Statistics) row(server->client) item(Packet Loss Duration (ms)) is 14493.613, out of range [0, 2000]
+

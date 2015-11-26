@@ -1,0 +1,230 @@
+2015-11-26 16:38:01,095 -INFO:    loading a new bench:bench.csv
+2015-11-26 16:38:01,101 -INFO:    releasing duts in old dut_pool
+2015-11-26 16:38:01,101 -INFO:    loading case: 2-cr.py-upgradeE7.csv-bench.csv-full-N3-e7-e7-600-E7_R02.04.050_EX24_0003-2.4.50.3
+2015-11-26 16:38:02,776 -INFO:    starting to run case: cr.py upgradeE7.csv bench.csv full N3 e7 e7 600 E7_R02.04.050_EX24_0003 2.4.50.3
+2015-11-26 16:38:02,776 -INFO:    starting segment:0
+2015-11-26 16:39:09,016 -ERROR:    Case FAIL
+2015-11-26 16:39:09,017 -ERROR:    
+*********************************ERROR DUMP************************************
+*logAction dump:
+*	Function Name: 		run
+*	Arguments: 		
+*		2-cr.py-upgradeE7.csv-bench.csv-full-N3-e7-e7-600-E7_R02.04.050_EX24_0003-2.4.50.3
+*		{'N3': <e7.e7 object at 0x02BB74D0>}
+*		[[['N3', 'set session page dis tim dis', 'success: session updated.', '10', 10], ['N3', 'show alarm', '>', '60', 11], ['N3', 'upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.050_EX24_0003 version 2.4.50.3 ', 'Password:', '10', 12], ['N3', 'e7', 'Software Upgrade in progress -- Version=2.4.50.3', '40', 13], ['N3', '', 'no:Upgrade: Had Errors', '30', 14], ['N3', 'try 2:show upgrade', 'NO:failed', '60', 15], ['N3', 'try 600:show upgrade', 'upgrade performed', '60', 16], ['N3', 'show card', '>', '30', 17], ['N3', 'show version', '>', '30', 18], ['N3', 'setAutoReloginFlag(1)', '', '0', 19], ['N3', 'reset system version  2.4.50.3', 'yes/no', '30', 20], ['N3', 'yes', 'Reset: In Progress -- Version=2.4.50.3', '30', 21], ['N3', 'SLEEP(300)', '', '0', 22], ['N3', 'try 3:set session page dis tim dis', 'success: session updated.', '10', 23], ['N3', 'show alarm', '>', '60', 24], ['N3', 'show version', '>', '20', 25], ['N3', 'try 180:show card detail', 'Alarms:\\s*\r*\n\\s*<none>\\s*\r*\n\\s*Conditions:\\s*\r*\n\\s*Release is not Committed.+Alarms:\\s*\r*\n\\s*<none>\\s*\r*\n\\s*Conditions:\\s*\r*\n\\s*Release is not Committed', '30', 26], ['N3', 'try 2:commit system version 2.4.50.3', 'no:failed', '30', 27], ['N3', 'show version', '>', '30', 28], ['N3', 'show alarm', '>', '30', 29]], [], []]
+*		full
+*		<logging.Logger object at 0x02BA58D0>
+*	Keyword Arguments: 		
+*-------------------------------------------------------------------------------
+*ERROR MESSAGE:
+*   tried 1 time(s), failed in function(singleStep),
+*	arg( ['', 'Upgrade: Had Errors', '30', False, True, False])
+*	kwarg ({})
+*
+*Exception:pattern(Upgrade: Had Errors) found with 30.000000, buffer is:
+*--buffer start--
+*
+*N3>EVENT for card 1 at 2015/11/26 16:36:58.38:
+*    "Upgrade: Failed File Xfer --  Reason: Software package does not have files for this card"
+*EVENT for system at 2015/11/26 16:36:59.88:
+*    "Upgrade: Had Errors -- Version=2.4.50.3"
+*
+*--buffer end here--
+*
+*
+*Traceback (most recent call last):
+*  File "C:\workspace\idash\lib\runner.py", line 18, in inner
+*    response = fun(*arg, **kwargs)
+*  File "C:\workspace\idash\lib\runner.py", line 210, in run
+*    runSegment(casename, mode, modeset[index], duts,seqlist[index],  segNamelist[index], logger)
+*  File "C:\workspace\idash\lib\runner.py", line 191, in runSegment
+*    session.stepCheck(casename, lineno, cmd, expect, due)
+*  File "C:\workspace\idash\lib\dut.py", line 298, in stepCheck
+*    retry(CaseName, int(MaxTry), FunName, ListArg, DicArg)
+*  File "C:\workspace\idash\lib\dut.py", line 294, in retry
+*    raise ValueError('tried %d time(s), failed in function(%s),\n\targ( %s)\n\tkwarg (%s)\n\nException:%s\n'%(counter, fun.func_name, str(arg), str(kwarg),errormessage))
+*ValueError: tried 1 time(s), failed in function(singleStep),
+*	arg( ['', 'Upgrade: Had Errors', '30', False, True, False])
+*	kwarg ({})
+*
+*Exception:pattern(Upgrade: Had Errors) found with 30.000000, buffer is:
+*--buffer start--
+*
+*N3>EVENT for card 1 at 2015/11/26 16:36:58.38:
+*    "Upgrade: Failed File Xfer --  Reason: Software package does not have files for this card"
+*EVENT for system at 2015/11/26 16:36:59.88:
+*    "Upgrade: Had Errors -- Version=2.4.50.3"
+*
+*--buffer end here--
+*
+*
+*-------------------------------------------------------------------------------
+*globals=>
+*	'__author__': 'Sean Yu'
+*	'__doc__': None
+*	'__file__': 'C:\workspace\idash\lib\dut.pyc'
+*	'__name__': 'dut'
+*	'__package__': None
+*	'dut': <class 'dut.dut'>
+*	'time': <module 'time' (built-in)>
+*
+*locals =>
+*	'FunName': 'singleStep'
+*	'GetFunctionbyName': <function GetFunctionbyName at 0x02B54CB0>
+*	'IsFail': True
+*	'arg': ['', 'Upgrade: Had Errors', '30', False, True, False]
+*	'casename': '2-cr.py-upgradeE7.csv-bench.csv-full-N3-e7-e7-600-E7_R02.04.050_EX24_0003-2.4.50.3'
+*	'counter': 1
+*	'e': RuntimeError('pattern(Upgrade: Had Errors) found with 30.000000, buffer is:\n--buffer start--\n\r\nN3>EVENT for card 1 at 2015/11/26 16:36:58.38:\r\n    "Upgrade: Failed File Xfer --  Reason: Software package does not have files for this card"\r\nEVENT for system at 2015/11/26 16:36:59.88:\r\n    "Upgrade: Had Errors -- Version=2.4.50.3"\r\n\n--buffer end here--\n',)
+*	'errormessage': 'pattern(Upgrade: Had Errors) found with 30.000000, buffer is:\n--buffer start--\n\r\nN3>EVENT for card 1 at 2015/11/26 16:36:58.38:\r\n    "Upgrade: Failed File Xfer --  Reason: Software package does not have files for this card"\r\nEVENT for system at 2015/11/26 16:36:59.88:\r\n    "Upgrade: Had Errors -- Version=2.4.50.3"\r\n\n--buffer end here--\n'
+*	'fun': <bound method e7.singleStep of <e7.e7 object at 0x02BB74D0>>
+*	'funName': 'singleStep'
+*	'kwarg': {}
+*	'maxtry': 1
+*	'self': <e7.e7 object at 0x02BB74D0>
+*		'_has_poll': False
+*		'attribute': {'PROMPT': '>|#|>>>', 'LOGIN': '../bench/e7.login', 'SUT': 'e7', 'CMD': 'telnet 10.245.3.15'}
+*		'cookedq': 'N3>'
+*		'debuglevel': 0
+*		'eof': False
+*		'host': '10.245.3.15'
+*		'iacseq': ''
+*		'idxSearch': 1641
+*		'idxUpdate': 1425
+*		'irawq': 0
+*		'lockRelogin': <thread.lock object at 0x005AD9A0>
+*		'lockStreamOut': <thread.lock object at 0x005AD990>
+*		'logfile': <open file 'C:\workspace\idash\test\log\st_dhcpv6-csv-2-3-E7_R02-04-050_EX24_0003-2-4-50-3-2015-11-26_163757.860000\2-2015-11-26_163801.071000\1-cr.py-upgradeE7.csv-bench.csv-full-N3-e7-e7-600-E7_R02.04.-2015-11-26_163801.079000\N3.log', mode 'wb' at 0x02BAD548>
+*		'logger': <logging.Logger object at 0x02B57930>
+*		'loginDone': True
+*		'name': 'N3'
+*		'option_callback': None
+*		'port': 23
+*		'rawq': ''
+*		'sb': 0
+*		'sbdataq': ''
+*		'sock': <socket._socketobject object at 0x02BA1340>
+*		'streamOut': '"N3" Thu Nov 26 16:36:53 2015\n\r\nUsername: \r\nUsername: e7support\r\nPassword: \r\nN3>set ses time dis page dis\r\nsuccess: session updated.\r\nN3>set session page dis tim dis\r\nsuccess: session updated.\r\nN3>show alarm\r\nOccurred Time          Severity Alarm                                          \r\n---------------------- -------- -----------------------------------------------\r\n2015/11/25 16:19:16.11 critical G.8032 Ring "syu"\r\n                                "G.8032 Isolated Node"\r\n                                 (affects service)\r\n\r\n1 alarm found.\r\nN3>upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$ystem  server  10.245.3.201 user  e7 directory-path E7_R02.04.0          \x08\x08\x08\x08\x08\x08\x08\x08\x08\x0850_EX24_0\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$ver  10.245.3.201 user  e7 directory-path E7_R02.04.050_EX24_00           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x0803 versio\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$5.3.201 user  e7 directory-path E7_R02.04.050_EX24_0003 version           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08 2.4.50.3\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$er  e7 directory-path E7_R02.04.050_EX24_0003 version 2.4.50.3            \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\r\nPassword: \r\nN3>warning ALARM for system at 2015/11/26 16:36:56.88:\r\n    "Software Upgrade in progress -- Version=2.4.50.3 (No auto-reset)"\r\n\r\nN3>EVENT for card 1 at 2015/11/26 16:36:58.38:\r\n    "Upgrade: Failed File Xfer --  Reason: Software package does not have files for this card"\r\nEVENT for system at 2015/11/26 16:36:59.88:\r\n    "Upgrade: Had Errors -- Version=2.4.50.3"\r\nAlarm CLEARED for system at 2015/11/26 16:36:59.88:\r\n    "Software Upgrade in progress"\r\n\r\nN3>'
+*		'timeout': 0.5
+*		'timestampCmd': 1448527145.473
+*	'traceback': <module 'traceback' from 'C:\Python27\lib\traceback.pyc'>
+*
+**********************************EREOR END*************************************
+
+
+Traceback (most recent call last):
+  File "C:\workspace\idash\lib\runner.py", line 468, in run1case
+    returncode, STRerrormessage= case_runner(casename,dut_pool,seq, case_mode, caselogger)
+  File "C:\workspace\idash\lib\runner.py", line 229, in case_runner
+    caseFail, errorMessage = run(casename, dictDUTs, case_seq, m, logger)
+  File "C:\workspace\idash\lib\runner.py", line 36, in inner
+    raise Exception(msg)
+Exception: 
+*********************************ERROR DUMP************************************
+*logAction dump:
+*	Function Name: 		run
+*	Arguments: 		
+*		2-cr.py-upgradeE7.csv-bench.csv-full-N3-e7-e7-600-E7_R02.04.050_EX24_0003-2.4.50.3
+*		{'N3': <e7.e7 object at 0x02BB74D0>}
+*		[[['N3', 'set session page dis tim dis', 'success: session updated.', '10', 10], ['N3', 'show alarm', '>', '60', 11], ['N3', 'upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.050_EX24_0003 version 2.4.50.3 ', 'Password:', '10', 12], ['N3', 'e7', 'Software Upgrade in progress -- Version=2.4.50.3', '40', 13], ['N3', '', 'no:Upgrade: Had Errors', '30', 14], ['N3', 'try 2:show upgrade', 'NO:failed', '60', 15], ['N3', 'try 600:show upgrade', 'upgrade performed', '60', 16], ['N3', 'show card', '>', '30', 17], ['N3', 'show version', '>', '30', 18], ['N3', 'setAutoReloginFlag(1)', '', '0', 19], ['N3', 'reset system version  2.4.50.3', 'yes/no', '30', 20], ['N3', 'yes', 'Reset: In Progress -- Version=2.4.50.3', '30', 21], ['N3', 'SLEEP(300)', '', '0', 22], ['N3', 'try 3:set session page dis tim dis', 'success: session updated.', '10', 23], ['N3', 'show alarm', '>', '60', 24], ['N3', 'show version', '>', '20', 25], ['N3', 'try 180:show card detail', 'Alarms:\\s*\r*\n\\s*<none>\\s*\r*\n\\s*Conditions:\\s*\r*\n\\s*Release is not Committed.+Alarms:\\s*\r*\n\\s*<none>\\s*\r*\n\\s*Conditions:\\s*\r*\n\\s*Release is not Committed', '30', 26], ['N3', 'try 2:commit system version 2.4.50.3', 'no:failed', '30', 27], ['N3', 'show version', '>', '30', 28], ['N3', 'show alarm', '>', '30', 29]], [], []]
+*		full
+*		<logging.Logger object at 0x02BA58D0>
+*	Keyword Arguments: 		
+*-------------------------------------------------------------------------------
+*ERROR MESSAGE:
+*   tried 1 time(s), failed in function(singleStep),
+*	arg( ['', 'Upgrade: Had Errors', '30', False, True, False])
+*	kwarg ({})
+*
+*Exception:pattern(Upgrade: Had Errors) found with 30.000000, buffer is:
+*--buffer start--
+*
+*N3>EVENT for card 1 at 2015/11/26 16:36:58.38:
+*    "Upgrade: Failed File Xfer --  Reason: Software package does not have files for this card"
+*EVENT for system at 2015/11/26 16:36:59.88:
+*    "Upgrade: Had Errors -- Version=2.4.50.3"
+*
+*--buffer end here--
+*
+*
+*Traceback (most recent call last):
+*  File "C:\workspace\idash\lib\runner.py", line 18, in inner
+*    response = fun(*arg, **kwargs)
+*  File "C:\workspace\idash\lib\runner.py", line 210, in run
+*    runSegment(casename, mode, modeset[index], duts,seqlist[index],  segNamelist[index], logger)
+*  File "C:\workspace\idash\lib\runner.py", line 191, in runSegment
+*    session.stepCheck(casename, lineno, cmd, expect, due)
+*  File "C:\workspace\idash\lib\dut.py", line 298, in stepCheck
+*    retry(CaseName, int(MaxTry), FunName, ListArg, DicArg)
+*  File "C:\workspace\idash\lib\dut.py", line 294, in retry
+*    raise ValueError('tried %d time(s), failed in function(%s),\n\targ( %s)\n\tkwarg (%s)\n\nException:%s\n'%(counter, fun.func_name, str(arg), str(kwarg),errormessage))
+*ValueError: tried 1 time(s), failed in function(singleStep),
+*	arg( ['', 'Upgrade: Had Errors', '30', False, True, False])
+*	kwarg ({})
+*
+*Exception:pattern(Upgrade: Had Errors) found with 30.000000, buffer is:
+*--buffer start--
+*
+*N3>EVENT for card 1 at 2015/11/26 16:36:58.38:
+*    "Upgrade: Failed File Xfer --  Reason: Software package does not have files for this card"
+*EVENT for system at 2015/11/26 16:36:59.88:
+*    "Upgrade: Had Errors -- Version=2.4.50.3"
+*
+*--buffer end here--
+*
+*
+*-------------------------------------------------------------------------------
+*globals=>
+*	'__author__': 'Sean Yu'
+*	'__doc__': None
+*	'__file__': 'C:\workspace\idash\lib\dut.pyc'
+*	'__name__': 'dut'
+*	'__package__': None
+*	'dut': <class 'dut.dut'>
+*	'time': <module 'time' (built-in)>
+*
+*locals =>
+*	'FunName': 'singleStep'
+*	'GetFunctionbyName': <function GetFunctionbyName at 0x02B54CB0>
+*	'IsFail': True
+*	'arg': ['', 'Upgrade: Had Errors', '30', False, True, False]
+*	'casename': '2-cr.py-upgradeE7.csv-bench.csv-full-N3-e7-e7-600-E7_R02.04.050_EX24_0003-2.4.50.3'
+*	'counter': 1
+*	'e': RuntimeError('pattern(Upgrade: Had Errors) found with 30.000000, buffer is:\n--buffer start--\n\r\nN3>EVENT for card 1 at 2015/11/26 16:36:58.38:\r\n    "Upgrade: Failed File Xfer --  Reason: Software package does not have files for this card"\r\nEVENT for system at 2015/11/26 16:36:59.88:\r\n    "Upgrade: Had Errors -- Version=2.4.50.3"\r\n\n--buffer end here--\n',)
+*	'errormessage': 'pattern(Upgrade: Had Errors) found with 30.000000, buffer is:\n--buffer start--\n\r\nN3>EVENT for card 1 at 2015/11/26 16:36:58.38:\r\n    "Upgrade: Failed File Xfer --  Reason: Software package does not have files for this card"\r\nEVENT for system at 2015/11/26 16:36:59.88:\r\n    "Upgrade: Had Errors -- Version=2.4.50.3"\r\n\n--buffer end here--\n'
+*	'fun': <bound method e7.singleStep of <e7.e7 object at 0x02BB74D0>>
+*	'funName': 'singleStep'
+*	'kwarg': {}
+*	'maxtry': 1
+*	'self': <e7.e7 object at 0x02BB74D0>
+*		'_has_poll': False
+*		'attribute': {'PROMPT': '>|#|>>>', 'LOGIN': '../bench/e7.login', 'SUT': 'e7', 'CMD': 'telnet 10.245.3.15'}
+*		'cookedq': 'N3>'
+*		'debuglevel': 0
+*		'eof': False
+*		'host': '10.245.3.15'
+*		'iacseq': ''
+*		'idxSearch': 1641
+*		'idxUpdate': 1425
+*		'irawq': 0
+*		'lockRelogin': <thread.lock object at 0x005AD9A0>
+*		'lockStreamOut': <thread.lock object at 0x005AD990>
+*		'logfile': <open file 'C:\workspace\idash\test\log\st_dhcpv6-csv-2-3-E7_R02-04-050_EX24_0003-2-4-50-3-2015-11-26_163757.860000\2-2015-11-26_163801.071000\1-cr.py-upgradeE7.csv-bench.csv-full-N3-e7-e7-600-E7_R02.04.-2015-11-26_163801.079000\N3.log', mode 'wb' at 0x02BAD548>
+*		'logger': <logging.Logger object at 0x02B57930>
+*		'loginDone': True
+*		'name': 'N3'
+*		'option_callback': None
+*		'port': 23
+*		'rawq': ''
+*		'sb': 0
+*		'sbdataq': ''
+*		'sock': <socket._socketobject object at 0x02BA1340>
+*		'streamOut': '"N3" Thu Nov 26 16:36:53 2015\n\r\nUsername: \r\nUsername: e7support\r\nPassword: \r\nN3>set ses time dis page dis\r\nsuccess: session updated.\r\nN3>set session page dis tim dis\r\nsuccess: session updated.\r\nN3>show alarm\r\nOccurred Time          Severity Alarm                                          \r\n---------------------- -------- -----------------------------------------------\r\n2015/11/25 16:19:16.11 critical G.8032 Ring "syu"\r\n                                "G.8032 Isolated Node"\r\n                                 (affects service)\r\n\r\n1 alarm found.\r\nN3>upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$ystem  server  10.245.3.201 user  e7 directory-path E7_R02.04.0          \x08\x08\x08\x08\x08\x08\x08\x08\x08\x0850_EX24_0\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$ver  10.245.3.201 user  e7 directory-path E7_R02.04.050_EX24_00           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x0803 versio\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$5.3.201 user  e7 directory-path E7_R02.04.050_EX24_0003 version           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08 2.4.50.3\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$er  e7 directory-path E7_R02.04.050_EX24_0003 version 2.4.50.3            \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\r\nPassword: \r\nN3>warning ALARM for system at 2015/11/26 16:36:56.88:\r\n    "Software Upgrade in progress -- Version=2.4.50.3 (No auto-reset)"\r\n\r\nN3>EVENT for card 1 at 2015/11/26 16:36:58.38:\r\n    "Upgrade: Failed File Xfer --  Reason: Software package does not have files for this card"\r\nEVENT for system at 2015/11/26 16:36:59.88:\r\n    "Upgrade: Had Errors -- Version=2.4.50.3"\r\nAlarm CLEARED for system at 2015/11/26 16:36:59.88:\r\n    "Software Upgrade in progress"\r\n\r\nN3>'
+*		'timeout': 0.5
+*		'timestampCmd': 1448527145.473
+*	'traceback': <module 'traceback' from 'C:\Python27\lib\traceback.pyc'>
+*
+**********************************EREOR END*************************************
+
+
+

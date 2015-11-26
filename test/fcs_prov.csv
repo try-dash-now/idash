@@ -1,0 +1,61 @@
+#var,,,
+defaultTime,2,,
+#setup,,,
+pet1,show system,>|#|>>>,${defaultTime}
+pet2,show craft-fe,>|#|>>>,${defaultTime}
+pet1,show vlan,>|#|>>>,${defaultTime}
+pet1,create vlan 1025,>|#|>>>,${defaultTime}
+pet1,create int as10 role trunk  rstp-active disa lag-cross-card active-active,>|#|>>>,${defaultTime}
+pet1,show int as10 me,>|#|>>>,${defaultTime}
+pet1,dis int 1/1/x3,>|#|>>>,${defaultTime}
+pet1,dis int 1/2/x3,>|#|>>>,${defaultTime}
+pet1,set eth-port 1/1/x3 int as10,>|#|>>>,${defaultTime}
+pet1,set eth-port 1/2/x3 int as10,>|#|>>>,${defaultTime}
+pet1,add int as10 to 1025,>|#|>>>,${defaultTime}
+pet1,add int 1/2/g1 to-vlan 1025,>|#|>>>,${defaultTime}
+pet2,show alarm,>|#|>>>,${defaultTime}
+pet1,show vlan 1025 member,>|#|>>>,${defaultTime}
+pet2,create int as10 role trunk  rstp-active disa lag-cross-card active-active,>|#|>>>,${defaultTime}
+pet2,create vlan 1025,>|#|>>>,${defaultTime}
+pet2,dis int 1/2/x3,>|#|>>>,${defaultTime}
+pet2,set system mod en,>|#|>>>,${defaultTime}
+pet2,show verion,>|#|>>>,${defaultTime}
+pet2,dis int 1/2/x3,>|#|>>>,${defaultTime}
+pet2,dis int 1/1/x3,>|#|>>>,${defaultTime}
+pet2,set eth-port 1/2/x3 int as10,>|#|>>>,${defaultTime}
+pet2,dis int 2/x3,>|#|>>>,${defaultTime}
+pet2,dis int 1/x3,>|#|>>>,${defaultTime}
+pet2,set eth-port 2/x3 int as10,>|#|>>>,${defaultTime}
+pet2,set eth-port 1/x3 int as10,>|#|>>>,${defaultTime}
+pet2,enable eth-port 1/x3,>|#|>>>,${defaultTime}
+pet2,enable eth-port 2/x3,>|#|>>>,${defaultTime}
+pet2,show card,>|#|>>>,${defaultTime}
+pet2,show dsl-vector-group,>|#|>>>,${defaultTime}
+pet2,show vlan,>|#|>>>,${defaultTime}
+pet2,show vlan 1025 me,>|#|>>>,${defaultTime}
+pet2,set system mod en,>|#|>>>,${defaultTime}
+pet2,show int as10 me,>|#|>>>,${defaultTime}
+pet2,show int as10 me,>|#|>>>,${defaultTime}
+pet2,enable  eth-port 1/1/x3,>|#|>>>,${defaultTime}
+pet2,enable  eth-port 1/2/x3,>|#|>>>,${defaultTime}
+pet2,enable  eth-port 1/2/x3,>|#|>>>,${defaultTime}
+pet2,show int as10 me,>|#|>>>,${defaultTime}
+pet2,show alarm,>|#|>>>,${defaultTime}
+pet2,show eth-port 1/1/x3,>|#|>>>,${defaultTime}
+pet2,ent,,
+pet2,enable eth-port 1/1/x3,>|#|>>>,${defaultTime}
+pet2,enable eth-port 1/2/x3,>|#|>>>,${defaultTime}
+pet2,show int as10 me,>|#|>>>,${defaultTime}
+pet2,show vlan 1025 me,>|#|>>>,${defaultTime}
+pet2,show vlan 1025 m,>|#|>>>,${defaultTime}
+pet2,remove int 1/2/g1 from 1025,>|#|>>>,${defaultTime}
+pet2,create tag-action add-tag 1025  inter 1/2/g1,>|#|>>>,${defaultTime}
+pet2,show int as10 me,>|#|>>>,${defaultTime}
+pet1,enable eth-port 1/1/x3,>|#|>>>,${defaultTime}
+pet1,enable eth-port 1/2/x3,>|#|>>>,${defaultTime}
+pet1,enable eth-port 1/2/x3,>|#|>>>,${defaultTime}
+pet1,show int as10 me,>|#|>>>,${defaultTime}
+pet2,set vlan 1025 igmp-mode snoop-suppress,>|#|>>>,${defaultTime}
+pet1,set vlan 1025 igmp-mode snoop-suppress,>|#|>>>,${defaultTime}
+pet1,show mcast,>|#|>>>,${defaultTime}
+pet1,show mroute,>|#|>>>,${defaultTime}

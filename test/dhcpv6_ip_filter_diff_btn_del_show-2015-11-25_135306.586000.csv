@@ -1,0 +1,14 @@
+#var
+defaultTime,2
+#setup
+#SUT_Name,Command_or_Function,Expect,Max_Wait_Time,TimeStamp,Interval
+N6,show version,>|#|>>>,${defaultTime},2015-11-25_13:53:14.004000,0:00:07.418000
+,set sess page en,>,2
+N6,show card,>|#|>>>,${defaultTime},2015-11-25_13:53:16.727000,0:00:02.723000
+N6,show dhcp lease,.*,${defaultTime},2015-11-25_13:53:22.508000,0:00:05.781000
+,q,>,2
+N6,del dhcp lease ip ?,>|#|>>>,${defaultTime},2015-11-25_13:54:02.165000,0:00:39.657000
+N6,show dhcp lease ip ?,>|#|>>>,${defaultTime},2015-11-25_13:54:30.438000,0:00:28.273000
+,,>,2,#N6,show versoin,>|#|>>>,${defaultTime},2015-11-25_13:54:33.874000,0:00:03.436000
+N6,show version,>|#|>>>,${defaultTime},2015-11-25_13:54:38.826000,0:00:04.952000
+,set ses page dis,>,2

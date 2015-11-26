@@ -1,0 +1,6 @@
+2015-11-25 14:23:48,099 -INFO:    suite name	st_dhcpv6.csv
+2015-11-25 14:23:48,099 -INFO:    suite range	all
+2015-11-25 14:23:48,101 -INFO:    to run case: index 1, name: cr.py loadSync_cs.csv bench.csv full ${1}, failAction: break
+2015-11-25 14:23:48,101 -INFO:    creating logdir: ./log/st_dhcpv6-csv-all-2015-11-25_142348.072000
+2015-11-25 14:23:48,135 -INFO:    running case: cr.py loadSync_cs.csv bench.csv full ${1}
+2015-11-25 14:23:48,203 -INFO:    openLogfile PS in ./log/st_dhcpv6-csv-all-2015-11-25_142348.072000/1-cr.py-loadSync_cs.csv-bench.csv-full---1--2015-11-25_142348.102000

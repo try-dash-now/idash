@@ -1,0 +1,495 @@
+show card 1/1 detail
+Information for card 1/1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211503600306
+Application version     : 2.4.45.14
+Database created        : 2015/10/12 18:20:54
+Database last updated   : 2015/11/20 12:06:23
+Controller candidate    : enabled
+MAC address start       : 00:02:fd:e1:ba:1c
+MAC address end         : 00:02:fd:e1:ba:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, standby
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	<none>
+N6>show card 1/2 detail
+Information for card 1/2:
+Provisioned type        : VDSL2-48c
+Actual type             : VDSL2-48c
+Part number             : 100-01908
+CLEI                    : BVL3A5FFTA
+Serial number           : 211412601514
+Application version     : 2.4.45.14
+Database created        : 2015/10/12 18:20:54
+Database last updated   : 2015/11/20 12:06:23
+Controller candidate    : enabled
+MAC address start       : 00:02:5d:dc:72:dc
+MAC address end         : 00:02:5d:dc:73:17
+Temperature level       : fine
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, active
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	<none>
+N6>show alarm
+No alarms found.
+N6>enable eth-port 1/1/x3
+success: Enable Ethernet port "1/1/x3".
+N6>enable eth-port 1/2/x3
+success: Enable Ethernet port "1/2/x3".
+N6>show interface as10 member
+
+Ethernet Port                    Status          LACP Status
+-------------------------------- --------------- -------------
+1/1/x3                           enabled         up in bundle
+1/1/x4                           enabled         up in bundle
+1/2/x3                           enabled         up in bundle
+
+3 members found.
+N6>show interface as10 member
+
+Ethernet Port                    Status          LACP Status
+-------------------------------- --------------- -------------
+1/1/x3                           enabled         up in bundle
+1/1/x4                           enabled         up in bundle
+1/2/x3                           enabled         up in bundle
+
+3 members found.
+N6>reboot card 1/1
+card 1/1 will immediately reboot and continue with the last committed software version.
+This will interrupt service. Continue? (yes/no): yes
+N6>EVENT for card 1/1 at 2015/11/20 12:11:47.37:
+    "Reboot: In Progress -- Version=2.4.45.14"
+
+N6>critical ALARM for card 1/1 at 2015/11/20 12:11:57.38:
+    "Unequipped"
+    (affects service)
+EVENT for card 1/1 at 2015/11/20 12:11:57.41:
+    "Card Event: Departure"
+minor ALARM for system at 2015/11/20 12:11:57.43:
+    "No standby controller"
+    (related object: card 1/1)
+
+N6>"N6" Fri Nov 20 12:13:05 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:08 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:10 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:12 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:15 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:18 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:20 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:22 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:25 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:27 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:30 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:32 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:35 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:38 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:40 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:42 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:45 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:47 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:50 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:52 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:55 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:13:57 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:00 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:02 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:05 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:06 2015
+
+Username: 
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:10 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:12 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:15 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:17 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page disAlarm CLEARED for card 1/1 at 2015/11/20 12:14:18.28:
+    "Unequipped"
+
+EVENT for card 1/1 at 2015/11/20 12:14:18.29:
+    "Card Event: Arrival"
+critical ALARM for card 1/1 at 2015/11/20 12:14:18.30:
+    "Not Operational"
+    (affects service)
+warning ALARM for card 1/1 at 2015/11/20 12:14:18.31:
+    "Software initialization in progress"
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:19 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+EVENT for Ethernet port "1/1/x4" at 2015/11/20 12:14:20.75:
+    "LLDP Neighbor Update"
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:22 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>EVENT for Ethernet port "1/1/x3" at 2015/11/20 12:"N6" Fri Nov 20 12:14:24 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:27 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:30 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:32 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:35 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:37 2015
+
+Username: 
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:39 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:42 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:45 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:47 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:49 2015
+
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:51 2015
+
+Username: 
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:53 2015
+
+Username: 
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:55 2015
+
+Username: 
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>"N6" Fri Nov 20 12:14:58 2015
+
+Username: 
+Username: e7support
+Password: 
+N6>set ses time dis page dis
+success: session updated.
+N6>show card 1/1 detail
+Information for card 1/1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211503600306
+Application version     : 2.4.45.14
+Database created        : 2015/10/12 18:20:54
+Database last updated   : 2015/11/20 12:11:30
+Controller candidate    : enabled
+MAC address start       : 00:02:fd:e1:ba:1c
+MAC address end         : 00:02:fd:e1:ba:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : system disabled
+Additional status info  : child provisioned, default provisioned
+Critical alarms         : 1
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	Not Operational
+
+Conditions:
+	Software initialization in progress
+N6>Alarm CLEARED for card 1/1 at 2015/11/20 12:15:12.44:
+    "Not Operational"
+warning ALARM for card 1/1 at 2015/11/20 12:15:09.49:
+    "Storing database to flash memory"
+Alarm CLEARED for card 1/1 at 2015/11/20 12:15:26.84:
+    "Storing database to flash memory"
+Alarm CLEARED for system at 2015/11/20 12:15:28.33:
+    "No standby controller"
+    (related object: card 1/1)
+show card 1/1 detail
+Information for card 1/1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211503600306
+Application version     : 2.4.45.14
+Database created        : 2015/10/12 18:20:54
+Database last updated   : 2015/11/20 12:11:30
+Controller candidate    : enabled
+MAC address start       : 00:02:fd:e1:ba:1c
+MAC address end         : 00:02:fd:e1:ba:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, standby
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 1
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	Software initialization in progress
+N6>Alarm CLEARED for card 1/1 at 2015/11/20 12:15:41.74:
+    "Software initialization in progress"
+EVENT for card 1/1 at 2015/11/20 12:15:41.87:
+    "Reboot: Success -- Version=2.4.45.14"
+
+N6>show card 1/1 detail
+Information for card 1/1:
+Provisioned type        : VDSL2-48Cr2
+Actual type             : VDSL2-48Cr2
+Part number             : 100-03882
+CLEI                    : CALIXCALIX
+Serial number           : 211503600306
+Application version     : 2.4.45.14
+Database created        : 2015/10/12 18:20:54
+Database last updated   : 2015/11/20 12:11:30
+Controller candidate    : enabled
+MAC address start       : 00:02:fd:e1:ba:1c
+MAC address end         : 00:02:fd:e1:ba:57
+Temperature level       : cool
+Admin status            : enabled
+Operational status      : enabled
+Additional status info  : child provisioned, default provisioned, standby
+Critical alarms         : 0
+Major alarms            : 0
+Minor alarms            : 0
+Warning conditions      : 0
+Info conditions         : 0
+
+Alarms:
+	<none>
+
+Conditions:
+	<none>
+N6>show alarm
+No alarms found.
+N6>

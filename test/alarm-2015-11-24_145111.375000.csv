@@ -1,0 +1,5 @@
+#var
+defaultTime,2
+#setup
+N6,show alarm,>|#|>>>,${defaultTime},2015-11-24_14:51:15.217000,0:00:03.842000
+N6,show card,>|#|>>>,${defaultTime},2015-11-24_14:51:17.749000,0:00:02.532000

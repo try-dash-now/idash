@@ -1,0 +1,8 @@
+2015-11-20 11:46:15,851 -INFO:    suite name	st_fcs.csv
+2015-11-20 11:46:15,851 -INFO:    suite range	1
+2015-11-20 11:46:15,851 -INFO:    arg1	pet2
+2015-11-20 11:46:15,852 -INFO:    to run case: index 1, name: cr.py  aalag_switchtime_reboot_card_fcs.csv  bench.csv full pet2 ix-syu 1/1 1/1 1/2, failAction: continue
+2015-11-20 11:46:15,854 -INFO:    creating logdir: ./log/st_fcs-csv-1-pet2-2015-11-20_114615.801000
+2015-11-20 11:46:15,951 -INFO:    running case: cr.py  aalag_switchtime_reboot_card_fcs.csv  bench.csv full pet2 ix-syu 1/1 1/1 1/2
+2015-11-20 11:46:16,026 -INFO:    openLogfile ix-syu in ./log/st_fcs-csv-1-pet2-2015-11-20_114615.801000/1-cr.py--aalag_switchtime_reboot_card_fcs.csv--bench.csv-ful-2015-11-20_114615.857000
+2015-11-20 11:46:16,055 -INFO:    openLogfile pet2 in ./log/st_fcs-csv-1-pet2-2015-11-20_114615.801000/1-cr.py--aalag_switchtime_reboot_card_fcs.csv--bench.csv-ful-2015-11-20_114615.857000

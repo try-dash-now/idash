@@ -1,0 +1,218 @@
+2015-11-25 15:14:45,989 -INFO:    loading a new bench:bench.csv
+2015-11-25 15:14:45,990 -INFO:    releasing duts in old dut_pool
+2015-11-25 15:14:45,992 -INFO:    loading case: 1-cr.py-upgradeE7.csv-bench.csv-full-N6-e7-e7-600-E7_R02.04.045_EX24VDSL2_0022-2.4
+2015-11-25 15:14:47,624 -INFO:    starting to run case: cr.py upgradeE7.csv bench.csv full N6 e7 e7 600 E7_R02.04.045_EX24VDSL2_0022 2.4.45.22
+2015-11-25 15:14:47,624 -INFO:    starting segment:0
+2015-11-25 15:15:30,250 -ERROR:    Case FAIL
+2015-11-25 15:15:30,250 -ERROR:    
+*********************************ERROR DUMP************************************
+*logAction dump:
+*	Function Name: 		run
+*	Arguments: 		
+*		1-cr.py-upgradeE7.csv-bench.csv-full-N6-e7-e7-600-E7_R02.04.045_EX24VDSL2_0022-2.4
+*		{'N6': <e7.e7 object at 0x02CE4490>}
+*		[[['N6', 'set session page dis tim dis', 'success: session updated.', '10', 10], ['N6', 'show alarm', '>', '60', 11], ['N6', 'upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version 2.4.45.22 ', 'Password:', '10', 12], ['N6', 'e7', 'Software Upgrade in progress -- Version=2.4.45.22', '40', 13], ['N6', 'try 2:', 'no:Upgrade: Had Errors', '30', 14], ['N6', 'try 600:show upgrade', 'upgrade performed', '60', 15], ['N6', 'show card', '>', '30', 16], ['N6', 'show version', '>', '30', 17], ['N6', 'setAutoReloginFlag(1)', '', '0', 18], ['N6', 'reset system version  2.4.45.22', 'yes/no', '30', 19], ['N6', 'yes', 'Reset: In Progress -- Version=2.4.45.22', '30', 20], ['N6', 'SLEEP(300)', '', '0', 21], ['N6', 'try 3:set session page dis tim dis', 'success: session updated.', '10', 22], ['N6', 'show alarm', '>', '60', 23], ['N6', 'show version', '>', '20', 24], ['N6', 'try 180:show card detail', 'Alarms:\\s*\r*\n\\s*<none>\\s*\r*\n\\s*Conditions:\\s*\r*\n\\s*Release is not Committed.+Alarms:\\s*\r*\n\\s*<none>\\s*\r*\n\\s*Conditions:\\s*\r*\n\\s*Release is not Committed', '30', 25], ['N6', 'try 2:commit system version 2.4.45.22', 'no:failed', '30', 26], ['N6', 'show version', '>', '30', 27], ['N6', 'show alarm', '>', '30', 28]], [], []]
+*		full
+*		<logging.Logger object at 0x02CD9190>
+*	Keyword Arguments: 		
+*-------------------------------------------------------------------------------
+*ERROR MESSAGE:
+*   tried 1 time(s), failed in function(singleStep),
+*	arg( ['e7', 'Software Upgrade in progress -- Version=2.4.45.22', '40', False, False, False])
+*	kwarg ({})
+*
+*Exception:pattern(Software Upgrade in progress -- Version=2.4.45.22) doesn't find with 40.000000, buffer is:
+*--buffer start--
+*
+*failed: another command is in progress.
+*N6>
+*--buffer end here--
+*
+*
+*Traceback (most recent call last):
+*  File "C:\workspace\idash\lib\runner.py", line 18, in inner
+*    response = fun(*arg, **kwargs)
+*  File "C:\workspace\idash\lib\runner.py", line 204, in run
+*    runSegment(casename, mode, modeset[index], duts,seqlist[index],  segNamelist[index], logger)
+*  File "C:\workspace\idash\lib\runner.py", line 185, in runSegment
+*    session.stepCheck(casename, lineno, cmd, expect, due)
+*  File "C:\workspace\idash\lib\dut.py", line 298, in stepCheck
+*    retry(CaseName, int(MaxTry), FunName, ListArg, DicArg)
+*  File "C:\workspace\idash\lib\dut.py", line 294, in retry
+*    raise ValueError('tried %d time(s), failed in function(%s),\n\targ( %s)\n\tkwarg (%s)\n\nException:%s\n'%(counter, fun.func_name, str(arg), str(kwarg),errormessage))
+*ValueError: tried 1 time(s), failed in function(singleStep),
+*	arg( ['e7', 'Software Upgrade in progress -- Version=2.4.45.22', '40', False, False, False])
+*	kwarg ({})
+*
+*Exception:pattern(Software Upgrade in progress -- Version=2.4.45.22) doesn't find with 40.000000, buffer is:
+*--buffer start--
+*
+*failed: another command is in progress.
+*N6>
+*--buffer end here--
+*
+*
+*-------------------------------------------------------------------------------
+*globals=>
+*	'__author__': 'Sean Yu'
+*	'__doc__': None
+*	'__file__': 'C:\workspace\idash\lib\dut.pyc'
+*	'__name__': 'dut'
+*	'__package__': None
+*	'dut': <class 'dut.dut'>
+*	'time': <module 'time' (built-in)>
+*
+*locals =>
+*	'FunName': 'singleStep'
+*	'GetFunctionbyName': <function GetFunctionbyName at 0x02CBE2F0>
+*	'IsFail': True
+*	'arg': ['e7', 'Software Upgrade in progress -- Version=2.4.45.22', '40', False, False, False]
+*	'casename': '1-cr.py-upgradeE7.csv-bench.csv-full-N6-e7-e7-600-E7_R02.04.045_EX24VDSL2_0022-2.4'
+*	'counter': 1
+*	'e': RuntimeError("pattern(Software Upgrade in progress -- Version=2.4.45.22) doesn't find with 40.000000, buffer is:\n--buffer start--\n\r\nfailed: another command is in progress.\r\nN6>\n--buffer end here--\n",)
+*	'errormessage': "pattern(Software Upgrade in progress -- Version=2.4.45.22) doesn't find with 40.000000, buffer is:\n--buffer start--\n\r\nfailed: another command is in progress.\r\nN6>\n--buffer end here--\n"
+*	'fun': <bound method e7.singleStep of <e7.e7 object at 0x02CE4490>>
+*	'funName': 'singleStep'
+*	'kwarg': {}
+*	'maxtry': 1
+*	'self': <e7.e7 object at 0x02CE4490>
+*		'_has_poll': False
+*		'attribute': {'PROMPT': '>|#|>>>', 'LOGIN': '../bench/e7.login', 'SUT': 'e7', 'CMD': 'telnet 10.245.3.19'}
+*		'cookedq': 'N6>'
+*		'debuglevel': 0
+*		'eof': False
+*		'host': '10.245.3.19'
+*		'iacseq': ''
+*		'idxSearch': 1475
+*		'idxUpdate': 1475
+*		'irawq': 0
+*		'lockRelogin': <thread.lock object at 0x007FD9D0>
+*		'lockStreamOut': <thread.lock object at 0x007FD9E0>
+*		'logfile': <open file 'C:\workspace\idash\test\log\st_dhcpv6-csv-2-3-E7_R02-04-045_EX24VDSL2_0022-2-4-45-22-2015-11-25_151300.903000\1-2015-11-25_151423.309000\1-cr.py-upgradeE7.csv-bench.csv-full-N6-e7-e7-600-E7_R02.04.-2015-11-25_151445.983000\N6.log', mode 'wb' at 0x02CCBE38>
+*		'logger': <logging.Logger object at 0x02C7EEB0>
+*		'loginDone': True
+*		'name': 'N6'
+*		'option_callback': None
+*		'port': 23
+*		'rawq': ''
+*		'sb': 0
+*		'sbdataq': ''
+*		'sock': <socket._socketobject object at 0x02CC79D0>
+*		'streamOut': '"N6" Wed Nov 25 15:19:51 2015\n\r\nUsername: \r\nUsername: e7support\r\nPassword: \r\nN6>set ses time dis page dis\r\nsuccess: session updated.\r\nN6>set session page dis tim dis\r\nsuccess: session updated.\r\nN6>show alarm\r\nOccurred Time          Severity Alarm                                          \r\n---------------------- -------- -----------------------------------------------\r\n2015/11/25 15:09:27.71 warning  system\r\n                                "Software Upgrade in progress"\r\n                                 Version=2.4.45.22 (No auto-reset)\r\n2015/11/20 16:38:53.89 minor    Ethernet port "1/2/g1"\r\n                                "Improper removal"\r\n                                 (affects service)\r\n\r\n2 alarms found.\r\nN6>upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$ystem  server  10.245.3.201 user  e7 directory-path E7_R02.04.0          \x08\x08\x08\x08\x08\x08\x08\x08\x08\x0845_EX24VD\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$ver  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDS           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08L2_0022 v\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$5.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 ve           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08rsion 2.4\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$er  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version 2.4.           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x0845.22 \r\nPassword: \r\nfailed: another command is in progress.\r\nN6>'
+*		'timeout': 0.5
+*		'timestampCmd': 1448435690.09
+*	'traceback': <module 'traceback' from 'C:\Python27\lib\traceback.pyc'>
+*
+**********************************EREOR END*************************************
+
+
+Traceback (most recent call last):
+  File "C:\workspace\idash\lib\runner.py", line 462, in run1case
+    returncode, STRerrormessage= case_runner(casename,dut_pool,seq, case_mode, caselogger)
+  File "C:\workspace\idash\lib\runner.py", line 223, in case_runner
+    caseFail, errorMessage = run(casename, dictDUTs, case_seq, m, logger)
+  File "C:\workspace\idash\lib\runner.py", line 36, in inner
+    raise Exception(msg)
+Exception: 
+*********************************ERROR DUMP************************************
+*logAction dump:
+*	Function Name: 		run
+*	Arguments: 		
+*		1-cr.py-upgradeE7.csv-bench.csv-full-N6-e7-e7-600-E7_R02.04.045_EX24VDSL2_0022-2.4
+*		{'N6': <e7.e7 object at 0x02CE4490>}
+*		[[['N6', 'set session page dis tim dis', 'success: session updated.', '10', 10], ['N6', 'show alarm', '>', '60', 11], ['N6', 'upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version 2.4.45.22 ', 'Password:', '10', 12], ['N6', 'e7', 'Software Upgrade in progress -- Version=2.4.45.22', '40', 13], ['N6', 'try 2:', 'no:Upgrade: Had Errors', '30', 14], ['N6', 'try 600:show upgrade', 'upgrade performed', '60', 15], ['N6', 'show card', '>', '30', 16], ['N6', 'show version', '>', '30', 17], ['N6', 'setAutoReloginFlag(1)', '', '0', 18], ['N6', 'reset system version  2.4.45.22', 'yes/no', '30', 19], ['N6', 'yes', 'Reset: In Progress -- Version=2.4.45.22', '30', 20], ['N6', 'SLEEP(300)', '', '0', 21], ['N6', 'try 3:set session page dis tim dis', 'success: session updated.', '10', 22], ['N6', 'show alarm', '>', '60', 23], ['N6', 'show version', '>', '20', 24], ['N6', 'try 180:show card detail', 'Alarms:\\s*\r*\n\\s*<none>\\s*\r*\n\\s*Conditions:\\s*\r*\n\\s*Release is not Committed.+Alarms:\\s*\r*\n\\s*<none>\\s*\r*\n\\s*Conditions:\\s*\r*\n\\s*Release is not Committed', '30', 25], ['N6', 'try 2:commit system version 2.4.45.22', 'no:failed', '30', 26], ['N6', 'show version', '>', '30', 27], ['N6', 'show alarm', '>', '30', 28]], [], []]
+*		full
+*		<logging.Logger object at 0x02CD9190>
+*	Keyword Arguments: 		
+*-------------------------------------------------------------------------------
+*ERROR MESSAGE:
+*   tried 1 time(s), failed in function(singleStep),
+*	arg( ['e7', 'Software Upgrade in progress -- Version=2.4.45.22', '40', False, False, False])
+*	kwarg ({})
+*
+*Exception:pattern(Software Upgrade in progress -- Version=2.4.45.22) doesn't find with 40.000000, buffer is:
+*--buffer start--
+*
+*failed: another command is in progress.
+*N6>
+*--buffer end here--
+*
+*
+*Traceback (most recent call last):
+*  File "C:\workspace\idash\lib\runner.py", line 18, in inner
+*    response = fun(*arg, **kwargs)
+*  File "C:\workspace\idash\lib\runner.py", line 204, in run
+*    runSegment(casename, mode, modeset[index], duts,seqlist[index],  segNamelist[index], logger)
+*  File "C:\workspace\idash\lib\runner.py", line 185, in runSegment
+*    session.stepCheck(casename, lineno, cmd, expect, due)
+*  File "C:\workspace\idash\lib\dut.py", line 298, in stepCheck
+*    retry(CaseName, int(MaxTry), FunName, ListArg, DicArg)
+*  File "C:\workspace\idash\lib\dut.py", line 294, in retry
+*    raise ValueError('tried %d time(s), failed in function(%s),\n\targ( %s)\n\tkwarg (%s)\n\nException:%s\n'%(counter, fun.func_name, str(arg), str(kwarg),errormessage))
+*ValueError: tried 1 time(s), failed in function(singleStep),
+*	arg( ['e7', 'Software Upgrade in progress -- Version=2.4.45.22', '40', False, False, False])
+*	kwarg ({})
+*
+*Exception:pattern(Software Upgrade in progress -- Version=2.4.45.22) doesn't find with 40.000000, buffer is:
+*--buffer start--
+*
+*failed: another command is in progress.
+*N6>
+*--buffer end here--
+*
+*
+*-------------------------------------------------------------------------------
+*globals=>
+*	'__author__': 'Sean Yu'
+*	'__doc__': None
+*	'__file__': 'C:\workspace\idash\lib\dut.pyc'
+*	'__name__': 'dut'
+*	'__package__': None
+*	'dut': <class 'dut.dut'>
+*	'time': <module 'time' (built-in)>
+*
+*locals =>
+*	'FunName': 'singleStep'
+*	'GetFunctionbyName': <function GetFunctionbyName at 0x02CBE2F0>
+*	'IsFail': True
+*	'arg': ['e7', 'Software Upgrade in progress -- Version=2.4.45.22', '40', False, False, False]
+*	'casename': '1-cr.py-upgradeE7.csv-bench.csv-full-N6-e7-e7-600-E7_R02.04.045_EX24VDSL2_0022-2.4'
+*	'counter': 1
+*	'e': RuntimeError("pattern(Software Upgrade in progress -- Version=2.4.45.22) doesn't find with 40.000000, buffer is:\n--buffer start--\n\r\nfailed: another command is in progress.\r\nN6>\n--buffer end here--\n",)
+*	'errormessage': "pattern(Software Upgrade in progress -- Version=2.4.45.22) doesn't find with 40.000000, buffer is:\n--buffer start--\n\r\nfailed: another command is in progress.\r\nN6>\n--buffer end here--\n"
+*	'fun': <bound method e7.singleStep of <e7.e7 object at 0x02CE4490>>
+*	'funName': 'singleStep'
+*	'kwarg': {}
+*	'maxtry': 1
+*	'self': <e7.e7 object at 0x02CE4490>
+*		'_has_poll': False
+*		'attribute': {'PROMPT': '>|#|>>>', 'LOGIN': '../bench/e7.login', 'SUT': 'e7', 'CMD': 'telnet 10.245.3.19'}
+*		'cookedq': 'N6>'
+*		'debuglevel': 0
+*		'eof': False
+*		'host': '10.245.3.19'
+*		'iacseq': ''
+*		'idxSearch': 1475
+*		'idxUpdate': 1475
+*		'irawq': 0
+*		'lockRelogin': <thread.lock object at 0x007FD9D0>
+*		'lockStreamOut': <thread.lock object at 0x007FD9E0>
+*		'logfile': <open file 'C:\workspace\idash\test\log\st_dhcpv6-csv-2-3-E7_R02-04-045_EX24VDSL2_0022-2-4-45-22-2015-11-25_151300.903000\1-2015-11-25_151423.309000\1-cr.py-upgradeE7.csv-bench.csv-full-N6-e7-e7-600-E7_R02.04.-2015-11-25_151445.983000\N6.log', mode 'wb' at 0x02CCBE38>
+*		'logger': <logging.Logger object at 0x02C7EEB0>
+*		'loginDone': True
+*		'name': 'N6'
+*		'option_callback': None
+*		'port': 23
+*		'rawq': ''
+*		'sb': 0
+*		'sbdataq': ''
+*		'sock': <socket._socketobject object at 0x02CC79D0>
+*		'streamOut': '"N6" Wed Nov 25 15:19:51 2015\n\r\nUsername: \r\nUsername: e7support\r\nPassword: \r\nN6>set ses time dis page dis\r\nsuccess: session updated.\r\nN6>set session page dis tim dis\r\nsuccess: session updated.\r\nN6>show alarm\r\nOccurred Time          Severity Alarm                                          \r\n---------------------- -------- -----------------------------------------------\r\n2015/11/25 15:09:27.71 warning  system\r\n                                "Software Upgrade in progress"\r\n                                 Version=2.4.45.22 (No auto-reset)\r\n2015/11/20 16:38:53.89 minor    Ethernet port "1/2/g1"\r\n                                "Improper removal"\r\n                                 (affects service)\r\n\r\n2 alarms found.\r\nN6>upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$ystem  server  10.245.3.201 user  e7 directory-path E7_R02.04.0          \x08\x08\x08\x08\x08\x08\x08\x08\x08\x0845_EX24VD\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$ver  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDS           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08L2_0022 v\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$5.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 ve           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08rsion 2.4\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$er  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version 2.4.           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x0845.22 \r\nPassword: \r\nfailed: another command is in progress.\r\nN6>'
+*		'timeout': 0.5
+*		'timestampCmd': 1448435690.09
+*	'traceback': <module 'traceback' from 'C:\Python27\lib\traceback.pyc'>
+*
+**********************************EREOR END*************************************
+
+
+

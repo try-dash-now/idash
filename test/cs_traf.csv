@@ -1,0 +1,10 @@
+#var,
+ixia,${4}
+#setup,
+${ixia},clearStats()
+,sleep(10)
+#run,
+${ixia},"getStatsItem(""Traffic Item Statistics"", ""Packet Loss Duration (ms)"")"
+,"checkRange(""Traffic Item Statistics"",""multicast UDP"", ""Packet Loss Duration (ms)"", 200)"
+,"checkRange(""Traffic Item Statistics"",""client->server"", ""Packet Loss Duration (ms)"", 200)"
+,"checkRange(""Traffic Item Statistics"",""server->client"", ""Packet Loss Duration (ms)"", 200)"

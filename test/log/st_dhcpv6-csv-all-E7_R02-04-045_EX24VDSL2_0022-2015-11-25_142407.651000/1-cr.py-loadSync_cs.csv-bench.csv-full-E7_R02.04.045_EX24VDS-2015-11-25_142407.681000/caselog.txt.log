@@ -1,0 +1,8 @@
+2015-11-25 14:24:07,707 -INFO:    loading a new bench:bench.csv
+2015-11-25 14:24:07,709 -INFO:    releasing duts in old dut_pool
+2015-11-25 14:24:07,709 -INFO:    loading case: 1-cr.py-loadSync_cs.csv-bench.csv-full-E7_R02.04.045_EX24VDSL2_0022
+2015-11-25 14:24:08,223 -INFO:    starting to run case: cr.py loadSync_cs.csv bench.csv full E7_R02.04.045_EX24VDSL2_0022
+2015-11-25 14:24:08,224 -INFO:    starting segment:0
+2015-11-25 14:30:09,338 -INFO:    starting segment:1
+2015-11-25 14:30:09,338 -INFO:    starting segment:2
+2015-11-25 14:30:09,338 -INFO:    Case PASS

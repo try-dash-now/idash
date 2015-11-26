@@ -1,0 +1,218 @@
+2015-11-25 14:30:09,545 -INFO:    loading a new bench:bench.csv
+2015-11-25 14:30:09,545 -INFO:    releasing duts in old dut_pool
+2015-11-25 14:30:09,545 -INFO:    loading case: 3-cr.py-upgradeE7.csv-bench.csv-full-N3-e7-e7-600-E7_R02.04.045_EX24VDSL2_0022---2
+2015-11-25 14:30:11,032 -INFO:    starting to run case: cr.py upgradeE7.csv bench.csv full N3 e7 e7 600 E7_R02.04.045_EX24VDSL2_0022 ${2}
+2015-11-25 14:30:11,032 -INFO:    starting segment:0
+2015-11-25 14:30:21,986 -ERROR:    Case FAIL
+2015-11-25 14:30:21,986 -ERROR:    
+*********************************ERROR DUMP************************************
+*logAction dump:
+*	Function Name: 		run
+*	Arguments: 		
+*		3-cr.py-upgradeE7.csv-bench.csv-full-N3-e7-e7-600-E7_R02.04.045_EX24VDSL2_0022---2
+*		{'N3': <e7.e7 object at 0x02996A50>}
+*		[[['N3', 'set session page dis tim dis', 'success: session updated.', '10', 10], ['N3', 'show alarm', '>', '60', 11], ['N3', 'upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version ${2} ', 'Password:', '10', 12], ['N3', 'e7', 'Software Upgrade in progress -- Version=${2}', '40', 13], ['N3', 'try 2:', 'no:Upgrade: Had Errors', '30', 14], ['N3', 'try 600:show upgrade', 'upgrade performed', '60', 15], ['N3', 'show card', '>', '30', 16], ['N3', 'show version', '>', '30', 17], ['N3', 'setAutoReloginFlag(1)', '', '0', 18], ['N3', 'reset system version  ${2}', 'yes/no', '30', 19], ['N3', 'yes', 'Reset: In Progress -- Version=${2}', '30', 20], ['N3', 'SLEEP(300)', '', '0', 21], ['N3', 'try 3:set session page dis tim dis', 'success: session updated.', '10', 22], ['N3', 'show alarm', '>', '60', 23], ['N3', 'show version', '>', '20', 24], ['N3', 'try 180:show card detail', 'Alarms:\\s*\r*\n\\s*<none>\\s*\r*\n\\s*Conditions:\\s*\r*\n\\s*Release is not Committed.+Alarms:\\s*\r*\n\\s*<none>\\s*\r*\n\\s*Conditions:\\s*\r*\n\\s*Release is not Committed', '30', 25], ['N3', 'try 2:commit system version ${2}', 'no:failed', '30', 26], ['N3', 'show version', '>', '30', 27], ['N3', 'show alarm', '>', '30', 28]], [], []]
+*		full
+*		<logging.Logger object at 0x028E1110>
+*	Keyword Arguments: 		
+*-------------------------------------------------------------------------------
+*ERROR MESSAGE:
+*   tried 1 time(s), failed in function(singleStep),
+*	arg( ['upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version ${2} ', 'Password:', '10', False, False, False])
+*	kwarg ({})
+*
+*Exception:pattern(Password:) doesn't find with 10.000000, buffer is:
+*--buffer start--
+*upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.$ystem  server  10.245.3.201 user  e7 directory-path E7_R02.04.0          45_EX24VD$ver  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDS           L2_0022 v$5.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 ve           rsion ${2$er  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version ${2}            
+*invalid version: ${2}
+*N3>
+*--buffer end here--
+*
+*
+*Traceback (most recent call last):
+*  File "c:\workspace\idash\lib\runner.py", line 18, in inner
+*    response = fun(*arg, **kwargs)
+*  File "c:\workspace\idash\lib\runner.py", line 204, in run
+*    runSegment(casename, mode, modeset[index], duts,seqlist[index],  segNamelist[index], logger)
+*  File "c:\workspace\idash\lib\runner.py", line 185, in runSegment
+*    session.stepCheck(casename, lineno, cmd, expect, due)
+*  File "c:\workspace\idash\lib\dut.py", line 298, in stepCheck
+*    retry(CaseName, int(MaxTry), FunName, ListArg, DicArg)
+*  File "c:\workspace\idash\lib\dut.py", line 294, in retry
+*    raise ValueError('tried %d time(s), failed in function(%s),\n\targ( %s)\n\tkwarg (%s)\n\nException:%s\n'%(counter, fun.func_name, str(arg), str(kwarg),errormessage))
+*ValueError: tried 1 time(s), failed in function(singleStep),
+*	arg( ['upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version ${2} ', 'Password:', '10', False, False, False])
+*	kwarg ({})
+*
+*Exception:pattern(Password:) doesn't find with 10.000000, buffer is:
+*--buffer start--
+*upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.$ystem  server  10.245.3.201 user  e7 directory-path E7_R02.04.0          45_EX24VD$ver  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDS           L2_0022 v$5.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 ve           rsion ${2$er  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version ${2}            
+*invalid version: ${2}
+*N3>
+*--buffer end here--
+*
+*
+*-------------------------------------------------------------------------------
+*globals=>
+*	'__author__': 'Sean Yu'
+*	'__doc__': None
+*	'__file__': 'c:\workspace\idash\lib\dut.pyc'
+*	'__name__': 'dut'
+*	'__package__': None
+*	'dut': <class 'dut.dut'>
+*	'time': <module 'time' (built-in)>
+*
+*locals =>
+*	'FunName': 'singleStep'
+*	'GetFunctionbyName': <function GetFunctionbyName at 0x0283C430>
+*	'IsFail': True
+*	'arg': ['upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version ${2} ', 'Password:', '10', False, False, False]
+*	'casename': '3-cr.py-upgradeE7.csv-bench.csv-full-N3-e7-e7-600-E7_R02.04.045_EX24VDSL2_0022---2'
+*	'counter': 1
+*	'e': RuntimeError("pattern(Password:) doesn't find with 10.000000, buffer is:\n--buffer start--\nupgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$ystem  server  10.245.3.201 user  e7 directory-path E7_R02.04.0          \x08\x08\x08\x08\x08\x08\x08\x08\x08\x0845_EX24VD\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$ver  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDS           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08L2_0022 v\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$5.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 ve           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08rsion ${2\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$er  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version ${2}           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08 \r\ninvalid version: ${2}\r\nN3>\n--buffer end here--\n",)
+*	'errormessage': "pattern(Password:) doesn't find with 10.000000, buffer is:\n--buffer start--\nupgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$ystem  server  10.245.3.201 user  e7 directory-path E7_R02.04.0          \x08\x08\x08\x08\x08\x08\x08\x08\x08\x0845_EX24VD\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$ver  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDS           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08L2_0022 v\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$5.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 ve           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08rsion ${2\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$er  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version ${2}           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08 \r\ninvalid version: ${2}\r\nN3>\n--buffer end here--\n"
+*	'fun': <bound method e7.singleStep of <e7.e7 object at 0x02996A50>>
+*	'funName': 'singleStep'
+*	'kwarg': {}
+*	'maxtry': 1
+*	'self': <e7.e7 object at 0x02996A50>
+*		'_has_poll': False
+*		'attribute': {'PROMPT': '>|#|>>>', 'LOGIN': '../bench/e7.login', 'SUT': 'e7', 'CMD': 'telnet 10.245.3.15'}
+*		'cookedq': 'N3>'
+*		'debuglevel': 0
+*		'eof': False
+*		'host': '10.245.3.15'
+*		'iacseq': ''
+*		'idxSearch': 230
+*		'idxUpdate': 230
+*		'irawq': 0
+*		'lockRelogin': <thread.lock object at 0x0221B1D0>
+*		'lockStreamOut': <thread.lock object at 0x0221B270>
+*		'logfile': <open file 'c:\workspace\idash\test\log\st_dhcpv6-csv-all-E7_R02-04-045_EX24VDSL2_0022-2015-11-25_142407.651000\3-2015-11-25_143009.378000\1-cr.py-upgradeE7.csv-bench.csv-full-N3-e7-e7-600-E7_R02.04.-2015-11-25_143009.406000\N3.log', mode 'wb' at 0x028F1AC8>
+*		'logger': <logging.Logger object at 0x02864810>
+*		'loginDone': True
+*		'name': 'N3'
+*		'option_callback': None
+*		'port': 23
+*		'rawq': ''
+*		'sb': 0
+*		'sbdataq': ''
+*		'sock': <socket._socketobject object at 0x0298C340>
+*		'streamOut': '"N3" Wed Nov 25 14:28:43 2015\n\r\nUsername: \r\nUsername: e7support\r\nPassword: \r\nN3>set ses time dis page dis\r\nsuccess: session updated.\r\nN3>set session page dis tim dis\r\nsuccess: session updated.\r\nN3>show alarm\r\nNo alarms found.\r\nN3>upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$ystem  server  10.245.3.201 user  e7 directory-path E7_R02.04.0          \x08\x08\x08\x08\x08\x08\x08\x08\x08\x0845_EX24VD\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$ver  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDS           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08L2_0022 v\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$5.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 ve           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08rsion ${2\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$er  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version ${2}           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08 \r\ninvalid version: ${2}\r\nN3>'
+*		'timeout': 0.5
+*		'timestampCmd': 1448433011.656
+*	'traceback': <module 'traceback' from 'c:\Python27\lib\traceback.pyc'>
+*
+**********************************EREOR END*************************************
+
+
+Traceback (most recent call last):
+  File "c:\workspace\idash\lib\runner.py", line 462, in run1case
+    returncode, STRerrormessage= case_runner(casename,dut_pool,seq, case_mode, caselogger)
+  File "c:\workspace\idash\lib\runner.py", line 223, in case_runner
+    caseFail, errorMessage = run(casename, dictDUTs, case_seq, m, logger)
+  File "c:\workspace\idash\lib\runner.py", line 36, in inner
+    raise Exception(msg)
+Exception: 
+*********************************ERROR DUMP************************************
+*logAction dump:
+*	Function Name: 		run
+*	Arguments: 		
+*		3-cr.py-upgradeE7.csv-bench.csv-full-N3-e7-e7-600-E7_R02.04.045_EX24VDSL2_0022---2
+*		{'N3': <e7.e7 object at 0x02996A50>}
+*		[[['N3', 'set session page dis tim dis', 'success: session updated.', '10', 10], ['N3', 'show alarm', '>', '60', 11], ['N3', 'upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version ${2} ', 'Password:', '10', 12], ['N3', 'e7', 'Software Upgrade in progress -- Version=${2}', '40', 13], ['N3', 'try 2:', 'no:Upgrade: Had Errors', '30', 14], ['N3', 'try 600:show upgrade', 'upgrade performed', '60', 15], ['N3', 'show card', '>', '30', 16], ['N3', 'show version', '>', '30', 17], ['N3', 'setAutoReloginFlag(1)', '', '0', 18], ['N3', 'reset system version  ${2}', 'yes/no', '30', 19], ['N3', 'yes', 'Reset: In Progress -- Version=${2}', '30', 20], ['N3', 'SLEEP(300)', '', '0', 21], ['N3', 'try 3:set session page dis tim dis', 'success: session updated.', '10', 22], ['N3', 'show alarm', '>', '60', 23], ['N3', 'show version', '>', '20', 24], ['N3', 'try 180:show card detail', 'Alarms:\\s*\r*\n\\s*<none>\\s*\r*\n\\s*Conditions:\\s*\r*\n\\s*Release is not Committed.+Alarms:\\s*\r*\n\\s*<none>\\s*\r*\n\\s*Conditions:\\s*\r*\n\\s*Release is not Committed', '30', 25], ['N3', 'try 2:commit system version ${2}', 'no:failed', '30', 26], ['N3', 'show version', '>', '30', 27], ['N3', 'show alarm', '>', '30', 28]], [], []]
+*		full
+*		<logging.Logger object at 0x028E1110>
+*	Keyword Arguments: 		
+*-------------------------------------------------------------------------------
+*ERROR MESSAGE:
+*   tried 1 time(s), failed in function(singleStep),
+*	arg( ['upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version ${2} ', 'Password:', '10', False, False, False])
+*	kwarg ({})
+*
+*Exception:pattern(Password:) doesn't find with 10.000000, buffer is:
+*--buffer start--
+*upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.$ystem  server  10.245.3.201 user  e7 directory-path E7_R02.04.0          45_EX24VD$ver  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDS           L2_0022 v$5.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 ve           rsion ${2$er  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version ${2}            
+*invalid version: ${2}
+*N3>
+*--buffer end here--
+*
+*
+*Traceback (most recent call last):
+*  File "c:\workspace\idash\lib\runner.py", line 18, in inner
+*    response = fun(*arg, **kwargs)
+*  File "c:\workspace\idash\lib\runner.py", line 204, in run
+*    runSegment(casename, mode, modeset[index], duts,seqlist[index],  segNamelist[index], logger)
+*  File "c:\workspace\idash\lib\runner.py", line 185, in runSegment
+*    session.stepCheck(casename, lineno, cmd, expect, due)
+*  File "c:\workspace\idash\lib\dut.py", line 298, in stepCheck
+*    retry(CaseName, int(MaxTry), FunName, ListArg, DicArg)
+*  File "c:\workspace\idash\lib\dut.py", line 294, in retry
+*    raise ValueError('tried %d time(s), failed in function(%s),\n\targ( %s)\n\tkwarg (%s)\n\nException:%s\n'%(counter, fun.func_name, str(arg), str(kwarg),errormessage))
+*ValueError: tried 1 time(s), failed in function(singleStep),
+*	arg( ['upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version ${2} ', 'Password:', '10', False, False, False])
+*	kwarg ({})
+*
+*Exception:pattern(Password:) doesn't find with 10.000000, buffer is:
+*--buffer start--
+*upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.$ystem  server  10.245.3.201 user  e7 directory-path E7_R02.04.0          45_EX24VD$ver  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDS           L2_0022 v$5.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 ve           rsion ${2$er  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version ${2}            
+*invalid version: ${2}
+*N3>
+*--buffer end here--
+*
+*
+*-------------------------------------------------------------------------------
+*globals=>
+*	'__author__': 'Sean Yu'
+*	'__doc__': None
+*	'__file__': 'c:\workspace\idash\lib\dut.pyc'
+*	'__name__': 'dut'
+*	'__package__': None
+*	'dut': <class 'dut.dut'>
+*	'time': <module 'time' (built-in)>
+*
+*locals =>
+*	'FunName': 'singleStep'
+*	'GetFunctionbyName': <function GetFunctionbyName at 0x0283C430>
+*	'IsFail': True
+*	'arg': ['upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version ${2} ', 'Password:', '10', False, False, False]
+*	'casename': '3-cr.py-upgradeE7.csv-bench.csv-full-N3-e7-e7-600-E7_R02.04.045_EX24VDSL2_0022---2'
+*	'counter': 1
+*	'e': RuntimeError("pattern(Password:) doesn't find with 10.000000, buffer is:\n--buffer start--\nupgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$ystem  server  10.245.3.201 user  e7 directory-path E7_R02.04.0          \x08\x08\x08\x08\x08\x08\x08\x08\x08\x0845_EX24VD\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$ver  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDS           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08L2_0022 v\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$5.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 ve           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08rsion ${2\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$er  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version ${2}           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08 \r\ninvalid version: ${2}\r\nN3>\n--buffer end here--\n",)
+*	'errormessage': "pattern(Password:) doesn't find with 10.000000, buffer is:\n--buffer start--\nupgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$ystem  server  10.245.3.201 user  e7 directory-path E7_R02.04.0          \x08\x08\x08\x08\x08\x08\x08\x08\x08\x0845_EX24VD\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$ver  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDS           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08L2_0022 v\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$5.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 ve           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08rsion ${2\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$er  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version ${2}           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08 \r\ninvalid version: ${2}\r\nN3>\n--buffer end here--\n"
+*	'fun': <bound method e7.singleStep of <e7.e7 object at 0x02996A50>>
+*	'funName': 'singleStep'
+*	'kwarg': {}
+*	'maxtry': 1
+*	'self': <e7.e7 object at 0x02996A50>
+*		'_has_poll': False
+*		'attribute': {'PROMPT': '>|#|>>>', 'LOGIN': '../bench/e7.login', 'SUT': 'e7', 'CMD': 'telnet 10.245.3.15'}
+*		'cookedq': 'N3>'
+*		'debuglevel': 0
+*		'eof': False
+*		'host': '10.245.3.15'
+*		'iacseq': ''
+*		'idxSearch': 230
+*		'idxUpdate': 230
+*		'irawq': 0
+*		'lockRelogin': <thread.lock object at 0x0221B1D0>
+*		'lockStreamOut': <thread.lock object at 0x0221B270>
+*		'logfile': <open file 'c:\workspace\idash\test\log\st_dhcpv6-csv-all-E7_R02-04-045_EX24VDSL2_0022-2015-11-25_142407.651000\3-2015-11-25_143009.378000\1-cr.py-upgradeE7.csv-bench.csv-full-N3-e7-e7-600-E7_R02.04.-2015-11-25_143009.406000\N3.log', mode 'wb' at 0x028F1AC8>
+*		'logger': <logging.Logger object at 0x02864810>
+*		'loginDone': True
+*		'name': 'N3'
+*		'option_callback': None
+*		'port': 23
+*		'rawq': ''
+*		'sb': 0
+*		'sbdataq': ''
+*		'sock': <socket._socketobject object at 0x0298C340>
+*		'streamOut': '"N3" Wed Nov 25 14:28:43 2015\n\r\nUsername: \r\nUsername: e7support\r\nPassword: \r\nN3>set ses time dis page dis\r\nsuccess: session updated.\r\nN3>set session page dis tim dis\r\nsuccess: session updated.\r\nN3>show alarm\r\nNo alarms found.\r\nN3>upgrade  system  server  10.245.3.201 user  e7 directory-path E7_R02.04.\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$ystem  server  10.245.3.201 user  e7 directory-path E7_R02.04.0          \x08\x08\x08\x08\x08\x08\x08\x08\x08\x0845_EX24VD\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$ver  10.245.3.201 user  e7 directory-path E7_R02.04.045_EX24VDS           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08L2_0022 v\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$5.3.201 user  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 ve           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08rsion ${2\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08$er  e7 directory-path E7_R02.04.045_EX24VDSL2_0022 version ${2}           \x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08 \r\ninvalid version: ${2}\r\nN3>'
+*		'timeout': 0.5
+*		'timestampCmd': 1448433011.656
+*	'traceback': <module 'traceback' from 'c:\Python27\lib\traceback.pyc'>
+*
+**********************************EREOR END*************************************
+
+
+
