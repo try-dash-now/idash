@@ -48,7 +48,7 @@ if __name__ == "__main__":
     suitelogdir = createLogDir(name, suitelogdir)
     st = suiteParser(name, suitelogdir)
     lstRange = GetRange(rangelist )
-    suite= st.load(suitefile, arglist, lstRange)
+    statsTotalCase, suite= st.load(suitefile, arglist, lstRange)
 
     benchfile =''
     benchinfo ={}
@@ -69,12 +69,6 @@ if __name__ == "__main__":
     index = 1
     from runner import run_case_in_suite , releaseDUTs , initDUT,case_runner, createLogDir, array2html, run1case
 
-
-
-
-
-
-
     import time, re
     returncode =1
     errormessage =''
@@ -83,7 +77,8 @@ if __name__ == "__main__":
     statsPass =0
     statsFail =0
     lstFailCase = []
-    htmlstring = array2html(suitefile,rangelist,','.join(arglist), suite.__len__(),statsFail+statsPass,statsPass,statsFail, suite.__len__()-statsFail-statsPass,report, suiteStartTime, suiteEndTime)
+
+    htmlstring = array2html(suitefile,rangelist,','.join(arglist), statsTotalCase,statsFail+statsPass,statsPass,statsFail, statsTotalCase-statsFail-statsPass,report, suiteStartTime, suiteEndTime)
     reportfilename = './log/%s.html'%(name)
     with open(reportfilename, 'wb') as f:
         f.write(htmlstring.encode(encoding='utf_8', errors='strict'))
@@ -148,7 +143,7 @@ if __name__ == "__main__":
 
         print('Pass:',statsPass, 'Fail', statsFail)
         suiteEndTime = time.time()
-        htmlstring = array2html(suitefile,rangelist,','.join(arglist), suite.__len__(),statsFail+statsPass,statsPass,statsFail, suite.__len__()-statsFail-statsPass,report, suiteStartTime, suiteEndTime)
+        htmlstring = array2html(suitefile,rangelist,','.join(arglist), statsTotalCase,statsFail+statsPass,statsPass,statsFail, statsTotalCase-statsFail-statsPass,report, suiteStartTime, suiteEndTime)
         reportfilename = './log/%s.html'%(name)
         with open(reportfilename, 'wb') as f:
             f.write(htmlstring.encode(encoding='utf_8', errors='strict'))

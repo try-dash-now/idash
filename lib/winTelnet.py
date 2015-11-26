@@ -352,7 +352,7 @@ class winTelnet(dut):#, spawn
 
 
                         except Exception as e:
-                            print('\nReadDataFromSocket Exception2 %d:'%(counter)+e.__str__()+'\n')
+                            print('\nReadDataFromSocket Exception2 %d:'%(fail_counter)+e.__str__()+'\n')
                     else:
                         print("ReadDataFromSocket Exception: %s"%(str(e)))
                         import traceback

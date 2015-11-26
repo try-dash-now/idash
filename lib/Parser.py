@@ -304,6 +304,7 @@ class suiteParser(object):
                 raise ValueError(errormsg)
 
         def loadCsvSuite2Array(filename, arglist, rangelist='all'):
+            totalCase =0
             import re
             from common import csvstring2array
             numOfArglist = len(arglist)
@@ -335,6 +336,7 @@ class suiteParser(object):
                         line =  re.sub('\$\s*\{\s*%d\s*\}'%(index), arglist[index-1], line)
                     columns = csvstring2array(line)[0]
                     tmp =[]
+                    totalCase+=1
                     for i in columns:
                         if re.match(pComments, i):
                             break
@@ -404,6 +406,7 @@ class suiteParser(object):
                             prefailAction = 'break'
                             SuiteArray.append([lineNo-1,prefailAction, newSuiteLine])
 
+
                         if loopCounter>1:
                             action = loop
                             currentAction =action
@@ -417,13 +420,13 @@ class suiteParser(object):
                     suiteIndex+=1
                 if lstConc !=[]:
                     SuiteArray.append([lastLineNoOfConcurrent,'break', [concurrent, lstConc]])
-                return SuiteArray
+                return totalCase, SuiteArray
 
-        arrSuite = loadCsvSuite2Array(suitfile, arglist, rangelist)
+        totalCase, arrSuite = loadCsvSuite2Array(suitfile, arglist, rangelist)
 
 
 
-        return  arrSuite
+        return totalCase, arrSuite
 
 
 

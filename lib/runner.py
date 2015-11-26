@@ -48,8 +48,12 @@ def createLogger(name, logpath='./'):
     hdrlog .setFormatter(logging.Formatter('%(asctime)s -%(levelname)s:    %(message)s'))
     logger.addHandler(hdrlog )
     return logger
+import threading
+gPathLocker = threading.Lock()
 @logAction
 def createLogDir(name,logpath='./'):
+    global  gPathLocker
+    gPathLocker.acquire()
     import os
     old_logpath=logpath
     def listDir(path):
@@ -80,6 +84,7 @@ def createLogDir(name,logpath='./'):
     for dir in logpath:
         print(os.getcwd())
         if os.path.exists(dir):
+            print(os.getcwd())
             os.chdir(dir)
             print(os.getcwd())
         else:
@@ -88,6 +93,7 @@ def createLogDir(name,logpath='./'):
                 os.chdir(dir)
                 print(os.getcwd())
             print(errormsg)
+            gPathLocker.release()
             raise Exception(errormsg)
 
     if not os.path.exists(fullname):
@@ -100,7 +106,7 @@ def createLogDir(name,logpath='./'):
     for dir in old_cwd:
         os.chdir(dir)
         print(os.getcwd())
-
+    gPathLocker.release()
     return old_logpath+'/'+fullname
 
 @logAction
@@ -506,7 +512,7 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger ):
     return  returncode, errormessage, benchfile,bench, dut_pool
 
 
-def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN,Report, suiteStartTime,suiteEndTime):
+def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN,Report, suiteStartTime,suiteEndTime, pathpre):
     import time
     if CASERUN==0 or TOTAL==0:
         CASERUN=1
