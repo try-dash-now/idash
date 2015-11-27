@@ -28,6 +28,27 @@ class ia(Cmd, object):
     lenCompleteBuffer=0
     tmTimeStampOfLastCmd=None
     cmdLineBuffer=''
+    rl =None
+    readline =None
+    def checkQuestionMarkEnd(self):
+        while not self.flagEndCase:
+            if self.rl:
+                buf = self.rl.get_line_buffer()
+                #buf="aaaa?"
+                if str(buf).endswith('?'):
+                    if self.sutname!='tc':
+                        sut = self.sut[self.sutname]
+                        sut.write(buf+'\b'*len(buf))
+                        #print("##################",self.rl.mode)
+                        self.rl.mode.l_buffer.set_line(buf[:-1])
+                        #print('#############',self.rl.get_line_buffer())
+#                        self.rl.insert_text('\b')
+                        #VOID keybd_event(BYTE bVk, BYTE bScan, DWORD dwFlags, PTR dwExtraInfo);
+                        #user32.keybd_event(keycode,0,1,0) #is the code for KEYDOWN
+                        #user32.keybd_event(keycode,0,2,0) #is the code for KEYDOWN
+                        #time.sleep(0.5)
+                        #break
+
     def emptyline(self):
         return ''
 
@@ -55,6 +76,8 @@ class ia(Cmd, object):
         self.sut=duts
         import threading
         th = threading.Thread(target=self.show)
+        th.start()
+        th = threading.Thread(target=self.checkQuestionMarkEnd)
         th.start()
         self.do_setsut(dutname[0])
         self.helpDoc={}
@@ -348,9 +371,11 @@ class ia(Cmd, object):
                 #print('len:%d'%len(cmd))
                 sut = self.sut[self.sutname]
                 if cmd.endswith('?'):
-                    sut.stepCheck('casename', self.cp, cmd, expectPat,str(timeout))
+                    sut.write(cmd)
+                    #sut.stepCheck('casename', self.cp, cmd, expectPat,str(timeout))
                     sutresponse = str(cmd).strip()[:-1]+' '
-                    self.cmdLineBuffer=sutresponse
+                    self.rl.insert_text(sutresponse)
+                    #self.cmdLineBuffer=sutresponse
                     #import  readline
                     #print('inert text to readline :',sutresponse)
                     #readline.clear_history()
@@ -455,9 +480,17 @@ class ia(Cmd, object):
         if self.use_rawinput and self.completekey:
             try:
                 import readline
+                self.readline = readline
+
                 self.old_completer = readline.get_completer()
                 readline.set_completer(self.complete)
                 readline.parse_and_bind(self.completekey+": complete")
+                self.rl = readline.rl
+                if self.cmdLineBuffer!='':
+                    self.readline.insert_text(self.cmdLineBuffer)
+                    self.rl._update_prompt_pos(len(self.cmdLineBuffer))
+                    #rl.prompt_begin_pos =
+                    self.rl._update_line()
                 #readline.parse_and_bind('?: completeQuestion')
             except ImportError:
                 pass
@@ -473,7 +506,8 @@ class ia(Cmd, object):
                 else:
                     if self.use_rawinput:
                         try:
-                            line = raw_input(self.prompt+self.cmdLineBuffer)
+                            line = raw_input(self.prompt)#+self.cmdLineBuffer
+
                         except EOFError:
                             line = 'EOF'
                     else:
@@ -485,14 +519,19 @@ class ia(Cmd, object):
                         else:
                             line = line.rstrip('\r\n')
                 if len(self.cmdLineBuffer):
+                    self.rl.console.write(self.cmdLineBuffer)
+                    self.rl.console.flush()
                     line =self.cmdLineBuffer+line
+                    self.readline.insert_text(self.cmdLineBuffer)
+
                     self.cmdLineBuffer=''
                 line = self.precmd(line)
                 stop = self.onecmd(line)
                 stop = self.postcmd(stop, line)
             self.postloop()
-        finally:
+        finally :
             if self.use_rawinput and self.completekey:
+
                 try:
                     import readline
                     readline.set_completer(self.old_completer)
