@@ -118,11 +118,12 @@ class winTelnet(dut):#, spawn
         command = self.attribute.get('CMD')
         m1=sre.match(reHostOnly, command)
         m2=sre.match(reHostPort, command)
-        if m1:
-            host= m1.groups(1)[0]
-        elif m2:
-            host= m2.groups(1)[0]
-            port= m2.groups(2)[0]
+        if m2:
+            host= m2.group(1)
+            port= int(m2.group(2))
+        elif m1:
+            host= m1.group(1)
+
         #import socket
         #timeout = 30
         #self.sock = socket.create_connection((host, port), timeout)
@@ -181,6 +182,7 @@ class winTelnet(dut):#, spawn
         self.msg("send %r", buffer)
         if self.sock:
             self.sock.sendall(buffer)
+        super(winTelnet,self).write()
 
     def msg(self, msg, *args):
         """Print a debug message, when the debug level is > 0.
@@ -305,7 +307,7 @@ class winTelnet(dut):#, spawn
         self.sock = socket.create_connection((host, port), timeout)
     def ReadDataFromSocket(self):
         import time, os
-        maxInterval = 60
+        maxInterval = 60*5
         if self.timestampCmd ==None:
             self.timestampCmd= time.time()
         fail_counter = 0
@@ -316,7 +318,7 @@ class winTelnet(dut):#, spawn
                 #    self.relogin()
                 if self.sock:
                     if (time.time()-self.timestampCmd)>maxInterval:
-                        self.write(os.linesep)
+                        self.write('\n')
                         self.timestampCmd = time.time()
                 else:
                     raise Exception('[Errno 10053] An established connection was aborted by the software in your host machine')

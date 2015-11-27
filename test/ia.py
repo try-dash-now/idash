@@ -41,6 +41,7 @@ class ia(Cmd, object):
                         sut.write(buf+'\b'*len(buf))
                         #print("##################",self.rl.mode)
                         self.rl.mode.l_buffer.set_line(buf[:-1])
+
                         #print('#############',self.rl.get_line_buffer())
 #                        self.rl.insert_text('\b')
                         #VOID keybd_event(BYTE bVk, BYTE bScan, DWORD dwFlags, PTR dwExtraInfo);

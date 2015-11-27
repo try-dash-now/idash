@@ -69,6 +69,17 @@ class dut(object):
             self.attribute = {}
         if logger:
             logger.info('openLogfile %s in %s'%(name,logpath))
+        if self.attribute.get("LINESEP"):
+            LINESEP = self.attribute.get('LINESEP').replace('\\r', '\r').replace('\\n', '\n')
+            self.attribute['LINESEP']=LINESEP
+        else:
+            self.attribute['LINESEP']='\n'
+
+        if self.attribute.get("LOGIN_LINESEP"):
+            LOGIN_LINESEP = self.attribute.get('LOGIN_LINESEP').replace('\\r', '\r').replace('\\n', '\n')
+            self.attribute['LOGIN_LINESEP']=LOGIN_LINESEP
+        else:
+            self.attribute['LOGIN_LINESEP']='\n'
         self.openLogfile(logpath)
     def openLogfile(self, logpath):
         '''
@@ -103,12 +114,12 @@ class dut(object):
         if result!='' and result[-1]!='\n' and result[-1]!='\r':
             #import sys
             #sys.stdout.write('\t%s'%(result.replace('\n', '\n\t')))
-            print('\t%s'%(result.replace('\n', '\n\t'))),
+            print('\t%s'%(result.replace('\n', '\n\t').replace('\r\n','\n'))),
         return result
 
 
         #raise NotImplementedError('please implement function show in your class')
-    def write(self, buffer):
+    def write(self, buffer=''):
         import time
         self.timestampCmd= time.time()
 
@@ -305,31 +316,23 @@ call function(%s)
         '''
         import os
         tmp =[]
+        if self.loginDone:
+            linesep=self.attribute['LINESEP']
+        else:
+            linesep=self.attribute['LOGIN_LINESEP']
+
         if Ctrl:
             ascii = ord(cmd[0]) & 0x1f
             ch = chr(ascii)
             self.write(ch)
-
         else:
-            self.write(cmd)
-
-        if self.loginDone:
-            if self.attribute.get("LINESEP"):
-                LINESEP = self.attribute.get('LINESEP').replace('\\r', '\r').replace('\\n', '\n')
-                self.write(LINESEP)
-            else:
-                self.write('\n')
-        else:
-            if self.attribute.get("LOGIN_LINESEP"):
-                LINESEP = self.attribute.get('LOGIN_LINESEP').replace('\\r', '\r').replace('\\n', '\n')
-                self.write(LINESEP)
-            else:
-                self.write('\n')
-
+            self.write(cmd+linesep)
         if noWait:
             pass
         else:
+            self.lockStreamOut.acquire()
             self.idxSearch =self.streamOut.__len__() #move the Search window to the end of streamOut
+            self.lockStreamOut.release()
         self.timestampCmd=time.time()
     def find(self, pattern, timeout = 1.0, flags=0x18, noPattern=False):
         '''find a given patten within given time(timeout),
