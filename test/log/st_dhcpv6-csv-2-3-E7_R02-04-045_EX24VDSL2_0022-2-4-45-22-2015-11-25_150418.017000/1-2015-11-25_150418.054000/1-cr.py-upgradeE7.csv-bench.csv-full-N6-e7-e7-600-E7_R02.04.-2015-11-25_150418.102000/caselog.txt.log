@@ -1,8 +1,0 @@
-2015-11-25 15:04:18,407 -INFO:    loading a new bench:bench.csv
-2015-11-25 15:04:18,407 -INFO:    releasing duts in old dut_pool
-2015-11-25 15:04:18,407 -INFO:    loading case: 1-cr.py-upgradeE7.csv-bench.csv-full-N6-e7-e7-600-E7_R02.04.045_EX24VDSL2_0022-2.4
-2015-11-25 15:04:19,881 -INFO:    starting to run case: cr.py upgradeE7.csv bench.csv full N6 e7 e7 600 E7_R02.04.045_EX24VDSL2_0022 2.4.45.22
-2015-11-25 15:04:19,881 -INFO:    starting segment:0
-2015-11-25 15:46:11,578 -INFO:    starting segment:1
-2015-11-25 15:46:11,578 -INFO:    starting segment:2
-2015-11-25 15:46:11,578 -INFO:    Case PASS

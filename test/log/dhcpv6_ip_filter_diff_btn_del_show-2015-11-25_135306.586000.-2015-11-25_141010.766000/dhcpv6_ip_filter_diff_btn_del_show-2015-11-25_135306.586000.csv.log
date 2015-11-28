@@ -1,5 +1,0 @@
-2015-11-25 14:10:10,802 -INFO:    openLogfile N6 in ./log/dhcpv6_ip_filter_diff_btn_del_show-2015-11-25_135306.586000.-2015-11-25_141010.766000
-2015-11-25 14:10:12,257 -INFO:    starting segment:0
-2015-11-25 14:10:14,262 -INFO:    starting segment:1
-2015-11-25 14:10:14,262 -INFO:    starting segment:2
-2015-11-25 14:10:14,262 -INFO:    releasing dut: N6
