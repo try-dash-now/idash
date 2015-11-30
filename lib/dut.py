@@ -316,6 +316,13 @@ call function(%s)
         '''
         import os
         tmp =[]
+        if noWait:
+            pass
+        else:
+            self.lockStreamOut.acquire()
+            self.idxSearch =self.streamOut.__len__() #move the Search window to the end of streamOut
+            self.lockStreamOut.release()
+
         if self.loginDone:
             linesep=self.attribute['LINESEP']
         else:
@@ -327,12 +334,7 @@ call function(%s)
             self.write(ch)
         else:
             self.write(cmd+linesep)
-        if noWait:
-            pass
-        else:
-            self.lockStreamOut.acquire()
-            self.idxSearch =self.streamOut.__len__() #move the Search window to the end of streamOut
-            self.lockStreamOut.release()
+
         self.timestampCmd=time.time()
     def find(self, pattern, timeout = 1.0, flags=0x18, noPattern=False):
         '''find a given patten within given time(timeout),

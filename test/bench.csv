@@ -18,4 +18,4 @@ n6s2,SUT=,LOGIN=../bench/e7serial.login,CMD=telnet 10.245.3.11 10012,LINESEP=\r,
 n3s1,SUT=,LOGIN=../bench/e7serial.login,CMD=telnet 10.245.3.11 10005,LINESEP=\r,LOGIN_LINESEP=\r\n
 n3s2,SUT=,LOGIN=../bench/e7serial.login,CMD=telnet 10.245.3.11 10006,LINESEP=\r,LOGIN_LINESEP=\r\n
 sbb93,SUT=e7,LOGIN=../bench/e7.login,CMD=telnet  10.2.14.93,,
-c2960-2,SUT=,LOGIN=../bench/cisco.login,CMD=telnet 10.245.3.17,LINESEP=\r,LOGIN_LINESEP=\r\n
+c2960-2,SUT=,LOGIN=../bench/cisco.login,CMD=telnet 10.245.3.17,LINESEP=\n,LOGIN_LINESEP=\r
