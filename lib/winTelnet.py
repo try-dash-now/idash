@@ -287,8 +287,46 @@ class winTelnet(dut):#, spawn
             self.iacseq = '' # Reset on EOF
             self.sb = 0
             pass
-        self.cookedq = self.cookedq + buf[0]
+        self.cookedq = self.cookedq + self.removeSpecChar(buf[0])
         self.sbdataq = self.sbdataq + buf[1]
+    def removeSpecChar(self, inputString):
+
+#^@   \x00 \000   0
+#^A   \x01 \001   1
+#^B   \x02 \002   2
+#^C   \x03 \003   3
+#^D   \x04 \004   4
+#^E   \x05 \005   5
+#^F   \x06 \006   6
+#^G   \x07 \007   7
+#^H   \x08 \010   8
+#^I   \x09 \011   9
+#^J   \x0a \012  10
+#^K   \x0b \013  11
+#^L   \x0c \014  12
+#^M   \x0d \015  13
+#^N   \x0e \016  14
+#^O   \x0f \017  15
+#^P   \x10 \020  16
+#^Q   \x11 \021  17
+#^R   \x12 \022  18
+#^S   \x13 \023  19
+#^T   \x14 \024  20
+#^U   \x15 \025  21
+#^V   \x16 \026  22
+#^W   \x17 \027  23
+#^X   \x18 \030  24
+#^Y   \x19 \031  25
+#^Z   \x1a \032  26
+#^[   \x1b \033  27
+#^\   \x1c \034  28
+#^]   \x1d \035  29
+#^^   \x1e \036  30
+        inputString = inputString.replace(chr(0x08), '')
+        inputString = inputString.replace(chr(0x03), '^C')
+        inputString = inputString.replace(chr(0x04), '^D')
+        inputString = inputString.replace(chr(0x18), '^X')
+        return inputString
     def open(self, host, port=0, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
         """Connect to a host.
 
@@ -325,6 +363,7 @@ class winTelnet(dut):#, spawn
                 self.fill_rawq()
                 self.cookedq=''
                 self.process_rawq()
+
                 self.streamOut+=self.cookedq
                 if self.logfile and self.cookedq.__len__()!=0:
                     self.logfile.write(self.cookedq)
