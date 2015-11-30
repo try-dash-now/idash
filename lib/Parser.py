@@ -214,11 +214,13 @@ class caseParser(object):
 
         from common import csvfile2array
         import runner
-        runner.gPathLocker.acquire()
+
         import os
         if self.logger:
             self.logger.info('current work directory: %s'%os.getcwd())
-        with open(filename, 'r') as csvfile:
+        try:
+            runner.gPathLocker.acquire()
+            csvfile = open(filename, 'r')
             runner.gPathLocker.release()
             LineNo =0
             dutname =None
@@ -232,6 +234,9 @@ class caseParser(object):
                 if cstate ==state.index('end'):
                     break
 
+        except Exception as e:
+            runner.gPathLocker.release()
+            raise e
         return sdut, lvar, lsetup, lrun, ltear
 
 

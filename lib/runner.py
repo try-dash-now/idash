@@ -20,11 +20,14 @@ def logAction(fun):
         except Exception as e:
             arglist = list(arg)
             argstring =''
-            for a in arglist:
-                argstring +='\n\t\t'+str(a)
+            import pprint as pp
+            argstring = pp.pformat(arglist)
+            #for a in arglist:
+            #    argstring +='\n\t\t'+str(a)
             kwargstring = ''
-            for k,v in kwargs:
-                kwargstring += '\n\t\t%s: %s'%(str(k),str(v))
+            kwargstring = pp.pformat(kwargs)
+            #for k,v in kwargs:
+            #    kwargstring += '\n\t\t%s: %s'%(str(k),str(v))
             msg ='*logAction dump:\n\tFunction Name: \t\t%s\n\tArguments: \t\t%s\n\tKeyword Arguments: \t\t%s'%(fun.func_name, argstring, kwargstring)
             from common import DumpStack
             msg =msg +'\n-------------------------------------------------------------------------------'+DumpStack(e)
