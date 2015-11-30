@@ -213,7 +213,13 @@ class caseParser(object):
             return seg, curdut
 
         from common import csvfile2array
+        import runner
+        runner.gPathLocker.acquire()
+        import os
+        if self.logger:
+            self.logger.info('current work directory: %s'%os.getcwd())
         with open(filename, 'r') as csvfile:
+            runner.gPathLocker.release()
             LineNo =0
             dutname =None
             import re as sre

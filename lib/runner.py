@@ -253,7 +253,7 @@ def run_case_in_suite(casename, currentBenchfile, currentBenchinfo,logger, stop_
             bench = currentBenchinfo
         from Parser import  caseParser
 
-        cs = caseParser(casename, mode, logdir)
+        cs = caseParser(casename, mode, logdir, logger)
         sdut, lvar, lsetup, lrun, ltear =cs.load(casefile)
         ldut = list(sdut)
         errormessage =[]
