@@ -415,7 +415,9 @@ class winTelnet(dut):#, spawn
         result = self.streamOut[self.idxUpdate  :  newIndex+1]
         self.idxUpdate= newIndex
         #print('print::%d'%result.__len__())
+
         if result!='':
+            result= self.colorString(result)
             print('\t%s'%(result.replace('\n', '\n\t')))
         return result
 

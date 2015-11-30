@@ -155,7 +155,8 @@ def initDUT(errormessage ,bench, dutnames, logger=None, casepath='./'):
     for th in dutobjs:
         th.join()
     if len(errormessage)!=0 or (len(dictDUTs)!= len(dutnames)):
-        raise ValueError('\n\t'.join(errormessage))
+        errormessage ='\n\t'.join(errormessage)
+        raise Exception(errormessage)
     return  dictDUTs
 
 

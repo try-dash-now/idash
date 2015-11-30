@@ -61,6 +61,7 @@ class dut(object):
         logger:     a logger instance, allow this term pass message to parent object
         logpath:    string, the path of the log file for this ter
         '''
+
         self.name       =   name
         self.logger     =   logger
         if attr:
@@ -81,6 +82,22 @@ class dut(object):
         else:
             self.attribute['LOGIN_LINESEP']='\n'
         self.openLogfile(logpath)
+        from colorama import Fore, Back, Style, init
+        init()
+
+    def colorString(self, str):
+        from colorama import Fore, Back, Style
+        lines = str.split('\n')
+        import re
+        rePat = re.compile('fail|error|err|wrong', re.IGNORECASE)
+        newLines =[]
+        for line in lines:
+            if re.search(rePat, line):
+                line = Fore.RED + line +Style.RESET_ALL
+            newLines.append(line)
+        return '\n'.join(newLines)
+
+
     def openLogfile(self, logpath):
         '''
         logpath, a folder path, where log to be found
@@ -114,6 +131,7 @@ class dut(object):
         if result!='' and result[-1]!='\n' and result[-1]!='\r':
             #import sys
             #sys.stdout.write('\t%s'%(result.replace('\n', '\n\t')))
+            result= self.colorString(result)
             print('\t%s'%(result.replace('\n', '\n\t').replace('\r\n','\n'))),
         return result
 
