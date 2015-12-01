@@ -8,6 +8,8 @@ sys.path.append(os.path.sep.join([pardir,'test']))
 print('\n'.join(sys.path))
 from  Tkinter import Tk,Tcl
 import os
+import colorama
+colorama.init()
 class tcltk(Tkinter.Tk):
     def __init__(self):
         Tkinter.Tk.__init__(self, None, None, 'Tk', 0)

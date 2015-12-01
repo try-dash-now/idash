@@ -13,12 +13,47 @@ sys.path.append(os.path.sep.join([pardir,'dut']))
 print('\n'.join(sys.path))
 import wx
 import Tkinter
-
+from colorama import *
 import os
 import glob
 from py2exe.build_exe import py2exe as build_exe
 import zipfile
 
+
+
+class tcltk(Tkinter.Tk):
+    def __init__(self):
+        Tkinter.Tk.__init__(self, None, None, 'Tk', 0)
+tcltk()
+from dut import dut
+a =dut('base', {}, logpath='../test/log')
+from winTelnet import winTelnet
+try:
+    wt = winTelnet('a',{'CMD':'telnet 127.0.0.1'}, logpath='./bin')
+except:
+    pass
+
+from TclInter import TclInter
+try:
+    ti = TclInter('a',{}, logpath='../test/log')
+except:
+    pass
+
+from IxNetwork import IxNetwork
+try:
+    ix = IxNetwork('a',{}, logpath='../test/log')
+except:
+    pass
+from e7 import  e7
+try:
+    e7 = e7('a', {}, logpath='../test/log')
+except:
+    pass
+from powershell import powershell
+try:
+    ps = powershell('a', {}, logpath='../test/log')
+except:
+    pass
 
 
 
@@ -105,6 +140,7 @@ try:
         windows = [],#'../bin/dash.py'
         console=["../test/cr.py",
                     "../test/sr.py",
+                    "../test/ia.py",
                     "../bin/ImportModule.py",#to include tcl things in the distribute package
                           ],
 
@@ -196,56 +232,4 @@ for file in os.listdir(folder):
             pass
         shutil.copytree(sourceFile, targetFile)
         shutil.rmtree(sourceFile)
-
-
-class tcltk(Tkinter.Tk):
-    def __init__(self):
-        Tkinter.Tk.__init__(self, None, None, 'Tk', 0)
-tcltk()
-from dut import dut
-a =dut('base', {}, logpath='./bin')
-from winTelnet import winTelnet
-try:
-    wt = winTelnet('a',{'CMD':'telnet 127.0.0.1'}, logpath='./bin')
-except:
-    pass
-
-from TclInter import TclInter
-try:
-    ti = TclInter('a',{}, logpath='./bin')
-except:
-    pass
-
-from IxNetwork import IxNetwork
-try:
-    ix = IxNetwork('a',{}, logpath='./bin')
-except:
-    pass
-from e7 import  e7
-try:
-    e7 = e7('a', {}, logpath='./bin')
-except:
-    pass
-from powershell import powershell
-try:
-    ps = powershell('a', {}, logpath='./bin')
-except:
-    pass
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

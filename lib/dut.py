@@ -84,14 +84,20 @@ class dut(object):
         else:
             self.attribute['LOGIN_LINESEP']='\n'
         self.openLogfile(logpath)
-        from colorama import Fore, Back, Style, init
-        init()
+        try:
+            from colorama import Fore, Back, Style, init
+            init()
+            self.color=True
+        except Exception as e:
+            self.color=False
 
     def colorString(self, str):
         if not self.color:
             return  str
-
-        from colorama import Fore, Back, Style
+        try:
+            from colorama import Fore, Back, Style
+        except Exception as e:
+            return str
         lines = str.split('\n')
         import re
         rePat = re.compile('fail|error|err|wrong', re.IGNORECASE)

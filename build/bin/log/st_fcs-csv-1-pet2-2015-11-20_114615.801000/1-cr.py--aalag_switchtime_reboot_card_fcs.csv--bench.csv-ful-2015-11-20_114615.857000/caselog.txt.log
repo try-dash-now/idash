@@ -1,5 +1,0 @@
-2015-11-20 11:46:15,957 -INFO:    loading a new bench:bench.csv
-2015-11-20 11:46:15,957 -INFO:    releasing duts in old dut_pool
-2015-11-20 11:46:15,957 -INFO:    loading case: 1-cr.py--aalag_switchtime_reboot_card_fcs.csv--bench.csv-full-pet2-ix-syu-1-1-1-1-
-2015-11-20 11:46:18,365 -INFO:    starting to run case: cr.py  aalag_switchtime_reboot_card_fcs.csv  bench.csv full pet2 ix-syu 1/1 1/1 1/2
-2015-11-20 11:46:18,365 -INFO:    starting segment:0

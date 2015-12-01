@@ -1,6 +1,0 @@
-2015-11-21 04:13:23,795 -INFO:    loading case: 120-cr.py--aalag_switchtime_reboot_card_fcs.csv--bench.csv-full-N6-ix-syu-1-1-1-1-1-
-2015-11-21 04:13:23,802 -INFO:    starting to run case: cr.py  aalag_switchtime_reboot_card_fcs.csv  bench.csv full N6 ix-syu 1/1 1/1 1/2
-2015-11-21 04:13:23,802 -INFO:    starting segment:0
-2015-11-21 04:13:55,861 -INFO:    starting segment:1
-2015-11-21 04:18:40,615 -INFO:    starting segment:2
-2015-11-21 04:18:40,615 -INFO:    Case PASS
