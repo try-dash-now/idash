@@ -72,4 +72,6 @@ def parse(arg):
     return tuple(map(int, arg.split()))
 
 if __name__ == '__main__':
+    import sys
+    sys.stdout.isatty()
     TurtleShell().cmdloop()

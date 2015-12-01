@@ -43,11 +43,13 @@ class dut(object):
     ErrorMessage =None # to store the error message
     autoReloginFlag = False
     counterRelogin =0
+    color =True
     def __del__(self):
         self.SessionAlive=False
         if self.logfile:
             self.logfile.flush()
-
+    def setOutputColor(self, enable=True):
+        self.color=enable
     def setAutoReloginFlag(self, flag=True):
         if flag:
             self.autoReloginFlag =True
@@ -86,6 +88,9 @@ class dut(object):
         init()
 
     def colorString(self, str):
+        if not self.color:
+            return  str
+
         from colorama import Fore, Back, Style
         lines = str.split('\n')
         import re
@@ -93,7 +98,7 @@ class dut(object):
         newLines =[]
         for line in lines:
             if re.search(rePat, line):
-                line = Fore.RED + line +Style.RESET_ALL
+                line = Fore.RED+Back.CYAN + line +Style.RESET_ALL
             newLines.append(line)
         return '\n'.join(newLines)
 

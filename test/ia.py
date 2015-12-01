@@ -30,6 +30,15 @@ class ia(Cmd, object):
     cmdLineBuffer=''
     rl =None
     readline =None
+    color = True
+    def color(self, enable='disable'):
+        if enable.lower().strip()=='disable':
+            self.color=False
+        else:
+            self.color=True
+        for sut in self.sut.keys():
+            if sut !='tc':
+                self.sut[sut].setOutputColor(self.color)
     def checkQuestionMarkEnd(self):
         while not self.flagEndCase:
             if self.rl:

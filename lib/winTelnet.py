@@ -356,7 +356,7 @@ class winTelnet(dut):#, spawn
                 #    self.relogin()
                 if self.sock:
                     if (time.time()-self.timestampCmd)>maxInterval:
-                        self.write('\n')
+                        self.write(ord(0x08))
                         self.timestampCmd = time.time()
                 else:
                     raise Exception('[Errno 10053] An established connection was aborted by the software in your host machine')
