@@ -10,6 +10,7 @@ for sub in subfolder:
     if libpath not in sys.path:
         sys.path.insert(0,libpath)
 import os
+
 def logAction(fun):
     def inner(*arg, **kwargs):
         try:
@@ -21,7 +22,10 @@ def logAction(fun):
             arglist = list(arg)
             argstring =''
             import pprint as pp
-            argstring = pp.pformat(arglist)
+            if type(arglist)==type([]):
+                argstring = pp.pformat(arglist)
+            else:
+                argstring = arglist
             #for a in arglist:
             #    argstring +='\n\t\t'+str(a)
             kwargstring = ''
@@ -53,6 +57,7 @@ def createLogger(name, logpath='./'):
     return logger
 import threading
 gPathLocker = threading.Lock()
+gShareDataLock= threading.Lock()
 @logAction
 def createLogDir(name,logpath='./'):
     global  gPathLocker
@@ -141,7 +146,7 @@ def initDUT(errormessage ,bench, dutnames, logger=None, casepath='./'):
             return  ses
         except Exception as e:
             msg = '\ncan\'t init dut(%s)\n%s\n'%(dutname, e.__str__())
-            InitErrorMessage+=msg
+            InitErrorMessage.append(msg)
             raise ValueError(msg)
     import threading
     dutobjs=[]
@@ -169,7 +174,7 @@ CASE_MODE = set(['full', 'f',
                  'notear', 'noteardown', 'nt',
                  ])
 @logAction
-def run(casename,duts, seqs ,mode, logger):
+def run(casename,duts, seqs ,mode, logger, sharedata):
         global  CASE_MODE
         import datetime
         def analyzeStep(casename, dut, commnad, expect, wait):
@@ -226,11 +231,11 @@ def run(casename,duts, seqs ,mode, logger):
         return caseFailFlag,caseErrorMessage
 
 
-def case_runner(casename, dictDUTs, case_seq, mode='full', logger =None):
+def case_runner(casename, dictDUTs, case_seq, mode='full', logger =None, sharedata=None):
     m =mode
     if mode :
         m =str(mode).lower()
-    caseFail, errorMessage = run(casename, dictDUTs, case_seq, m, logger)
+    caseFail, errorMessage = run(casename, dictDUTs, case_seq, m, logger, sharedata)
     #print(response)
     return  caseFail, errorMessage
 
@@ -409,7 +414,7 @@ def concurrent(startIndex, logpath, cmdConcurrent, report, suiteLogger):
 
     return caseTotal, casePass, caseFail, report, lstFailCase, breakFlag
 
-def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger ):
+def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, sharedata ):
     errormessage = ''
     caselogger = createLogger('caselog.txt', logdir)
     bench = benchinfo

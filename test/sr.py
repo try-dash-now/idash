@@ -101,7 +101,7 @@ if __name__ == "__main__":
         if not os.path.exists(logpath):
             os.mkdir(logpath)
 
-
+        shareData ={}
         if FuncName == run_case_in_suite:
             logdir =createLogDir(casename, logpath)# logpath#
             import re
@@ -109,7 +109,8 @@ if __name__ == "__main__":
             m =  re.match(patDash, cmd)
             returncode = 0
             logger.info('running case: %s'%cmd)
-            returncode , errormessage ,benchfile, benchinfo, dut_pool = run1case(casename, cmd, benchfile, benchinfo, dut_pool, logdir, logger )
+
+            returncode , errormessage ,benchfile, benchinfo, dut_pool = run1case(casename, cmd, benchfile, benchinfo, dut_pool, logdir, logger ,shareData)
             caseEndTime = time.time()
             ExecutionDuration = caseEndTime-caseStartTime
             caseResult = 'PASS'
@@ -136,7 +137,7 @@ if __name__ == "__main__":
 
         elif FuncName == concurrent:
 
-            conCaseTotal, conCasePass, conCaseFail, conReport, conLstFailCase , breakFlag=concurrent(index-1, logpath, caseline[2][1],report, logger)
+            conCaseTotal, conCasePass, conCaseFail, conReport, conLstFailCase , breakFlag=concurrent(index-1, logpath, caseline[2][1],report, logger, shareData)
             statsPass+=conCasePass
             statsFail+=conCaseFail
             for x in conLstFailCase:

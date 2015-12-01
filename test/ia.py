@@ -47,7 +47,7 @@ class ia(Cmd, object):
                 if str(buf).endswith('?'):
                     if self.sutname!='tc':
                         sut = self.sut[self.sutname]
-                        sut.write(buf+'\b'*len(buf))
+                        sut.write(buf+'\b'*(len(buf)))
                         #print("##################",self.rl.mode)
                         self.rl.mode.l_buffer.set_line(buf[:-1])
 
@@ -70,7 +70,7 @@ class ia(Cmd, object):
         self.tcName = 'tc'
         self.sutname='tc'
         self.tabend = 'disable'
-        self.record =[['#var'], ['defaultTime', gDefaultTimeout],['#setup'],
+        self.record =[['#var'], ['defaultTime', '30'],['#setup'],
                       ['#SUT_Name','Command_or_Function', 'Expect', 'Max_Wait_Time','TimeStamp','Interval']]
         self.intro = '''welcome to InterAction of DasH'''
         logpath = './log'
@@ -393,12 +393,13 @@ class ia(Cmd, object):
                     #print(readline.get_line_buffer())
                     #self.sut_complete(cmd)
                 else:
-                    self.sut[self.sutname].stepCheck('casename', self.cp, cmd+'\t', expectPat,str(timeout))
                     now = datetime.datetime.now()
                     lastSut, lastCmd, lastExp, lastTimeout = self.record[-1][:4]
                     if lastSut !=self.sutname or lastCmd!= cmd or lastExp != expectPat or lastTimeout!= strTimeout:
                         self.record.append([self.sutname,cmd, expectPat,strTimeout,now.isoformat('_'), now -self.tmTimeStampOfLastCmd ])
                         self.tmTimeStampOfLastCmd=now
+                    self.sut[self.sutname].stepCheck('casename', self.cp, cmd+'\t', '.*',str(timeout))
+
 
         except Exception as e:
             print(e)
@@ -420,9 +421,12 @@ class ia(Cmd, object):
         removelist = '\-_.'
         pat = r'[^\w'+removelist+']'
         name = re.sub(pat, '', fullname)
-        tm = self.tmCreated.isoformat('_')
+        tm = ''
+        if name=='tc':
+            tm = '-'+self.tmCreated.isoformat('_')
+
         tm =  re.sub(pat, '', tm)
-        fullname = name+'-'+tm
+        fullname = name+tm
         self.tcName = fullname
         csvfile = '%s.csv'%self.tcName
         from common import array2csvfile

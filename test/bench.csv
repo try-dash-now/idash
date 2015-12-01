@@ -1,12 +1,13 @@
 lnx1,SUT=,LOGIN=../bench/lnx.login,CMD=telnet cdc-dash,#192.168.1.113,
 lnx2,SUT=,LOGIN=../bench/lnx.login,CMD=telnet cdc-dash,#192.168.1.113,
-N6,SUT=e7,LOGIN=../bench/e7.login,CMD=telnet 10.245.3.19,
+N6,SUT=e7,LOGIN=../bench/e7.login,CMD=telnet 10.245.3.19,,
 N4,SUT=e7,LOGIN=../bench/e7.login,CMD=telnet 10.245.3.16,,
 N1,SUT=e7,LOGIN=../bench/e7.login,CMD=telnet 10.245.3.18,,
 N5,SUT=e7,LOGIN=../bench/e7.login,CMD=telnet 10.245.3.13,,
 N3,SUT=e7,LOGIN=../bench/e7.login,CMD=telnet 10.245.3.15,,
 N2,SUT=e7,LOGIN=../bench/e7.login,CMD=telnet 10.245.3.14,,
-PS,SUT=powershell,CMD=,LINESEP=\r\n,LOGIN_LINESEP=\r\n
+PS,SUT=powershell,CMD=,LINESEP=\r\n,LOGIN_LINESEP=\r\n,
+ps,SUT=powershell,CMD=,LINESEP=\r\n,LOGIN_LINESEP=\r\n,
 markli,SUT=e7,LOGIN=../bench/e7raw.login,CMD=telnet 10.245.53.100,,
 ix-syu,IP=192.168.37.112,SUT=IxNetwork,WAIT=5,LOGIN=../bench/ixiaNetwork.login,version=7.30
 tgu1,SUT=e7,LOGIN=../bench/e7.login,CMD=telnet 10.245.56.114,,
@@ -19,3 +20,4 @@ n3s1,SUT=,LOGIN=../bench/e7serial.login,CMD=telnet 10.245.3.11 10005,LINESEP=\r,
 n3s2,SUT=,LOGIN=../bench/e7serial.login,CMD=telnet 10.245.3.11 10006,LINESEP=\r,LOGIN_LINESEP=\r\n
 sbb93,SUT=e7,LOGIN=../bench/e7.login,CMD=telnet  10.2.14.93,,
 c2960-2,SUT=,LOGIN=../bench/cisco.login,CMD=telnet 10.245.3.17,LINESEP=\n,LOGIN_LINESEP=\r
+n6test,SUT=e7,LOGIN=../bench/e7.login,CMD=telnet 10.245.3.199,,

@@ -63,7 +63,8 @@ if __name__ == "__main__":
         #duts= initDUT(errormessage,bench,ldut,logger, casefolder)#['lnx1', 'lnx2']
         duts= initDUT(errormessage,bench, ldut,logger, casefolder)
         seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
-        caseFail, CaseErrorMessage= case_runner(casename,duts,seq, mode, logger)
+        sharedata ={}
+        caseFail, CaseErrorMessage= case_runner(casename,duts,seq, mode, logger,sharedata)
 
         from runner import releaseDUTs
         releaseDUTs(duts, logger)

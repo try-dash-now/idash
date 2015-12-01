@@ -11,8 +11,8 @@ import subprocess
 class powershell(dut):
     shellsession= None
     timestampCmd =None
-    def __init__(self,name,attr,logger, logpath):
-        dut.__init__(self, name,attr,logger, logpath)
+    def __init__(self,name,attr,logger, logpath, shareData):
+        dut.__init__(self, name,attr,logger, logpath, shareData)
 
         exe_cmd=['cmd.exe']
         a  = ['C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\powershell.exe',
@@ -109,6 +109,9 @@ class powershell(dut):
 
         #stdin.write('\r\n'+cmd+'\r\n')
         #stdin.flush()
+    def getCurrentTime(self):
+        self.send('date /t')
+        data = self.find('')
 
     def xsingleStep(self, cmd, expect, wait, ctrl=False, noPatternFlag=False, noWait=False):
         exe_cmd='C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\powershell.exe %s'%cmd

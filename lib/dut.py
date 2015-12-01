@@ -44,6 +44,8 @@ class dut(object):
     autoReloginFlag = False
     counterRelogin =0
     color =True
+    errorLines=None
+    shareData=None
     def __del__(self):
         self.SessionAlive=False
         if self.logfile:
@@ -55,7 +57,7 @@ class dut(object):
             self.autoReloginFlag =True
         else:
             self.autoReloginFlag=False
-    def __init__(self, name, attr =None,logger=None, logpath= None):
+    def __init__(self, name, attr =None,logger=None, logpath= None, shareData=None):
         '''
         initializing the term
         name:       string, the term's name
@@ -63,7 +65,7 @@ class dut(object):
         logger:     a logger instance, allow this term pass message to parent object
         logpath:    string, the path of the log file for this ter
         '''
-
+        self.errorLines =   ''
         self.name       =   name
         self.logger     =   logger
         if attr:
@@ -78,6 +80,13 @@ class dut(object):
         else:
             self.attribute['LINESEP']='\n'
 
+        if self.attribute.get("ERROR_PATTERN"):
+            LINESEP = self.attribute.get('ERROR_PATTERN').replace('\\r', '\r').replace('\\n', '\n')
+            self.attribute['ERROR_PATTERN']=LINESEP
+        else:
+            self.attribute['ERROR_PATTERN']='fail|error|err|wrong'
+
+
         if self.attribute.get("LOGIN_LINESEP"):
             LOGIN_LINESEP = self.attribute.get('LOGIN_LINESEP').replace('\\r', '\r').replace('\\n', '\n')
             self.attribute['LOGIN_LINESEP']=LOGIN_LINESEP
@@ -90,7 +99,33 @@ class dut(object):
             self.color=True
         except Exception as e:
             self.color=False
-
+        self.shareData =shareData
+    def setValue(self, name, value):
+        from runner import gShareDataLock
+        gShareDataLock.acquire()
+        try:
+            self.shareData[name]=value
+        except Exception as e:
+            print(e)
+        gShareDataLock.release()
+    def getValue(self, name):
+        try:
+            return  self.shareData[name]
+        except Exception as e:
+            return ''
+    def checkLine(self,str):
+        lines = str.split('\n')
+        import re
+        rePat = re.compile(self.attribute['ERROR_PATTERN'], re.IGNORECASE)
+        newLines =[]
+        for line in lines:
+            if re.search(rePat, line):
+                self.errorLines+='\n%s'%line
+                if self.logger:
+                    self.logger.error("%s ERROR_PATTERN FOUND: %s"%(self.name, line))
+                    self.FailFlag=True
+                else:
+                    print("ERROR_PATTERN FOUND(%s): %s"%(self.name, line))
     def colorString(self, str):
         if not self.color:
             return  str
