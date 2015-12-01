@@ -99,20 +99,32 @@ class dut(object):
             self.color=True
         except Exception as e:
             self.color=False
-        self.shareData =shareData
+        if shareData:
+            self.shareData =shareData
+        else:
+            self.shareData={}
     def setValue(self, name, value):
-        from runner import gShareDataLock
+        from runner import gShareDataLock, gShareData
         gShareDataLock.acquire()
         try:
-            self.shareData[name]=value
+            gShareData[name]=value
         except Exception as e:
             print(e)
         gShareDataLock.release()
     def getValue(self, name):
+        from runner import gShareDataLock, gShareData
         try:
-            return  self.shareData[name]
+            tmpvalue = gShareData[name]
+            print('%s:%s'%(str(name), str(tmpvalue).replace('\\n','\n').replace('\\r','\r')))
+            return  tmpvalue
         except Exception as e:
-            return ''
+
+            import pprint
+            print('dump of ShareData')
+            print(pprint.pformat(gShareData))
+            print(e)
+            print('%s is not in shareData'%(str(name)))
+
     def checkLine(self,str):
         lines = str.split('\n')
         import re
@@ -371,13 +383,31 @@ call function(%s)
         MaxTry, FunName, ListArg, DicArg = analyzeStep(CaseName,cmd, expect, wait)
 
         retry(CaseName, int(MaxTry), FunName, ListArg, DicArg)
-
+    def run(self,*arglist):#name, strFormat='%s'):
+        if len(arglist)>1:
+            namelist = arglist[:-1]
+            strFormat=arglist[-1]
+            if strFormat.find("%")==-1:
+                return
+            newArgs = []
+            for a in namelist:
+                v = self.getValue(a)
+                if type(v)!=type(''):
+                    newArgs.append(str(v))
+                else:
+                    newArgs.append('"%s"'%v)
+            evalstring = '"'+strFormat+"\"%("+ ','.join(newArgs)+")"
+            newcmd = eval(evalstring,globals(),locals())
+        else:
+            newcmd= self.getValue(namelist[0])
+        self.send(newcmd)
     def send(self, cmd, Ctrl=False, noWait=False):
         '''send a command to Software/Device, add a line end
         move idxSearch to the end of streamOut
         Ctrl, bool, default is False, if it's True, then send a key combination: Ctrl+first_char_of_cmd
         noWait, bool, defualt is False, means move searching index, otherwise doesn't move the searching index
         '''
+
         import os
         tmp =[]
         if noWait:

@@ -106,7 +106,7 @@ class winTelnet(dut):#, spawn
         if self.sock:
             self.write('quit')
             self.sock.close()
-    def __init__(self, name, attr =None,logger=None,  logpath= None):
+    def __init__(self, name, attr =None,logger=None,  logpath= None, shareData=None):
         dut.__init__(self, name,attr,logger, logpath)
 
         host=""
@@ -356,7 +356,7 @@ class winTelnet(dut):#, spawn
                 #    self.relogin()
                 if self.sock:
                     if (time.time()-self.timestampCmd)>maxInterval:
-                        self.write(ord(0x0))
+                        self.write(chr(0x08))
                         self.timestampCmd = time.time()
                 else:
                     raise Exception('[Errno 10053] An established connection was aborted by the software in your host machine')

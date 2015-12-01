@@ -58,6 +58,7 @@ def createLogger(name, logpath='./'):
 import threading
 gPathLocker = threading.Lock()
 gShareDataLock= threading.Lock()
+gShareData={}
 @logAction
 def createLogDir(name,logpath='./'):
     global  gPathLocker
@@ -124,10 +125,10 @@ def openDutLogfile(duts, logpath, logger):
         logger.info("DUT %s redirected to case folder"%dut_name)
 
 @logAction
-def initDUT(errormessage ,bench, dutnames, logger=None, casepath='./'):
+def initDUT(errormessage ,bench, dutnames, logger=None, casepath='./', shareData=None):
     dictDUTs={}
 
-    def connect2dut(InitErrorMessage , dutname, dut_attr, logger=None,path='./'):
+    def connect2dut(InitErrorMessage , dutname, dut_attr, logger=None,path='./', shareData=None):
         msg = ''
         try:
             import os
@@ -140,19 +141,25 @@ def initDUT(errormessage ,bench, dutnames, logger=None, casepath='./'):
             classname = dut_attr["SUT"]
             ModuleName = __import__(classname)
             ClassName = ModuleName.__getattribute__(classname)
-            ses= ClassName(dutname, dut_attr,logger=logger ,logpath = path)
+
+            ses= ClassName(dutname, dut_attr,logger=logger ,logpath = path, shareData =shareData)
             ses.login()
             dictDUTs[dutname]=ses
             return  ses
         except Exception as e:
             msg = '\ncan\'t init dut(%s)\n%s\n'%(dutname, e.__str__())
-            InitErrorMessage.append(msg)
+            if type(InitErrorMessage)==type(''):
+                InitErrorMessage+=msg
+            elif type(InitErrorMessage) ==type([]):
+                InitErrorMessage.append(msg)
+            else:
+                InitErrorMessage=[msg]
             raise ValueError(msg)
     import threading
     dutobjs=[]
 
     for dutname in dutnames:
-        th = threading.Thread(target= connect2dut, args =[errormessage, dutname, bench[dutname],logger, casepath])
+        th = threading.Thread(target= connect2dut, args =[errormessage, dutname, bench[dutname],logger, casepath, shareData])
         dutobjs.append(th)
     for th in dutobjs:
         th.start()

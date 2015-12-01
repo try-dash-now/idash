@@ -102,8 +102,23 @@ def FunctionArgParser(stringOfArgs):
         for k in kwargs.keys():
             Kwargvs.update({k:kwargs[k]})
         return Argvs, Kwargvs
-    print('stringOfArgs:', stringOfArgs)
-    args, kw = eval('GetFunArg(%s)'%stringOfArgs)
+    try:
+        args, kw = eval('GetFunArg(%s)'%stringOfArgs)
+    except Exception as e:
+
+        from common import csvstring2array
+        args = csvstring2array(stringOfArgs)[0]
+        newargs = []
+        for a in args:
+            tmp = a.strip()
+            if tmp.startswith('"') or tmp.startswith("'"):
+                newargs.append(tmp)
+            else:
+                newargs.append('"%s"'%tmp)
+        newstringArg= ','.join(newargs)
+        args, kw = eval('GetFunArg(%s)'%newstringArg)
+
+
     return args, kw
 
 def GetFunctionbyName(classobj, functionName):

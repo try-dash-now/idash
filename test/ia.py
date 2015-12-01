@@ -82,7 +82,8 @@ class ia(Cmd, object):
 
         #dutname = ['N6', 'ix-syu']
         errormessage = ''
-        duts= initDUT(errormessage,bench, dutname,self.logger , logpath)
+        shareData={}
+        duts= initDUT(errormessage,bench, dutname,self.logger , logpath, shareData)
         self.sut=duts
         import threading
         th = threading.Thread(target=self.show)

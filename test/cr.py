@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
         errormessage =[]
         #duts= initDUT(errormessage,bench,ldut,logger, casefolder)#['lnx1', 'lnx2']
-        duts= initDUT(errormessage,bench, ldut,logger, casefolder)
+        duts= initDUT(errormessage,bench, ldut,logger, casefolder, sharedata)
         seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
         sharedata ={}
         caseFail, CaseErrorMessage= case_runner(casename,duts,seq, mode, logger,sharedata)

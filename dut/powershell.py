@@ -109,9 +109,13 @@ class powershell(dut):
 
         #stdin.write('\r\n'+cmd+'\r\n')
         #stdin.flush()
-    def getCurrentTime(self):
+    def getCurrentTime(self,tmName='tm', format='%s:%s'):
         self.send('date /t')
-        data = self.find('')
+        ymd = self.find('(\d{4}/\d{2}/\d{2})', 30)
+        self.send('time /t')
+        hm = self.find('(\d{2}:\d{2})', 30)
+        self.setValue(str(tmName), format%(ymd,hm))
+        print(self.getValue(tmName))
 
     def xsingleStep(self, cmd, expect, wait, ctrl=False, noPatternFlag=False, noWait=False):
         exe_cmd='C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\powershell.exe %s'%cmd
