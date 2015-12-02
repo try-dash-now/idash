@@ -93,9 +93,9 @@ def createLogDir(name,logpath='./'):
     for dir in logpath:
         print(os.getcwd())
         if os.path.exists(dir):
-            print(os.getcwd())
+            #print(os.getcwd())
             os.chdir(dir)
-            print(os.getcwd())
+            #print(os.getcwd())
         else:
             errormsg= 'dir: %s does not exist, please create it first'%dir
             for dir in old_cwd:
@@ -111,10 +111,10 @@ def createLogDir(name,logpath='./'):
             pass
         os.mkdir(fullname)
     logpath.append(fullname)
-    print("old_cwd:",old_cwd)
+    #print("old_cwd:",old_cwd)
     for dir in old_cwd:
         os.chdir(dir)
-        print(os.getcwd())
+        #print(os.getcwd())
     gPathLocker.release()
     return old_logpath+'/'+fullname
 
@@ -167,7 +167,8 @@ def initDUT(errormessage ,bench, dutnames, logger=None, casepath='./', shareData
     for th in dutobjs:
         th.join()
     if len(errormessage)!=0 or (len(dictDUTs)!= len(dutnames)):
-        errormessage ='\n\t'.join(errormessage)
+        if type(errormessage)==type([]):
+            errormessage ='\n\t'.join(errormessage)
         raise Exception(errormessage)
     return  dictDUTs
 
@@ -232,7 +233,8 @@ def run(casename,duts, seqs ,mode, logger, sharedata):
         for dutname in duts.keys():
             if duts[dutname].FailFlag:
                 caseFailFlag=True
-                caseErrorMessage+=duts[dutname].ErrorMessage+'\n'
+                if duts[dutname].ErrorMessage:
+                    caseErrorMessage+=duts[dutname].ErrorMessage+'\n'
 
 
         return caseFailFlag,caseErrorMessage
@@ -343,16 +345,18 @@ def concurrent(startIndex, logpath, cmdConcurrent, report, suiteLogger, shareDat
         logdir = createLogDir(str(index+1)+"-"+ re.sub('[^\w\-._]','-',cmd)[:80], logpath)
         returncode, errormessage, benchfile,bench, dut_pool =run1case(casename, cmd,'',None,None, logdir, suiteLogger, shareData)
         caseEndTime=time.time()
+
         releaseDUTs(dut_pool, suiteLogger)
         if returncode:
-            qResult.put(['FAIL', LineNo,indexInSuite, failAction,index, 'thread %d/%d %s: '%(index+1,totalThread, logdir)+errormessage+'\n', '../'+logpath, caseStartTime,caseEndTime, cmd,allFailIsFail])
+            import  pprint
+            qResult.put(['FAIL', LineNo,indexInSuite, failAction,index, 'thread %d/%d %s: '%(index+1,totalThread, logdir)+pprint.pformat(errormessage)+'\n', '../'+logpath, caseStartTime,caseEndTime, cmd,allFailIsFail])
         else:
             qResult.put(['PASS', LineNo,indexInSuite, failAction,index, '','../'+logpath,caseStartTime,caseEndTime, cmd, allFailIsFail])
 
     lstThread=[]
     indexInSuite =startIndex
     for line in cmdConcurrent:
-        [fork, LineNo,failAction,action, cmd, allFailIsFail]= line
+        [fork, LineNo,failAction,action, cmd, allFailIsFail , loopCounter, loopFailAction]= line
         logdir = createLogDir(str(indexInSuite)[:80], logpath)#logpath #logpath #
         for i in range(0,fork):
             #key = '%d-%d'%(LineNo,i)
@@ -445,7 +449,10 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
             if case_benchfile!=benchfile:
                 from common import bench2dict
                 caselogger.info('loading a new bench:%s'%case_benchfile)
+                global gPathLocker
+                gPathLocker.acquire()
                 bench =bench2dict(case_benchfile)
+                gPathLocker.release()
                 benchfile = case_benchfile
                 caselogger.info('releasing duts in old dut_pool')
                 releaseDUTs(dut_pool, logger)
@@ -484,8 +491,11 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
             returncode, STRerrormessage= case_runner(casename,dut_pool,seq, case_mode, caselogger)
 
             if returncode:
-                caselogger.error('Case Failed:%s'%STRerrormessage)
+                import pprint
+                STRerrormessage = pprint.pformat(STRerrormessage)
+                caselogger.error('Case Failed:%s'%(STRerrormessage))
                 errormessage.append(STRerrormessage)
+
             else:
                 caselogger.info('Case PASS')
 
@@ -526,7 +536,6 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
         caselogger.error('Case FAIL')
         caselogger.error(errormessage)
     return  returncode, errormessage, benchfile,bench, dut_pool
-
 
 def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN,Report, suiteStartTime,suiteEndTime):
     import time

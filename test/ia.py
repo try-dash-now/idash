@@ -31,6 +31,7 @@ class ia(Cmd, object):
     rl =None
     readline =None
     color = True
+    fErrorPatternCheck=True
     def color(self, enable='disable'):
         if enable.lower().strip()=='disable':
             self.color=False
@@ -61,6 +62,14 @@ class ia(Cmd, object):
 
     def emptyline(self):
         return ''
+    def do_setCheckLine(self,enable='enable'):
+        if enable.strip().lower()=='enable':
+            self.fErrorPatternCheck=True
+
+        else:
+            self.fErrorPatternCheck=False
+        for sut in self.sut.keys():
+            self.sut[sut].setErrorPatternCheck(self.fErrorPatternCheck)
 
     def __init__(self, benchfile, dutname):
 
@@ -559,6 +568,7 @@ i=ia(benchfile, dutNames)
 print('#'*80)
 
 flagEndCase = False
+i.do_setCheckLine('enable')
 while not i.flagEndCase:
     try:
         #i.complete('show alar\t', 0)

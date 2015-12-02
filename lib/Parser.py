@@ -328,6 +328,7 @@ class suiteParser(object):
             lastLineNoOfConcurrent=0
             with open(suitfile, 'r') as suitefile:
                 from runner import run_case_in_suite, loop, concurrent
+
                 previousAction = run_case_in_suite
                 lineNo = 0
                 suiteIndex = 0
@@ -393,11 +394,13 @@ class suiteParser(object):
                             else:
                                 previousAction= currentAction
                             if loopCounter>1:
-                                action = loop
-                                lstConc=[[action, loopCounter, loop_stop_at_fail, cmd]]
+                                action = concurrent
+                                lstConc=[[ConcNumber, lineNo-1, failAction,action, cmd, flagAllFailIsFail, loopCounter, loop_stop_at_fail]]
+                                #lstConc=[[action, loopCounter, loop_stop_at_fail, cmd, ]]
                             else:
                                 action = run_case_in_suite
-                                lstConc=[[action, cmd]]
+                                lstConc=[[ConcNumber, lineNo-1, failAction,action, cmd, flagAllFailIsFail, loopCounter, loop_stop_at_fail]]
+                                #lstConc=[[action,loopCounter, loop_stop_at_fail,  cmd]]
                         else:
 
                             if loopCounter>1:
@@ -405,7 +408,7 @@ class suiteParser(object):
                                 lstConc.append([action,loopCounter, loop_stop_at_fail, cmd])
                             else:
                                 action = run_case_in_suite
-                                lstConc.append([ConcNumber, lineNo-1, failAction,action, cmd, flagAllFailIsFail])
+                                lstConc.append([ConcNumber, lineNo-1, failAction,action, cmd, flagAllFailIsFail,loopCounter, loop_stop_at_fail])
                                 #fork, LineNo,failAction,cmd, allFailIsFail
                                 #fork, index, totalThread, LineNo,indexInSuite,failAction,logpath,cmd, allFailIsFail
                             previousAction = currentAction

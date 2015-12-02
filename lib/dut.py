@@ -45,6 +45,7 @@ class dut(object):
     counterRelogin =0
     color =True
     errorLines=None
+    fErrorPatternCheck = False
     shareData=None
     def __del__(self):
         self.SessionAlive=False
@@ -52,6 +53,9 @@ class dut(object):
             self.logfile.flush()
     def setOutputColor(self, enable=True):
         self.color=enable
+    def setErrorPatternCheck(self, enable=True):
+        self.fErrorPatternCheck=enable
+
     def setAutoReloginFlag(self, flag=True):
         if flag:
             self.autoReloginFlag =True
@@ -126,16 +130,24 @@ class dut(object):
             print('%s is not in shareData'%(str(name)))
 
     def checkLine(self,str):
+        if not self.fErrorPatternCheck:
+            return str
+
         lines = str.split('\n')
         import re
         rePat = re.compile(self.attribute['ERROR_PATTERN'], re.IGNORECASE)
         newLines =[]
         for line in lines:
             if re.search(rePat, line):
+                self.FailFlag= True
+                if self.ErrorMessage:
+                    pass
+                else:
+                    self.ErrorMessage=''
+                self.ErrorMessage+="%s checkLine: ERROR_PATTERN FOUND: %s"%(self.name, line)
                 self.errorLines+='\n%s'%line
                 if self.logger:
                     self.logger.error("%s ERROR_PATTERN FOUND: %s"%(self.name, line))
-                    self.FailFlag=True
                 else:
                     print("ERROR_PATTERN FOUND(%s): %s"%(self.name, line))
     def colorString(self, str):

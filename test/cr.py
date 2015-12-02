@@ -60,10 +60,11 @@ if __name__ == "__main__":
         ldut = list(sdut)
 
         errormessage =[]
+        sharedata ={}
         #duts= initDUT(errormessage,bench,ldut,logger, casefolder)#['lnx1', 'lnx2']
         duts= initDUT(errormessage,bench, ldut,logger, casefolder, sharedata)
         seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
-        sharedata ={}
+
         caseFail, CaseErrorMessage= case_runner(casename,duts,seq, mode, logger,sharedata)
 
         from runner import releaseDUTs
@@ -75,6 +76,8 @@ if __name__ == "__main__":
             print ("---------------------------------- CASE PASS ----------------------------------")
             os._exit(0)
     except Exception as e:
+        import traceback
+        print(traceback.format_exc())
         print ("---------------------------------- CASE FAIL ----------------------------------")
         os._exit(1)
         #exit(1)
