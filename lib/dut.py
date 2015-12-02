@@ -399,7 +399,7 @@ call function(%s)
             evalstring = '"'+strFormat+"\"%("+ ','.join(newArgs)+")"
             newcmd = eval(evalstring,globals(),locals())
         else:
-            newcmd= self.getValue(namelist[0])
+            newcmd= self.getValue(arglist[0])
         self.send(newcmd)
     def send(self, cmd, Ctrl=False, noWait=False):
         '''send a command to Software/Device, add a line end

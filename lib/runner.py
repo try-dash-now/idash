@@ -330,18 +330,18 @@ def releaseDUTs(duts, logger):
             if dut.logfile:
                 dut.logfile.flush()
 errorlogger = None
-def concurrent(startIndex, logpath, cmdConcurrent, report, suiteLogger):
+def concurrent(startIndex, logpath, cmdConcurrent, report, suiteLogger, shareData):
     import Queue,threading
     qResult=Queue.Queue()
 
     lstThread=[]
     import time,re
-    def runCase(index, totalThread, indexInSuite,LineNo,allFailIsFail,failAction,logpath,casename,suitelogger, cmd,qResult):
+    def runCase(index, totalThread, indexInSuite,LineNo,allFailIsFail,failAction,logpath,casename,suitelogger, cmd,qResult, shareData):
         LineNo =int(LineNo)
         indexInSuite=int(indexInSuite)
         caseStartTime=time.time()
         logdir = createLogDir(str(index+1)+"-"+ re.sub('[^\w\-._]','-',cmd)[:80], logpath)
-        returncode, errormessage, benchfile,bench, dut_pool =run1case(casename, cmd,'',None,None, logdir, suiteLogger)
+        returncode, errormessage, benchfile,bench, dut_pool =run1case(casename, cmd,'',None,None, logdir, suiteLogger, shareData)
         caseEndTime=time.time()
         releaseDUTs(dut_pool, suiteLogger)
         if returncode:
@@ -357,7 +357,7 @@ def concurrent(startIndex, logpath, cmdConcurrent, report, suiteLogger):
         for i in range(0,fork):
             #key = '%d-%d'%(LineNo,i)
             casename ='%d-%s'%(indexInSuite, re.sub('[^\w\-_.]','-',cmd[:80]))
-            t = threading.Thread(target=runCase, args=[i,fork, indexInSuite,LineNo,allFailIsFail,failAction,logdir,casename, suiteLogger,cmd, qResult])
+            t = threading.Thread(target=runCase, args=[i,fork, indexInSuite,LineNo,allFailIsFail,failAction,logdir,casename, suiteLogger,cmd, qResult, shareData])
             lstThread.append(t)
         indexInSuite+=1
 
