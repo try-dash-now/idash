@@ -32,6 +32,7 @@ class ia(Cmd, object):
     readline =None
     color = True
     fErrorPatternCheck=True
+    repeatCounter=0
     def color(self, enable='disable'):
         if enable.lower().strip()=='disable':
             self.color=False
@@ -406,8 +407,13 @@ class ia(Cmd, object):
                     now = datetime.datetime.now()
                     lastSut, lastCmd, lastExp, lastTimeout = self.record[-1][:4]
                     if lastSut !=self.sutname or lastCmd!= cmd or lastExp != expectPat or lastTimeout!= strTimeout:
+                        if self.repeatCounter:
+                            self.record[-1][1]="try %d:%s"%(self.repeatCounter+1,self.record[-1][1])
+                            self.repeatCounter=0
                         self.record.append([self.sutname,cmd, expectPat,strTimeout,now.isoformat('_'), now -self.tmTimeStampOfLastCmd ])
                         self.tmTimeStampOfLastCmd=now
+                    else:
+                        self.repeatCounter+=1
                     self.sut[self.sutname].stepCheck('casename', self.cp, cmd+'\t', '.*',str(timeout))
 
 
