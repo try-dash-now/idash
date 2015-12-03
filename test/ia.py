@@ -23,6 +23,7 @@ class ia(Cmd, object):
     sutname=None
     tabend = None #'disable'
     tcName = None
+
     flagEndCase = False
     quoting = '"'
     lenCompleteBuffer=0
@@ -71,17 +72,36 @@ class ia(Cmd, object):
             self.fErrorPatternCheck=False
         for sut in self.sut.keys():
             self.sut[sut].setErrorPatternCheck(self.fErrorPatternCheck)
+    def write2TcFile(self,record):
+        from common import array2csvfile
+        array2csvfile(record,self.dftCaseFile)
 
     def __init__(self, benchfile, dutname):
 
         self.tmCreated = datetime.datetime.now()
         self.tmTimeStampOfLastCmd = self.tmCreated
         Cmd.__init__(self, 'tab', sys.stdin, sys.stdout)
+        import re
+        fullname = 'tc'
+        removelist = '\-_.'
+        pat = r'[^\w'+removelist+']'
+        name = re.sub(pat, '', fullname)
+        tm = ''
+        if name=='tc':
+            tm = '-'+self.tmCreated.isoformat('_')
+
+        tm =  re.sub(pat, '', tm)
+        self.dftCaseFile=name+tm+'.csv'
+
+
+
         self.tcName = 'tc'
         self.sutname='tc'
         self.tabend = 'disable'
         self.record =[['#var'], ['defaultTime', '30'],['#setup'],
                       ['#SUT_Name','Command_or_Function', 'Expect', 'Max_Wait_Time','TimeStamp','Interval']]
+        self.write2TcFile(self.record)
+        #self.write2TcFile(self.record[0])
         self.intro = '''welcome to InterAction of DasH'''
         logpath = './log'
         logpath =   createLogDir('ia',logpath)
@@ -410,7 +430,9 @@ class ia(Cmd, object):
                         if self.repeatCounter:
                             self.record[-1][1]="try %d:%s"%(self.repeatCounter+1,self.record[-1][1])
                             self.repeatCounter=0
-                        self.record.append([self.sutname,cmd, expectPat,strTimeout,now.isoformat('_'), now -self.tmTimeStampOfLastCmd ])
+                        newRecord = [self.sutname,cmd, expectPat,strTimeout,now.isoformat('_'), now -self.tmTimeStampOfLastCmd ]
+                        self.record.append(newRecord)
+                        self.write2TcFile([newRecord])
                         self.tmTimeStampOfLastCmd=now
                     else:
                         self.repeatCounter+=1

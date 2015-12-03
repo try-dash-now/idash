@@ -88,10 +88,16 @@ def csvfile2array(csvfile, Delimiter = ',', Newline = '', Quoting=csv.QUOTE_ALL)
         a.append(row)
     return a
 def array2csvfile(array, csvfile, Newline = '\n'):
-    with open(csvfile, 'w') as f:  #,newline ='',newline =Newline
+    with open(csvfile, 'ab+') as f:  #,newline ='',newline =Newline
         writer = csv.writer(f, lineterminator = Newline)
-        for row in array:
-            writer.writerow(row)
+        if type(array)==type([]):
+            for row in array:
+                if type(row)==type([]):
+                    writer.writerow(row)
+                else:
+                    writer.writerow([row])
+        else:
+            writer.writerow([array])
 
 def FunctionArgParser(stringOfArgs):
     def GetFunArg(*argvs, **kwargs):
