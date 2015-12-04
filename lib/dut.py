@@ -88,7 +88,7 @@ class dut(object):
             LINESEP = self.attribute.get('ERROR_PATTERN').replace('\\r', '\r').replace('\\n', '\n')
             self.attribute['ERROR_PATTERN']=LINESEP
         else:
-            self.attribute['ERROR_PATTERN']='fail|error|err|wrong'
+            self.attribute['ERROR_PATTERN']='fail|error| err|\serr |\serr:|wrong'
 
 
         if self.attribute.get("LOGIN_LINESEP"):
@@ -153,17 +153,22 @@ class dut(object):
     def colorString(self, str):
         if not self.color:
             return  str
-        try:
-            from colorama import Fore, Back, Style
-        except Exception as e:
-            return str
+
         lines = str.split('\n')
         import re
-        rePat = re.compile('fail|error|err|wrong', re.IGNORECASE)
+        rePat = re.compile(self.attribute['ERROR_PATTERN'], re.IGNORECASE)
         newLines =[]
         for line in lines:
             if re.search(rePat, line):
-                line = Fore.RED+Back.CYAN + line +Style.RESET_ALL
+                try:
+                    from colorama import Fore, Back, Style
+                    if line[-1]=='\r':
+                       line = ''+Fore.RED+Back.CYAN + line[:-1] +'\033[00m'#Style.RESET_ALL
+                    else:
+                       line = ''+Fore.RED+Back.CYAN + line +'\033[00m'#Style.RESET_ALL
+                except Exception as e:
+                    return str
+
             newLines.append(line)
         return '\n'.join(newLines)
 

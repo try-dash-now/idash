@@ -107,7 +107,7 @@ class winTelnet(dut):#, spawn
             self.write('quit')
             self.sock.close()
     def __init__(self, name, attr =None,logger=None,  logpath= None, shareData=None):
-        dut.__init__(self, name,attr,logger, logpath)
+        dut.__init__(self, name,attr,logger, logpath , shareData)
 
         host=""
         port=23

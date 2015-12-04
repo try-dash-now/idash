@@ -339,6 +339,7 @@ def concurrent(startIndex, logpath, cmdConcurrent, report, suiteLogger, shareDat
     lstThread=[]
     import time,re
     def runCase(index, totalThread, indexInSuite,LineNo,allFailIsFail,failAction,logpath,casename,suitelogger, cmd,qResult, shareData):
+        time.sleep(5)#sleep the child thread, make sure the parent thread can capture all children who are alive before parent call join()
         LineNo =int(LineNo)
         indexInSuite=int(indexInSuite)
         caseStartTime=time.time()
