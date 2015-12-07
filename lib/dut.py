@@ -8,6 +8,7 @@ provides:
 3. searching given pattern from a given range, e.g. right after last command entered
 '''
 import time
+import re
 class dut(object):
     '''
     streamOut:  string of Software/Device's output, __init__ will set it to ''
@@ -134,7 +135,7 @@ class dut(object):
             return str
 
         lines = str.split('\n')
-        import re
+
         rePat = re.compile(self.attribute['ERROR_PATTERN'], re.IGNORECASE)
         newLines =[]
         for line in lines:
@@ -155,7 +156,6 @@ class dut(object):
             return  str
 
         lines = str.split('\n')
-        import re
         rePat = re.compile(self.attribute['ERROR_PATTERN'], re.IGNORECASE)
         newLines =[]
         for line in lines:
@@ -313,7 +313,6 @@ call function(%s)
         self.stepCheck('tc', '', cmd, expect,wait)
     def stepCheck(self, CaseName, lineNo, cmd, expect, wait):
         def analyzeStep(casename, command, expect, wait):
-            import re
             reRetry         = re.compile("^\s*try\s+([0-9]+)\s*:(.*)", re.I)
             reFunction      = re.compile('\s*FUN\s*:\s*(.+?)\s*\(\s*(.*)\s*\)|\s*(.+?)\s*\(\s*(.*)\s*\)\s*$',re.IGNORECASE)
             reCtrl          = re.compile("^\s*ctrl\s*:(.*)", re.I)
@@ -458,7 +457,7 @@ call function(%s)
         noPattern: don't want to find the given pattern
         '''
 
-        import re
+
         pat = re.compile(pattern,flags)
         if timeout<0.1:
             timeout =0.1
