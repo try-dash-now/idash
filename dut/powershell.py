@@ -51,7 +51,7 @@ class powershell(dut):
                     self.logfile.write(out)
                     self.logfile.flush()
                 counter = 0
-            except Exception, e:
+            except Exception as e:
                 counter+=1
                 if self.debuglevel:
                     print('\nReadOutput Exception %d:'%(counter)+e.__str__()+'\n')

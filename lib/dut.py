@@ -298,8 +298,9 @@ call function(%s)
         self.show()
         import time
         time.sleep(0.01)
-        self.find(expect, float(wait), noPattern=noPatternFlag)
+        output = self.find(expect, float(wait), noPattern=noPatternFlag)
         self.show()
+        return output
 #       if not noPattern:
 #           self.find(expect, float(wait), noPattern=noPattern)
 #           self.show()
@@ -430,9 +431,9 @@ call function(%s)
         if noWait:
             pass
         else:
-            self.lockStreamOut.acquire()
+            #self.lockStreamOut.acquire()
             self.idxSearch =self.streamOut.__len__() #move the Search window to the end of streamOut
-            self.lockStreamOut.release()
+            #self.lockStreamOut.release()
 
         if self.loginDone:
             linesep=self.attribute['LINESEP']
@@ -445,7 +446,7 @@ call function(%s)
             self.write(ch)
         else:
             self.write(cmd+linesep)
-
+        self.idxSearch =self.streamOut.__len__() #move the Search window to the end of streamOut
         self.timestampCmd=time.time()
     def find(self, pattern, timeout = 1.0, flags=0x18, noPattern=False):
         '''find a given patten within given time(timeout),

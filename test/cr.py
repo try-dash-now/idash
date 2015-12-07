@@ -73,11 +73,11 @@ if __name__ == "__main__":
             print(CaseErrorMessage)
             Exception(CaseErrorMessage)
         else:
-            print ("---------------------------------- CASE PASS ----------------------------------")
+            print ("\r\n---------------------------------- CASE PASS ----------------------------------")
             os._exit(0)
     except Exception as e:
         import traceback
         print(traceback.format_exc())
-        print ("---------------------------------- CASE FAIL ----------------------------------")
+        print ("\r\n---------------------------------- CASE FAIL ----------------------------------")
         os._exit(1)
         #exit(1)

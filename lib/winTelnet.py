@@ -192,11 +192,11 @@ class winTelnet(dut):#, spawn
 
         """
         if self.debuglevel > 0:
-            print 'Telnet(%s,%s):' % (self.host, self.port),
+            print ('Telnet(%s,%s):' % (self.host, self.port),)
             if args:
-                print msg % args
+                print (msg % args)
             else:
-                print msg
+                print (msg)
     def fill_rawq(self):
         """Fill raw queue from exactly one recv() system call.
 
@@ -369,7 +369,7 @@ class winTelnet(dut):#, spawn
                     self.logfile.write(self.cookedq)
                     self.logfile.flush()
                 fail_counter = 0
-            except Exception, e:
+            except Exception as e:
                 fail_counter+=1
                 if self.debuglevel:
                     print('\nReadDataFromSocket Exception %d:'%(counter)+e.__str__()+'\n')

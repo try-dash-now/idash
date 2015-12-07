@@ -14,7 +14,7 @@ import os
 def logAction(fun):
     def inner(*arg, **kwargs):
         try:
-            msg ='Called function: %s'%(fun.func_name)
+            msg ='Called function: %s'%(fun.__name__)
             print(msg)
             response = fun(*arg, **kwargs)
             return  response
@@ -32,7 +32,7 @@ def logAction(fun):
             kwargstring = pp.pformat(kwargs)
             #for k,v in kwargs:
             #    kwargstring += '\n\t\t%s: %s'%(str(k),str(v))
-            msg ='*logAction dump:\n\tFunction Name: \t\t%s\n\tArguments: \t\t%s\n\tKeyword Arguments: \t\t%s'%(fun.func_name, argstring, kwargstring)
+            msg ='*logAction dump:\n\tFunction Name: \t\t%s\n\tArguments: \t\t%s\n\tKeyword Arguments: \t\t%s'%(fun.__name__, argstring, kwargstring)
             from common import DumpStack
             msg =msg +'\n-------------------------------------------------------------------------------'+DumpStack(e)
             msg = '\n*********************************ERROR DUMP************************************\n'+msg.replace('\n', '\n*')+'*********************************EREOR END*************************************\n\n'
