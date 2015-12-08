@@ -5,6 +5,7 @@ __mail__ = 'try.dash.now@gmail.com'
 created 2015/9/18 
 '''
 import traceback
+import re
 log=''
 def logCall(logger, fun):
     def inner(*arg, **kwargs):
@@ -154,7 +155,7 @@ class caseParser(object):
             seg.append([dut, cmd, exp, wait, lineno])
             return  dut#current dut
         def segTest(lineno,global_vars, previousDut, curseg , linestring, var,setup, run, teardown, dutset):
-            import re
+
             def substitude(global_var, local_vars, linestring):
                 index = 0
                 tmpline = linestring
@@ -271,7 +272,6 @@ class suiteParser(object):
     def load(self, suitfile, arglist=[], rangelist=[]):
         arrSuite =[]
         def parseFailAction(lineNo, failAction):
-            import re
             pat = '\s*(break|continue)\s*'
             pFailAction = re.compile(pat, re.IGNORECASE)
             m = re.match(pFailAction, failAction)
@@ -281,7 +281,7 @@ class suiteParser(object):
                 errormsg = 'Line: %d, FailAction(%s) doesn\'t match pattern(%s)'%(lineNo,failAction,pat)
                 raise ValueError(errormsg)
         def parserLoop(lineNo, loopAction):
-            import re
+
             pat = '\s*loop\s+(\d+)\s+(stop_at_fail|no_stop)\s*' #loop 1 stop_at_fail
             pLoop = re.compile(pat, re.IGNORECASE)
             m = re.match(pLoop, loopAction)
@@ -294,7 +294,7 @@ class suiteParser(object):
                 raise ValueError(errormsg)
 
         def parserConcurent(lineNo, ConcurrentAction):
-            import re
+
             pat = '\s*(new|)\s*concurrent\s*(\d+|)(\s*|\s+allpass|\s+allfail)' #cocurent 0
             pConcurrent = re.compile(pat, re.IGNORECASE)
             m = re.match(pConcurrent, ConcurrentAction)
@@ -316,7 +316,7 @@ class suiteParser(object):
 
         def loadCsvSuite2Array(filename, arglist, rangelist='all'):
             totalCase =0
-            import re
+
             from common import csvstring2array
             numOfArglist = len(arglist)
             pComments = re.compile('\s*#',re.IGNORECASE)

@@ -3,6 +3,7 @@ __author__ = 'Sean Yu'
 import unittest
 import os
 import sys
+import re, datetime
 pardir =os.path.dirname(os.path.realpath(os.getcwd()))
 subfolder = ['lib', 'dut']
 for sub in subfolder:
@@ -82,7 +83,7 @@ def createLogDir(name,logpath='./'):
     logpath = listDir(os.path.abspath(logpath))
 
 
-    import re, datetime
+
     fullname = name[:60]
     removelist = '\-_.'
     pat = r'[^\w'+removelist+']'
@@ -249,7 +250,7 @@ def case_runner(casename, dictDUTs, case_seq, mode='full', logger =None, shareda
     return  caseFail, errorMessage
 
 def run_case_in_suite(casename, currentBenchfile, currentBenchinfo,logger, stop_at_fail,logdir, cmd):
-    import re
+
     patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s* cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
     m =  re.match(patDash, cmd)
     returncode = 0
@@ -431,7 +432,7 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
     caselogger = createLogger('caselog.txt', logdir)
     bench = benchinfo
     try:
-        import re
+
         patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
         m =  re.match(patDash, cmd)
         returncode = 0
@@ -504,7 +505,6 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
             import subprocess
             pp =None
 
-            import re
             patPython = re.compile('\s*(python\s+|python.exe\s+|)([\w_-]+.py)', re.IGNORECASE)
             m=re.match(patPython, cmd)
             if m :
@@ -587,7 +587,6 @@ def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAI
 
     response = response+ '''<tr><td>No.</td><td>Result</td><td>Case Name</td><td>Duration(s)</td><td>StartTime</td><td>EndTime</td><td>Line No</td><td>Error Message</td></tr>'''
     #NewRecord = [index,caseResult,caseline[2][1], errormessage,logdir, LineNo]
-    import re
     for result in Report:
         index,caseResult,caseLine, errormessage,logdir, LineNo ,ExecutionDuration, caseStartTime,caseEndTime=result
         caseStartTime =time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(caseStartTime))

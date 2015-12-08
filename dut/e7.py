@@ -9,6 +9,8 @@ from winTelnet import winTelnet
 import re
 import math
 import pprint
+import time
+import threading
 class e7(winTelnet):
     def __init__(self,name,attr,logger, logpath, shareData):
         winTelnet.__init__(self, name,attr,logger, logpath, shareData)
@@ -30,8 +32,8 @@ class e7(winTelnet):
             if lport[-1].__len__()==1:
                 lport[-1]='0'+lport[-1]
             return 'v'.join(lport)
-        for item in tmp:
-            m = re.search(reDslPortRange,item)
+        for i in tmp:
+            m = re.search(reDslPortRange,i)
 
             if m:
                 prefix= m.group(1)
@@ -41,7 +43,7 @@ class e7(winTelnet):
                     port = reFormPort('%s:%s%d'%(nodeName,prefix,i))
                     lstIgnoreDsls.append(port)
             else:
-                lstIgnoreDsls.append(nodeName+':'+reFormPort(item.strip()))
+                lstIgnoreDsls.append(nodeName+':'+reFormPort(i.strip()))
 
         try:
             tmpIgnoreDsls = self.getValue(var_name)
@@ -56,67 +58,98 @@ class e7(winTelnet):
         maxReachTime = math.pow(2, Exponent)+180.0
         self.setValue(name, maxReachTime)
         return maxReachTime
-    def vdsl_setStartTimeOfReachTest(self, var_name='reachTimeStartTime'):
+    def vdsl_setStartTimeOfReachTest(self, var_name='reachTimeStartTime', StopSignalName='reachTimeCheck'):
         import datetime
         self.setValue(var_name, datetime.datetime.now())
-    def vdsl_CheckReachTime(self, totalDslUnderTest , cmd='show dsl-port',reachRate=100.0, startTimeName='reachTimeStartTime' ,MaxReachTimeName='MaxReachTime', varName_DslInfo = 'reachTime' , ignoreList='IgnoreDSLs'):
-        extratWaitTime= 1 #seconds
-        import datetime
-        now = datetime.datetime.now()
-        startTime    =  self.getValue(startTimeName)
-        MaxReachTime =  datetime.timedelta(seconds=self.getValue(MaxReachTimeName))
-        IgnoreDsls   =  self.getValue(ignoreList)
-
-        #1/v1     vdsl2/a (*v) 32.654M/96.876M 7.0/7.4     Showtime (2d22h13m20s/1)
-        stop=False
-        tmpReachRate=0
-        targReachRate = math.ceil(reachRate)
-        while not stop:
-            output = self.singleStep(cmd, '.+>', 60)
+        self.setValue(StopSignalName, {})
+    def vdsl_CheckReachTime(self, totalDslUnderTest , cmd='show dsl-port',reachRate=100.0,resultFile='../../vdsl.csv', startTimeName='reachTimeStartTime' ,MaxReachTimeName='MaxReachTime', varName_DslInfo = 'reachTime' , ignoreList='IgnoreDSLs', StopSignalName='reachTimeCheck'):
+        #self.vdsl_setStartTimeOfReachTest(startTimeName, StopSignalName)
+        def inner_vdsl_CheckReachTime(totalDslUnderTest , cmd,reachRate,resultFile, startTimeName ,MaxReachTimeName, varName_DslInfo , ignoreList, StopSignalName):
+            extratWaitTime= 1 #seconds
+            import datetime
             now = datetime.datetime.now()
-            lines = output.split('\n')
-            for line in lines:
-                line = self.vdsl_getSingleLineInfo(line)
-                if line:
-                    self.vdsl_checkLineStatus(line, now, varName_DslInfo)
-            tmpTotalShowTimeLines= self.getValue('reachTime')
-            if tmpTotalShowTimeLines:
-                self.logger.info('VDSL TR-249:%d DSL lines reached ShowTime '%tmpTotalShowTimeLines.__len__())
-                tmpReachRate=math.ceil( tmpTotalShowTimeLines.__len__()*100/totalDslUnderTest)
+            startTime    =  self.getValue(startTimeName)
+            MaxReachTime =  datetime.timedelta(seconds=self.getValue(MaxReachTimeName))
+            IgnoreDsls   =  self.getValue(ignoreList)
 
-            duration = now-startTime
-            if duration<MaxReachTime:
-                pass
-            else:
-                stop =True
-            if tmpReachRate>= targReachRate:
-                stop=True
-                self.logger.info('VDSL TR-249: achieved %f%s reach Rate after %f seconds:'%(tmpReachRate,'%',duration.total_seconds()))
+            #1/v1     vdsl2/a (*v) 32.654M/96.876M 7.0/7.4     Showtime (2d22h13m20s/1)
+            stop=False
+            tmpReachRate=0
+            targReachRate = math.ceil(reachRate)
+            preReachRate=tmpReachRate
+            msgReachRate=''#'ReachRate(%),TimeSpan(s)\n'
+            while not stop:
+                output = self.singleStep(cmd, '.+>', 60)
+                now = datetime.datetime.now()
+                duration = now-startTime
+                lines = output.split('\n')
+                for line in lines:
+                    line = self.vdsl_getSingleLineInfo(line)
+                    if line:
+                        line.append(100.-tmpReachRate)#line score, the first dsl lines get high score
+                        self.vdsl_checkLineStatus(line, duration.total_seconds(), varName_DslInfo)
+                tmpTotalShowTimeLines= self.getValue(varName_DslInfo)
+                if tmpTotalShowTimeLines:
+                    self.logger.info('VDSL TR-249:%d DSL lines reached ShowTime '%tmpTotalShowTimeLines.__len__())
+                    tmpReachRate=math.ceil( tmpTotalShowTimeLines.__len__()*100.0/totalDslUnderTest)
+
+
+                if duration<MaxReachTime:
+                    pass
+                else:
+                    stop =True
+                    msgReachRate+='%f,%f\n'%(tmpReachRate,duration.total_seconds())
+
+                if tmpReachRate>= targReachRate:
+                    if stop:
+                        pass
+                    else:
+                        stop=True
+                        msgReachRate+='%f,%f\n'%(tmpReachRate,duration.total_seconds())
+                elif tmpReachRate>=95 and preReachRate!=95:
+                    preReachRate=95
+                    msgReachRate+='%f,%f\n'%(tmpReachRate,duration.total_seconds())
+                elif tmpReachRate>=90 and preReachRate!=90:
+                    preReachRate=90
+                    msgReachRate+='%f,%f\n'%(tmpReachRate,duration.total_seconds())
+                elif tmpReachRate>=85 and preReachRate!=85:
+                    preReachRate=85
+                    msgReachRate+='%f,%f\n'%(tmpReachRate,duration.total_seconds())
+                elif tmpReachRate>=80 and preReachRate!=80:
+                    preReachRate=80
+                    msgReachRate+='%f,%f\n'%(tmpReachRate,duration.total_seconds())
 
             self.logger.info('VDSL TR-249: test duration:'+pprint.pformat(duration.total_seconds()))
 
 
-        self.logger.info('VDSL TR-249:\n'+ pprint.pformat(tmpTotalShowTimeLines))
-        import time
-        print('start to sleep %d seconds, make sure no retrain for each lines'%extratWaitTime)
-        time.sleep(extratWaitTime)
+            self.write2file(msgReachRate,filename=resultFile)
+            self.logger.info('VDSL TR-249:\n'+ pprint.pformat(tmpTotalShowTimeLines))
+            import time
+            print('start to sleep %d seconds, make sure no retrain for each lines'%extratWaitTime)
+            time.sleep(extratWaitTime)
+            self.updateValue(StopSignalName,{self.name:'stopped'})
+        th =threading.Thread(target=inner_vdsl_CheckReachTime, args=[totalDslUnderTest , cmd,reachRate,resultFile, startTimeName ,MaxReachTimeName, varName_DslInfo , ignoreList, StopSignalName])
+        th.start()
+        time.sleep(1)
 
-
-
+    def vdsl_wait_reachTimeCheck_stop(self, totalNodes=1, StopSignalName = 'reachTimeCheck'):
+        n= self.getValue(StopSignalName)
+        interval=5
+        while n.__len__()<totalNodes:
+            time.sleep(interval)
+            n= self.getValue(StopSignalName)
 
 
     def __vdsl_insertNewShowTimeDslLine(self,port, info, tableName = 'reachTime'):
+        dictReachTime={port:info}
         try:
-            dictReachTime =self.getValue(tableName)
-            dictReachTime[port]=info
-            self.setValue(tableName, dictReachTime)
+            dictReachTime =self.updateValue(tableName, dictReachTime)
         except:
-            dictReachTime={port:info}
             self.setValue(tableName,dictReachTime)
         return  dictReachTime.__len__()
 
     def vdsl_checkLineStatus(self, line,timeStamp,  reachTime_var_name='reachTime'):
-        [port, mode, rate_us, rate_ds, snr_us, snr_ds,status_status, status_time,status_retrain] =line
+        [port, mode, rate_us, rate_ds, snr_us, snr_ds,status_status, status_time,status_retrain, line_score] =line
         totalShowTimeLines=0
         if status_status.find('Showtime')!=-1:
             line[0]=timeStamp

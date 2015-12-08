@@ -9,6 +9,7 @@ provides:
 '''
 import time
 import re
+import pprint
 class dut(object):
     '''
     streamOut:  string of Software/Device's output, __init__ will set it to ''
@@ -108,6 +109,26 @@ class dut(object):
             self.shareData =shareData
         else:
             self.shareData={}
+    def appendValue(self,name,value):
+        from runner import gShareDataLock, gShareData
+        gShareDataLock.acquire()
+        try:
+            gShareData[name].append(value)
+        except Exception as e:
+            gShareData[name]=value
+            print(e)
+        gShareDataLock.release()
+        return gShareData[name]
+    def updateValue(self, name, value):
+        from runner import gShareDataLock, gShareData
+        gShareDataLock.acquire()
+        try:
+            gShareData[name].update(value)
+        except Exception as e:
+            gShareData[name]=value
+            print(e)
+        gShareDataLock.release()
+        return gShareData[name]
     def setValue(self, name, value):
         from runner import gShareDataLock, gShareData
         gShareDataLock.acquire()
@@ -116,15 +137,14 @@ class dut(object):
         except Exception as e:
             print(e)
         gShareDataLock.release()
+        return gShareData[name]
     def getValue(self, name):
         from runner import gShareDataLock, gShareData
         try:
             tmpvalue = gShareData[name]
-            print('%s:%s'%(str(name), str(tmpvalue).replace('\\n','\n').replace('\\r','\r')))
-            return  tmpvalue
+            print('%s:%s'%(str(name), pprint.pformat(tmpvalue)))
+            return  gShareData[name]
         except Exception as e:
-
-            import pprint
             print('dump of ShareData')
             print(pprint.pformat(gShareData))
             print(e)
@@ -222,9 +242,10 @@ class dut(object):
         '''
 
         if filename:
-            f =open(filename, 'wb')
+            f =open(filename, 'ab+')
             f.write(data)
             f.flush()
+            f.close()
         else:
             self.info(data)
 

@@ -104,7 +104,7 @@ if __name__ == "__main__":
         shareData ={}
         if FuncName == run_case_in_suite:
             logdir =createLogDir(casename, logpath)# logpath#
-            import re
+
             patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
             m =  re.match(patDash, cmd)
             returncode = 0

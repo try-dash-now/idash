@@ -81,7 +81,7 @@ class ia(Cmd, object):
         self.tmCreated = datetime.datetime.now()
         self.tmTimeStampOfLastCmd = self.tmCreated
         Cmd.__init__(self, 'tab', sys.stdin, sys.stdout)
-        import re
+
         fullname = 'tc'
         removelist = '\-_.'
         pat = r'[^\w'+removelist+']'
@@ -454,7 +454,7 @@ class ia(Cmd, object):
         if not name :
             name = 'tc'
 
-        import re
+
         fullname = name[:60]
         removelist = '\-_.'
         pat = r'[^\w'+removelist+']'
