@@ -1,4 +1,0 @@
-#var
-defaultTime,2
-#setup
-#SUT_Name,Command_or_Function,Expect,Max_Wait_Time,TimeStamp,Interval

@@ -2,6 +2,52 @@ __author__ = 'Sean Yu'
 '''created @2015/11/25''' 
 import cmd, sys
 from turtle import *
+import re
+reSSHcmd = re.compile('ssh\s+(([\w.]+)@([\w.]+)|(\w+)@([\w.]+)\s*:\s*(\d+))', re.I)
+s1 = 'root@test.com'
+s2 = 'root2@test2.com:22'
+m1 = re.match(reSSHcmd,s1)
+m2= re.match(reSSHcmd,s2)
+str = '2d22h13m20s'
+a=re.sub('\d\[mh]',',',str)
+a= a.split(',')
+import datetime
+a = datetime.timedelta()
+
+
+print( a)
+
+str = '1/v1     vdsl2/a (*v) 32.654M/96.876M 7.0/7.4     Showtime (2d22h13m20s/1)'
+a=str[0:8].strip()
+b=str[9:21].strip()
+c=str[22:37]
+d=str[38:49]
+e=str[50:]
+if m1:
+    print (m1.groups())
+if m2:
+    print( m2.groups())
+
+import ssh
+
+import subprocess
+import sys
+
+HOST="nanlnx-cafe02"
+# Ports are handled in ~/.ssh/config since we use OpenSSH
+COMMAND=""
+
+ssh = subprocess.Popen(["ssh", "%s" % HOST, COMMAND],
+                       shell=True,
+                       stdout=subprocess.PIPE,
+                       stderr=subprocess.PIPE)
+result = ssh.stdout.readlines()
+if result == []:
+    error = ssh.stderr.readlines()
+    print >>sys.stderr, "ERROR: %s" % error
+else:
+    print (result)
+
 
 class TurtleShell(cmd.Cmd):
     intro = 'Welcome to the turtle shell.   Type help or ? to list commands.\n'

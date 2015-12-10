@@ -94,6 +94,10 @@ class e7(winTelnet):
                     line = self.__vdsl_getSingleLineInfo(line)
                     if line:
                         tmpScore =MaxReachTime.total_seconds()-duration.total_seconds()
+                        if tmpScore>0:
+                            tmpScore=1
+                        else:
+                            tmpScore=0
                         line.append(tmpScore)#line score, the first dsl lines get high score
                         tmpLine=copy.deepcopy(line)
                         self.__vdsl_checkLineStatus(tmpLine, duration.total_seconds(),ignoreList, varName_DslInfo)
@@ -229,7 +233,7 @@ class e7(winTelnet):
         for i in range(0, vect.__len__()):
             portOfV.append(vect[i][0])
             vscore.append(float(vect[i][-1]))
-        minVscore =str(min(vscore)-5.0)
+        minVscore =0#str(min(vscore)-5.0)
 
         if vect.__len__()< nvect.__len__():
             self.setFail('train up ports are not equal between vectoring(%d) and non-vectoring(%d)'%(vect.__len__(),nvect.__len__()))
@@ -279,7 +283,7 @@ class e7(winTelnet):
         self.logger.info(msgSnr_ds)
         self.logger.info(msgRate_us)
         self.logger.info(msgRate_ds)
-        data = '\nPORT,%s\nVECTOR,%s\n'%(','.join(lstPortName),','.join(lstVScore))
+        data = 'PORT,%s\nVECTOR,%s\n'%(','.join(lstPortName),','.join(lstVScore))
         self.write2file(data, scoreFile)
         self.write2file(data+"\n", fileResult)
         self.write2file(msgMode+"\n", fileResult)
