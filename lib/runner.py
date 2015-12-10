@@ -536,6 +536,7 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
         errormessage = '%s\n%s'%(e.__str__(),traceback.format_exc())
         caselogger.error('Case FAIL')
         caselogger.error(errormessage)
+
     return  returncode, errormessage, benchfile,bench, dut_pool
 
 def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN,Report, suiteStartTime,suiteEndTime):

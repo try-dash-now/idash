@@ -10,6 +10,7 @@ provides:
 import time
 import re
 import pprint
+from common import GetFunctionbyName
 class dut(object):
     '''
     streamOut:  string of Software/Device's output, __init__ will set it to ''
@@ -361,7 +362,6 @@ call function(%s)
                 NewCommand  = mTry.group(2)
 
             mFun    = re.match(reFunction, NewCommand)
-            from common import GetFunctionbyName
             FunName = 'singleStep'
             if mFun:
                 from common import FunctionArgParser
@@ -396,7 +396,7 @@ call function(%s)
             #maxtry+=1
             IsFail= True
             counter =0
-            from common import GetFunctionbyName
+
             errormessage =''
             fun = GetFunctionbyName(self, funName)
             while(counter<maxtry):
@@ -550,3 +550,13 @@ call function(%s)
                 self.show()
                 #self.singleStep(cmd, exp, wait)
         self.loginDone=True
+    def setFail(self, msg):
+        self.FailFlag=True
+        if self.ErrorMessage:
+            self.ErrorMessage+=msg+'\n'
+        else:
+            if type(msg)==type(''):
+                pass
+            else:
+                msg= pprint.pformat(msg)
+            self.ErrorMessage=msg

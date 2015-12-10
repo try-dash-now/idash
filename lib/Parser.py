@@ -223,21 +223,23 @@ class caseParser(object):
             runner.gPathLocker.acquire()
             csvfile = open(filename, 'r')
             runner.gPathLocker.release()
-            LineNo =0
-            dutname =None
-            import re as sre
-            reComment    = sre.compile("^[\s]*#.*",sre.I|sre.DOTALL)
-            cstate = 0
-            predut = ''
-            for line in csvfile.readlines():
-                LineNo +=1
-                cstate, predut = segTest(LineNo,global_vars, predut, cstate, line, lvar, lsetup,lrun, ltear,sdut)
-                if cstate ==state.index('end'):
-                    break
-
         except Exception as e:
             runner.gPathLocker.release()
             raise e
+
+        LineNo =0
+        dutname =None
+        import re as sre
+        reComment    = sre.compile("^[\s]*#.*",sre.I|sre.DOTALL)
+        cstate = 0
+        predut = ''
+        for line in csvfile.readlines():
+            LineNo +=1
+            cstate, predut = segTest(LineNo,global_vars, predut, cstate, line, lvar, lsetup,lrun, ltear,sdut)
+            if cstate ==state.index('end'):
+                break
+
+
         return sdut, lvar, lsetup, lrun, ltear
 
 
