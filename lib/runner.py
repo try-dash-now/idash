@@ -11,6 +11,7 @@ for sub in subfolder:
     if libpath not in sys.path:
         sys.path.insert(0,libpath)
 import os
+import pprint,traceback
 
 def logAction(fun):
     def inner(*arg, **kwargs):
@@ -33,15 +34,16 @@ def logAction(fun):
             kwargstring = pp.pformat(kwargs)
             #for k,v in kwargs:
             #    kwargstring += '\n\t\t%s: %s'%(str(k),str(v))
+            print('!!!ERROR!!!:'+pprint.pformat(traceback.format_exc()))
             msg ='*logAction dump:\n\tFunction Name: \t\t%s\n\tArguments: \t\t%s\n\tKeyword Arguments: \t\t%s'%(fun.__name__, argstring, kwargstring)
             from common import DumpStack
             msg =msg +'\n-------------------------------------------------------------------------------'+DumpStack(e)
             msg = '\n*********************************ERROR DUMP************************************\n'+msg.replace('\n', '\n*')+'*********************************EREOR END*************************************\n\n'
-            print(msg)
+            #print(msg)
             import os
             with open(os.getcwd()+'/error.txt','a+') as errorfile:
                 errorfile.write(msg)
-            raise Exception(msg)
+            raise e
         return inner
     return inner
 @logAction
@@ -532,7 +534,7 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
         if returncode ==0:
             returncode =1
 
-        import traceback
+        #import traceback
         errormessage = '%s\n%s'%(e.__str__(),traceback.format_exc())
         caselogger.error('Case FAIL')
         caselogger.error(errormessage)

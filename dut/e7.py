@@ -85,8 +85,8 @@ class e7(winTelnet):
             localDslInfo=None
             while not stop:
                 preTimeStamp=now
-                output = self.singleStep(cmd, '.+>', 180)
                 now = datetime.datetime.now()
+                output = self.singleStep(cmd, '.+>', 180)
                 duration = now-startTime
                 lines = output.split('\n')
 
@@ -233,7 +233,7 @@ class e7(winTelnet):
         for i in range(0, vect.__len__()):
             portOfV.append(vect[i][0])
             vscore.append(float(vect[i][-1]))
-        minVscore =0#str(min(vscore)-5.0)
+        minVscore ='0'#str(min(vscore)-5.0)
 
         if vect.__len__()< nvect.__len__():
             self.setFail('train up ports are not equal between vectoring(%d) and non-vectoring(%d)'%(vect.__len__(),nvect.__len__()))
@@ -340,13 +340,19 @@ class e7(winTelnet):
         port='v'.join(lport)
         mode=str[9:21].strip()
         rate=str[22:37].strip()
-        reRate=re.compile('([\d.]+)M/([\d.]+)M')
+        reRate=re.compile('([\d.]+)(M|K)/([\d.]+)(M|K)')
         rate_us=0
         rate_ds=0
         mRate = re.match(reRate,rate)
         if mRate:
-            rate_us=float(mRate.group(1))
-            rate_ds=float(mRate.group(2))
+            base=1.
+            if mRate.group(2)=='K':
+                base=1024.
+            rate_us=float(mRate.group(1))/base
+            base=1.
+            if mRate.group(2)=='K':
+                base=1024.
+            rate_ds=float(mRate.group(3))/base
         snr=str[38:49].strip()
         reSNR=re.compile('([\d.]+)/([\d.]+)')
         mSNR = re.match(reSNR,snr)
