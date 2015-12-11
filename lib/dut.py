@@ -183,8 +183,8 @@ class dut(object):
             if re.search(rePat, line):
                 try:
                     from colorama import Fore, Back, Style
-                    if line[-1]=='\r':
-                       line = ''+Fore.RED+Back.CYAN + line[:-1] +'\033[00m'#Style.RESET_ALL
+                    if line.endswith('\r'):
+                       line = ''+Fore.RED+Back.CYAN + line[:-1] +'\033[00m'+'\r'#Style.RESET_ALL
                     else:
                        line = ''+Fore.RED+Back.CYAN + line +'\033[00m'#Style.RESET_ALL
                 except Exception as e:
