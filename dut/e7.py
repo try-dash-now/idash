@@ -57,7 +57,7 @@ class e7(winTelnet):
     def vdsl_getMaxReachTime(self, totalDslLines, name='MaxReachTime'):
         #import math
         Exponent =math.ceil(math.log(totalDslLines,2))
-        maxReachTime = math.pow(2, Exponent)+180.0
+        maxReachTime = math.pow(2, Exponent)+180.0+1.
         self.setValue(name, maxReachTime)
         return maxReachTime
     def vdsl_setStartTimeOfReachTest(self, var_name='reachTimeStartTime', StopSignalName='reachTimeCheck'):

@@ -145,7 +145,7 @@ def initDUT(errormessage ,bench, dutnames, logger=None, casepath='./', shareData
             ModuleName = __import__(classname)
             ClassName = ModuleName.__getattribute__(classname)
 
-            ses= ClassName(dutname, dut_attr,logger=logger ,logpath = path, shareData =shareData)
+            ses= ClassName(dutname, dut_attr,logger=logger ,logpath = path, shareData = shareData)
             ses.login()
             dictDUTs[dutname]=ses
             return  ses
@@ -157,7 +157,8 @@ def initDUT(errormessage ,bench, dutnames, logger=None, casepath='./', shareData
                 InitErrorMessage.append(msg)
             else:
                 InitErrorMessage=[msg]
-            raise ValueError(msg)
+            print(traceback.format_exc())
+            raise e#ValueError(msg)
     import threading
     dutobjs=[]
 

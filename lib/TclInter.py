@@ -4,8 +4,8 @@ from  Tkinter import Tk,Tcl
 from dut import dut
 class TclInter(dut):
     tclInter=None
-    def __init__(self, name,attrs,logger=None, logpath=None):
-        dut.__init__(self, name, attrs, logger, logpath)
+    def __init__(self, name,attrs,logger=None, logpath=None, shareData=None):
+        dut.__init__(self, name, attrs, logger, logpath,shareData)
         import threading
         self.lockStreamOut =threading.Lock()
         self.streamOut=''
