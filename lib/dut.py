@@ -184,9 +184,9 @@ class dut(object):
                 try:
                     from colorama import Fore, Back, Style
                     if line.endswith('\r'):
-                       line = ''+Fore.RED+Back.CYAN + line[:-1] +'\033[00m'+'\r'#Style.RESET_ALL
+                       line = '\033[1;31;46m'+Fore.RED+Back.CYAN + line[:-1] +'\033[0m'+'\r' #Style.RESET_ALL
                     else:
-                       line = ''+Fore.RED+Back.CYAN + line +'\033[00m'#Style.RESET_ALL
+                       line = '\033[1;31;46m'+Fore.RED+Back.CYAN +line +'\033[0m'#Style.RESET_ALL
                 except Exception as e:
                     return str
 
