@@ -201,11 +201,13 @@ def run(casename,duts, seqs ,mode, logger, sharedata):
                 stepindex= 1
                 for dut, cmd,expect , due, lineno in seq:#self.seqSetup:
                     session = duts[dut]
-                    stepinfo = """###############################################################################
+                    stepinfo = """
+###############################################################################
 # %s
 # Case: %s, LineNo:%d, %s.%d
 # DUT(%s) Action(%s),Exp(%s),Wait(%s)
-###############################################################################"""%(datetime.datetime.now().isoformat('_'),casename,lineno,segment, stepindex,
+###############################################################################
+"""%(datetime.datetime.now().isoformat('_'),casename,lineno,segment, stepindex,
                          dut,cmd, expect, due)
                     print(stepinfo)
 

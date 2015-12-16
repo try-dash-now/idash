@@ -243,10 +243,11 @@ class e7(winTelnet):
             nport,nreachTime, nmode, nrate_us, nrate_ds, nsnr_us, nsnr_ds,nstatus_status, nstatus_time,nstatus_retrain, nline_score, nline_timeSpan=nvect[ni]
             lstPortName.append(nport)
             lstNVScore.append(nline_score)
-            lstVTimeSpan.append(line_timeSpan)
+
             try:
                 i = portOfV.index(nport)
                 port,reachTime, mode, rate_us, rate_ds, snr_us, snr_ds,status_status, status_time,status_retrain , line_score, line_timeSpan =vect[i]
+                lstVTimeSpan.append(line_timeSpan)
                 lstVScore.append(line_score)
 
                 if rate_us>nrate_us:
@@ -309,7 +310,7 @@ class e7(winTelnet):
         return  dictReachTime.__len__()
 
     def __vdsl_checkLineStatus(self, line,timeStamp, ignoreList,  reachTime_var_name='reachTime'):
-        [port, mode, rate_us, rate_ds, snr_us, snr_ds,status_status, status_time,status_retrain, line_score] =line
+        [port, mode, rate_us, rate_ds, snr_us, snr_ds,status_status, status_time,status_retrain, line_score , line_span_time] =line
         totalShowTimeLines=0
         port='%s:%s'%(self.name, port)
         if status_status.find('Showtime')!=-1:
