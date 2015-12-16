@@ -84,6 +84,8 @@ class e7(winTelnet):
             preTimeStamp=now
             localDslInfo=None
             while not stop:
+                #Alarm CLEARED for DSL port "1/v12" at 2015/12/10 03:19:51.66
+
                 preTimeStamp=now
                 now = datetime.datetime.now()
                 output = self.singleStep(cmd, '.+>', 180)
@@ -93,12 +95,15 @@ class e7(winTelnet):
                 for line in lines:
                     line = self.__vdsl_getSingleLineInfo(line)
                     if line:
-                        tmpScore =MaxReachTime.total_seconds()-duration.total_seconds()
-                        if tmpScore>0:
+                        tmpShowTime =MaxReachTime.total_seconds()-duration.total_seconds()
+                        if tmpShowTime>0:
                             tmpScore=1
+
                         else:
                             tmpScore=0
+
                         line.append(tmpScore)#line score, the first dsl lines get high score
+                        line.append(tmpShowTime)#add time span of line which reach 'showtime' in seconds
                         tmpLine=copy.deepcopy(line)
                         self.__vdsl_checkLineStatus(tmpLine, duration.total_seconds(),ignoreList, varName_DslInfo)
                         del tmpLine
@@ -109,28 +114,24 @@ class e7(winTelnet):
                     tmpReachRate=math.ceil( tmpTotalShowTimeLines.__len__()*100.0/totalDslUnderTest)
 
 
-                if duration.total_seconds()<(MaxReachTime.total_seconds()+30.0):
-                    pass
-
-                else:
-                    stop =True
-                    msgReachRate+='%f,%f\n'%(tmpReachRate,duration.total_seconds())
-
                 if tmpReachRate>= targReachRate:
-                    if stop:
+                    msgReachRate+='%f,%f\n'%(tmpReachRate,duration.total_seconds())
+                    stop=True
+                    if duration.total_seconds()>=MaxReachTime.total_seconds():
                         deviation = now-preTimeStamp
                         msg = '\nTimeSpan %fs exceeded %f for %f%s train rate, interval is %fs between last 2 checkpoints'%(duration.total_seconds(), MaxReachTime, tmpReachRate, '%',deviation.total_seconds() )
                         self.setFail(msg)
-                    else:
-                        if duration.total_seconds()>=MaxReachTime.total_seconds():
-                            msg = '\nTimeSpan %fs exceeded %f for %f%s train rate, interval is %fs between last 2 checkpoints'%(duration.total_seconds(), MaxReachTime, tmpReachRate, '%',deviation.total_seconds() )
-                            self.setFail(msg)
-                        stop=True
-                        msgReachRate+='%f,%f\n'%(tmpReachRate,duration.total_seconds())
                 elif int(preReachRate)!=int(tmpReachRate):
                     msgReachRate+='%f,%f\n'%(tmpReachRate,duration.total_seconds())
                     preReachRate=tmpReachRate
 
+                if duration.total_seconds()>=(MaxReachTime.total_seconds()*2):
+                    msgReachRate+='%f,%f\n'%(tmpReachRate,duration.total_seconds())
+                    stop=True
+                    if duration.total_seconds()>=MaxReachTime.total_seconds():
+                        deviation = now-preTimeStamp
+                        msg = '\nTimeSpan %fs exceeded %f for %f%s train rate, interval is %fs between last 2 checkpoints'%(duration.total_seconds(), MaxReachTime, tmpReachRate, '%',deviation.total_seconds() )
+                        self.setFail(msg)
 
             self.logger.info('VDSL TR-249: test duration:'+pprint.pformat(duration.total_seconds()))
             if not resultFile:
@@ -230,6 +231,7 @@ class e7(winTelnet):
         lstNVScore=[]
         portOfV=[]
         vscore=[]
+        lstVTimeSpan = []
         for i in range(0, vect.__len__()):
             portOfV.append(vect[i][0])
             vscore.append(float(vect[i][-1]))
@@ -238,12 +240,13 @@ class e7(winTelnet):
         if vect.__len__()< nvect.__len__():
             self.setFail('train up ports are not equal between vectoring(%d) and non-vectoring(%d)'%(vect.__len__(),nvect.__len__()))
         for ni in range(0,nvect.__len__()):
-            nport,nreachTime, nmode, nrate_us, nrate_ds, nsnr_us, nsnr_ds,nstatus_status, nstatus_time,nstatus_retrain, nline_score=nvect[ni]
+            nport,nreachTime, nmode, nrate_us, nrate_ds, nsnr_us, nsnr_ds,nstatus_status, nstatus_time,nstatus_retrain, nline_score, nline_timeSpan=nvect[ni]
             lstPortName.append(nport)
             lstNVScore.append(nline_score)
+            lstVTimeSpan.append(line_timeSpan)
             try:
                 i = portOfV.index(nport)
-                port,reachTime, mode, rate_us, rate_ds, snr_us, snr_ds,status_status, status_time,status_retrain , line_score =vect[i]
+                port,reachTime, mode, rate_us, rate_ds, snr_us, snr_ds,status_status, status_time,status_retrain , line_score, line_timeSpan =vect[i]
                 lstVScore.append(line_score)
 
                 if rate_us>nrate_us:
@@ -283,7 +286,7 @@ class e7(winTelnet):
         self.logger.info(msgSnr_ds)
         self.logger.info(msgRate_us)
         self.logger.info(msgRate_ds)
-        data = 'PORT,%s\nVECTOR,%s\n'%(','.join(lstPortName),','.join(lstVScore))
+        data = 'PORT,%s\nVECTOR,%s\n'%(','.join(lstPortName+lstPortName),','.join(lstVScore+lstVTimeSpan))
         self.write2file(data, scoreFile)
         self.write2file(data+"\n", fileResult)
         self.write2file(msgMode+"\n", fileResult)

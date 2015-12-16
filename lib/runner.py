@@ -109,7 +109,7 @@ def createLogDir(name,logpath='./'):
             raise Exception(errormsg)
 
     if not os.path.exists(fullname):
-        print(len(fullname))
+        #print(len(fullname))
         if len(fullname)>30:
             pass
         os.mkdir(fullname)
