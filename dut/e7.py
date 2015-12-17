@@ -418,12 +418,9 @@ class e7(winTelnet):
                 base=1024.
             rate_ds=float(mRate.group(3))/base
         snr=item[4]#str[38:49].strip()
-        reSNR=re.compile('([\d.]+)/([\d.]+)')
-        mSNR = re.match(reSNR,snr)
-        snr_ds,snr_us=0,0
-        if mSNR:
-            snr_us=float(mSNR.group(1))
-            snr_ds=float(mSNR.group(2))
+        snr_ds,snr_us=snr.split('/')
+        snr_us=float(snr_us.strip())
+        snr_ds=float(snr_ds.strip())
         status=' '.join(item[5:])#str[50:].strip()
         reStatus=re.compile('([\w.]+)\s*\(([\d\w]+)/(\d+)\)')
         mStatus = re.match(reStatus,status)
