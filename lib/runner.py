@@ -597,11 +597,7 @@ def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAI
         index,caseResult,caseLine, errormessage,logdir, LineNo ,ExecutionDuration, caseStartTime,caseEndTime=result
         caseStartTime =time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(caseStartTime))
         caseEndTime =time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(caseEndTime))
-        if errormessage ==[]:
-            errormessage ='-'
-        else:
-            if type(errormessage)==type([]):
-                errormessage = ''.join([x for x in errormessage])
+        errormessage =pprint.pformat(errormessage)
 
         if errormessage:
             errormessage = re.search('\*ERROR MESSAGE:(.*?)\*Traceback',errormessage,re.IGNORECASE|re.DOTALL)

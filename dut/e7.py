@@ -30,13 +30,14 @@ class e7(winTelnet):
         lstIgnoreDsls=[]
         reDslPortRange = re.compile('\s*([\d/]+v)(\d+)\s*-\s*(\d+)\s*', re.IGNORECASE|re.DOTALL)
         def reFormPort(port):
+            if port.find(':')!=-1:
+                port ='%s:%s'%(self.name, port.strip())
             lport =re.split('v', port)
             if lport[-1].__len__()==1:
                 lport[-1]='0'+lport[-1]
             return 'v'.join(lport)
         for i in tmp:
             m = re.search(reDslPortRange,i)
-
             if m:
                 prefix= m.group(1)
                 s = int(m.group(2))
@@ -83,13 +84,67 @@ class e7(winTelnet):
             msgReachRate='ReachRate(%),TimeSpan(s)\n'
             preTimeStamp=now
             localDslInfo=None
+            #major ALARM for DSL port "1/v17" at 2015/12/16 20:53:14.21:
+            #Alarm CLEARED for DSL port "1/v12" at 2015/12/10 03:19:51.66
+
+            patEventRaise=re.compile('(major ALARM) for DSL port "([0-9/v]+)" at ([0-9/:. ]+):', re.IGNORECASE)
+            patEventClear=re.compile('(Alarm CLEARED) for DSL port "([0-9/v]+)" at ([0-9/:. ]+):', re.IGNORECASE)
+            def parseDslEvent(line, patRaise, patClear):
+                isEventFound =False
+                isClear =False
+                isRaise =False
+                portName =''
+                mRaise =re.match(patRaise,line)
+                mClear =re.match(patClear,line)
+                if mClear:
+                    isClear=True
+                    isEventFound = True
+                    portName= '%s:%s'%(self.name, mRaise.group(2))
+                elif mRaise:
+                    isRaise=True
+                    isEventFound = True
+                    portName= '%s:%s'%(self.name, mRaise.group(2))
+                return isEventFound,isClear, isRaise,portName
+            def updateDslSpanTimeAndScore(name_shareData, port, span_time, max_span_time):
+                dsl_info =self.getValue(name_shareData)
+                if dsl_info.has_key(port):
+                    #port existed
+                    self.setFail('port %s cleared again!')
+
+            self.send('')#reset the search index to the end
             while not stop:
                 #Alarm CLEARED for DSL port "1/v12" at 2015/12/10 03:19:51.66
 
                 preTimeStamp=now
                 now = datetime.datetime.now()
-                output = self.singleStep(cmd, '.+>', 180)
                 duration = now-startTime
+                output = self.find('.*\n',1)
+                lines = output.split('\n')
+                for line in lines:
+                    event_found, is_clear, is_raise, port_name =parseDslEvent(line, patEventRaise, patEventClear)
+                    if is_clear:
+                            #new dsl reachs showtime
+                    elif is_raise:
+
+                    if event_found:
+
+
+                        tmpShowTime =MaxReachTime.total_seconds()-duration.total_seconds()
+                        if tmpShowTime>0:
+                            tmpScore=1
+
+                        else:
+                            tmpScore=0
+
+                        line.append(tmpScore)#line score, the first dsl lines get high score
+                        line.append(tmpShowTime)#add time span of line which reach 'showtime' in seconds
+                        tmpLine=copy.deepcopy(line)
+                        self.__vdsl_checkLineStatus(tmpLine, duration.total_seconds(),ignoreList, varName_DslInfo)
+                        del tmpLine
+                        del tmpScore
+
+                output = self.singleStep(cmd, '.+>', 180)
+
                 lines = output.split('\n')
 
                 for line in lines:
