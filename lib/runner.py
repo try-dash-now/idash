@@ -601,8 +601,8 @@ def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAI
             errormessage ='-'
         else:
             if type(errormessage)==type([]):
-                errormessage = ''.join([x for x in errormessage])
-
+                errormessage = '\n'.join([x for x in errormessage])
+        errormessage =pprint.pformat(errormessage)
         if errormessage:
             errormessage = re.search('\*ERROR MESSAGE:(.*?)\*Traceback',errormessage,re.IGNORECASE|re.DOTALL)
         if errormessage:
