@@ -1,9 +1,0 @@
-#var
-dut,${5}
-#setup
-N5,show card,>, 20
-N5,try 2:show alarm,no:VOIP,10
-N5,try 2:set ses tim dis pager dis,success,1
-N5,show version,2.4.*,10
-,show card,>,10
-#!---

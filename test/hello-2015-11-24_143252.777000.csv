@@ -1,5 +1,0 @@
-#var
-defaultTime,2
-#setup
-N6,show ala,>|#|>>>,${defaultTime},2015-11-24_14:33:01.138000
-N6,show ala,>|#|>>>,${defaultTime},2015-11-24_14:33:08.550000

@@ -250,12 +250,12 @@ class e7(winTelnet):
                 lstVTimeSpan.append(line_timeSpan)
                 lstVScore.append(line_score)
 
-                if rate_us>nrate_us:
+                if float(rate_us)>float(nrate_us):
                     msgRate_us+='%s,RATE US, VECTOR, %s, FEXT, %s, \tPASS\n'%(port,rate_us, nrate_us)
                 else:
                     msgRate_us+='%s,RATE US, VECTOR, %s, FEXT, %s, \tFAIL\n'%(port,rate_us, nrate_us)
                     self.setFail('%s,RATE US, VECTOR, %s, FEXT, %s, \tFAIL\n'%(port,rate_us, nrate_us))
-                if rate_ds>nrate_ds:
+                if float(rate_ds)>float(nrate_ds):
                     msgRate_ds+='%s,RATE DS, VECTOR, %s, FEXT, %s, \tPASS\n'%(port,rate_ds, nrate_ds)
                 else:
                     msgRate_ds+='%s,RATE DS, VECTOR, %s, FEXT, %s, \tFAIL\n'%(port,rate_ds, nrate_ds)
@@ -348,7 +348,7 @@ class e7(winTelnet):
 
         port='v'.join(lport)
         mode=' '.join(item[1:3])#str[9:21].strip()
-        rate= item[3] # str[22:37].strip()
+        rate= item[3].strip() # str[22:37].strip()
         reRate=re.compile('([\d.]+)(M|K)/([\d.]+)(M|K)')
         rate_us=0
         rate_ds=0
@@ -369,7 +369,7 @@ class e7(winTelnet):
         if mSNR:
             snr_us=float(mSNR.group(1))
             snr_ds=float(mSNR.group(2))
-        status=' '.join(item[5:])str[50:].strip()
+        status=' '.join(item[5:])#str[50:].strip()
         reStatus=re.compile('([\w.]+)\s*\(([\d\w]+)/(\d+)\)')
         mStatus = re.match(reStatus,status)
         status_status,status_time,status_retrain='','',0

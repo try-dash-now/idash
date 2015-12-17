@@ -1,6 +1,0 @@
-#var
-defaultTime,2
-#setup
-N6,show alarm,>|#|>>>,${defaultTime},2015-11-24_14:41:59.317000
-N6,show version,>|#|>>>,${defaultTime},2015-11-24_14:42:32.975000
-N6,"find('1/1',0.1)",>|#|>>>,${defaultTime},2015-11-24_14:42:59.722000
