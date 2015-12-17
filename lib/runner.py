@@ -216,9 +216,9 @@ def run(casename,duts, seqs ,mode, logger, sharedata):
 
 
         modeset =[
-                    {'full', 'setup', 'norun', 'notear', 's', 'nr', 'nt', 'f'},
-                    {'full', 'run', 'nosetup', 'notear', 'r', 'ns', 'nt', 'f'},
-                    {'full', 'tear', 'norun', 'nosetup', 't', 'nr', 'ns', 'f'}
+                    ['full', 'setup', 'norun', 'notear', 's', 'nr', 'nt', 'f'],
+                    ['full', 'run', 'nosetup', 'notear', 'r', 'ns', 'nt', 'f'],
+                    ['full', 'tear', 'norun', 'nosetup', 't', 'nr', 'ns', 'f']
 
                   ]
         seqlist =[seqs[0],

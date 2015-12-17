@@ -329,21 +329,26 @@ class e7(winTelnet):
         -------- ------------ --------------- ----------- --------------------------------
         1/v1     vdsl2/a (*v) 32.654M/96.876M 7.0/7.4     Showtime (2d22h13m20s/1)
         '''
+
+
         pValidLine= re.compile('^\d+[/\d]v\d+')
         if re.match(pValidLine, line):
             pass
         else:
             return  None
-        str =line# '1/v1     vdsl2/a (*v) 32.654M/96.876M 7.0/7.4     Showtime (2d22h13m20s/1)'
+        str = re.sub('\s+', ' ', line)
+        item = str.split(' ')
+        #str =line# '1/v1     vdsl2/a (*v) 32.654M/96.876M 7.0/7.4     Showtime (2d22h13m20s/1)'
 
-        port=str[0:8].strip()
+
+        port=item[0]#str[0:8].strip()
         lport =re.split('v', port)
         if lport[-1].__len__()==1:
             lport[-1]='0'+lport[-1]
 
         port='v'.join(lport)
-        mode=str[9:21].strip()
-        rate=str[22:37].strip()
+        mode=' '.join(item[1:3])#str[9:21].strip()
+        rate= item[3] # str[22:37].strip()
         reRate=re.compile('([\d.]+)(M|K)/([\d.]+)(M|K)')
         rate_us=0
         rate_ds=0
@@ -354,17 +359,17 @@ class e7(winTelnet):
                 base=1024.
             rate_us=float(mRate.group(1))/base
             base=1.
-            if mRate.group(2)=='K':
+            if mRate.group(4)=='K':
                 base=1024.
             rate_ds=float(mRate.group(3))/base
-        snr=str[38:49].strip()
+        snr=item[4]#str[38:49].strip()
         reSNR=re.compile('([\d.]+)/([\d.]+)')
         mSNR = re.match(reSNR,snr)
         snr_ds,snr_us=0,0
         if mSNR:
             snr_us=float(mSNR.group(1))
             snr_ds=float(mSNR.group(2))
-        status=str[50:].strip()
+        status=' '.join(item[5:])str[50:].strip()
         reStatus=re.compile('([\w.]+)\s*\(([\d\w]+)/(\d+)\)')
         mStatus = re.match(reStatus,status)
         status_status,status_time,status_retrain='','',0
