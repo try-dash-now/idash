@@ -559,8 +559,8 @@ call function(%s)
                 pass
             else:
                 msg= pprint.pformat(msg)
-                msg= re.sub('\\\\n','\n', msg)
-                msg= re.sub('\\\\r','\r', msg)
-                msg= re.sub('\\\\t','\t', msg)
+            msg= re.sub('\\\\n','\n', msg)
+            msg= re.sub('\\\\r','\r', msg)
+            msg= re.sub('\\\\t','\t', msg)
 
             self.ErrorMessage=msg
