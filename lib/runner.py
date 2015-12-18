@@ -597,13 +597,24 @@ def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAI
         index, caseResult, caseLine, errormessage, logdir, LineNo, ExecutionDuration, caseStartTime, caseEndTime =result
         caseStartTime =time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(caseStartTime))
         caseEndTime =time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(caseEndTime))
-        errormessage =pprint.pformat(errormessage)
+        if errormessage in ([] , None, ''):
+            errormessage='-'
+        if type(errormessage)==type([]):
+            errormessage='<br>'.join(errormessage)
+        if type(errormessage)!=type(''):
+            errormessage =pprint.pformat(errormessage)
 
         if errormessage:
             m = re.search('\*ERROR MESSAGE:(.*?)\*Traceback',errormessage,re.IGNORECASE|re.DOTALL)
             if m:
                 errormessage=m.group(1).replace('*\t','')
-
+        errormessage= re.sub('\\\\n','&#10', errormessage)
+        errormessage= re.sub('\\\\r','&#10', errormessage)
+        errormessage= re.sub('\\\\t','    ', errormessage)
+        errormessage= re.sub('\r\n','&#10',errormessage)
+        errormessage= re.sub('\n|\r','&#10',errormessage)
+        errormessage = re.sub('\'|\"', '', errormessage )
+        short_error= errormessage[:40]+'...' if len(errormessage)>39 else errormessage[:40]
         bgcolor="#00FF00"
         if caseResult=='FAIL':
             bgcolor = "#FF0000"
@@ -616,9 +627,9 @@ def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAI
         <td>%s</td>
         <td>%s</td>
         <td>%s</td>
-        <td>%s <span style="color:blue;" title="errormessage">%s</span> </td>
+        <td><span style="color:blue;" title="%s">%s</span> </td>
         </tr>
-"""%(index,bgcolor,logdir,caseResult,logdir,caseLine, ExecutionDuration,caseStartTime,caseEndTime, LineNo,errormessage[:40], errormessage)
+"""%(index,bgcolor,logdir,caseResult,logdir,caseLine, ExecutionDuration,caseStartTime,caseEndTime, LineNo,errormessage, short_error)
 
     return response+"""</table>
 <br />

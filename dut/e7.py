@@ -152,7 +152,7 @@ class e7(winTelnet):
                     stop=True
                     if duration.total_seconds()>=MaxReachTime.total_seconds():
                         deviation = now-preTimeStamp
-                        msg = '\nTimeSpan %fs exceeded %f for %f%s train rate, interval is %fs between last 2 checkpoints'%(duration.total_seconds(), MaxReachTime, tmpReachRate, '%',deviation.total_seconds() )
+                        msg = '\nTimeSpan %fs exceeded %f for %f%s train rate, interval is %fs between last 2 checkpoints'%(duration.total_seconds(), MaxReachTime.total_seconds(), tmpReachRate, '%',deviation.total_seconds() )
                         self.setFail(msg)
                 elif int(preReachRate)!=int(tmpReachRate):
                     msgReachRate+='%f,%f\n'%(tmpReachRate,duration.total_seconds())
@@ -163,7 +163,7 @@ class e7(winTelnet):
                     stop=True
                     if duration.total_seconds()>=MaxReachTime.total_seconds():
                         deviation = now-preTimeStamp
-                        msg = '\nTimeSpan %fs exceeded %f for %f%s train rate, interval is %fs between last 2 checkpoints'%(duration.total_seconds(), MaxReachTime, tmpReachRate, '%',deviation.total_seconds() )
+                        msg = '\nTimeSpan %fs exceeded %f for %f%s train rate, interval is %fs between last 2 checkpoints'%(duration.total_seconds(), MaxReachTime.total_seconds(), tmpReachRate, '%',deviation.total_seconds() )
                         self.setFail(msg)
 
             self.logger.info('VDSL TR-249: test duration:'+pprint.pformat(duration.total_seconds()))
@@ -309,6 +309,7 @@ class e7(winTelnet):
             except Exception as e:
                 print(e)
                 self.setFail("can't find port %s in Vectoring test result"%(nport))
+                lstVTimeSpan.append(-9999)
                 lstVScore.append(minVscore)
                 msgMode+='%s mode is Known FAIL\n'%(nport)
                 msgStatus_retrain+='%s retrain is known FAIL\n'%(nport)
