@@ -121,7 +121,7 @@ class e7(winTelnet):
                     preTimeStamp=now
                     now = datetime.datetime.now()
                     duration = now-startTime
-                    self.send('#try show dsl-port %d'%counter)
+                    self.send('#try %d, duration(s):%f'%(counter,duration.total_seconds()))
                     self.singleStep(cmd, '.+>', 180)
                     output = self.singleStep(cmd, '.+>', 180)
                     lines = output.split('\r\n')
