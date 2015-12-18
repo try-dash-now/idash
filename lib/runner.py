@@ -616,9 +616,9 @@ def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAI
         <td>%s</td>
         <td>%s</td>
         <td>%s</td>
-        <td>%s</td>
+        <td>%s <span style="color:blue;" title="errormessage">%s</span> </td>
         </tr>
-"""%(index,bgcolor,logdir,caseResult,logdir,caseLine, ExecutionDuration,caseStartTime,caseEndTime, LineNo, errormessage)
+"""%(index,bgcolor,logdir,caseResult,logdir,caseLine, ExecutionDuration,caseStartTime,caseEndTime, LineNo,errormessage[:40], errormessage)
 
     return response+"""</table>
 <br />
