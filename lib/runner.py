@@ -608,12 +608,13 @@ def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAI
             m = re.search('\*ERROR MESSAGE:(.*?)\*Traceback',errormessage,re.IGNORECASE|re.DOTALL)
             if m:
                 errormessage=m.group(1).replace('*\t','')
-        errormessage= re.sub('\\\\n','&#10', errormessage)
-        errormessage= re.sub('\\\\r','&#10', errormessage)
-        errormessage= re.sub('\\\\t','    ', errormessage)
+        errormessage = re.sub('\'|\"', '', errormessage )
+        errormessage= re.sub('\\\n','&#10', errormessage)
+        errormessage= re.sub('\\\r','&#10', errormessage)
+        errormessage= re.sub('\\\t','    ', errormessage)
         errormessage= re.sub('\r\n','&#10',errormessage)
         errormessage= re.sub('\n|\r','&#10',errormessage)
-        errormessage = re.sub('\'|\"', '', errormessage )
+
         short_error= errormessage[:40]+'...' if len(errormessage)>39 else errormessage[:40]
         bgcolor="#00FF00"
         if caseResult=='FAIL':
