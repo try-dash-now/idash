@@ -114,12 +114,15 @@ class e7(winTelnet):
                         self.setFail('port %s cleared again!')
 
                 self.send('')#reset the search index to the end
+                counter=0
                 while not stop:
                     #Alarm CLEARED for DSL port "1/v12" at 2015/12/10 03:19:51.66
-
+                    counter +=1
                     preTimeStamp=now
                     now = datetime.datetime.now()
                     duration = now-startTime
+                    self.send('#try show dsl-port %d'%counter)
+                    self.singleStep(cmd, '.+>', 180)
                     output = self.singleStep(cmd, '.+>', 180)
                     lines = output.split('\r\n')
                     for line in lines:
@@ -150,7 +153,7 @@ class e7(winTelnet):
                         stop=True
                         if duration.total_seconds()>=MaxReachTime.total_seconds():
                             deviation = now-preTimeStamp
-                            msg = '\nTimeSpan %fs exceeded %f for %f%s train rate, interval is %fs between last 2 checkpoints'%(duration.total_seconds(), MaxReachTime.total_seconds(), tmpReachRate, '%',deviation.total_seconds() )
+                            msg = '\nTimeSpan %fs exceeded %f for %f%s train rate, interval is %fs between last 2 checkpoints\n%s'%(duration.total_seconds(), MaxReachTime.total_seconds(), tmpReachRate, '%',deviation.total_seconds() ,msgReachRate)
                             self.setFail(msg)
                     elif int(preReachRate)!=int(tmpReachRate):
                         msgReachRate+='%f,%f\n'%(tmpReachRate,duration.total_seconds())
@@ -161,8 +164,10 @@ class e7(winTelnet):
                         stop=True
                         if duration.total_seconds()>=MaxReachTime.total_seconds():
                             deviation = now-preTimeStamp
-                            msg = '\nTimeSpan %fs exceeded %f for %f%s train rate, interval is %fs between last 2 checkpoints'%(duration.total_seconds(), MaxReachTime.total_seconds(), tmpReachRate, '%',deviation.total_seconds() )
+                            msg = '\nTimeSpan %fs exceeded %f for %f%s train rate, interval is %fs between last 2 checkpoints\n%s'%(duration.total_seconds(), MaxReachTime.total_seconds(), tmpReachRate, '%',deviation.total_seconds(), msgReachRate )
                             self.setFail(msg)
+                    elif duration.total_seconds()>MaxReachTime.total_seconds():
+                        pass
 
                 self.logger.info('VDSL TR-249: test duration:'+pprint.pformat(duration.total_seconds()))
                 if not resultFile:

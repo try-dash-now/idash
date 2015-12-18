@@ -9,7 +9,7 @@ provides:
 '''
 import time
 import re
-import pprint
+import pprint,traceback
 from common import GetFunctionbyName
 class dut(object):
     '''
@@ -123,10 +123,14 @@ class dut(object):
     def updateValue(self, name, value):
         from runner import gShareDataLock, gShareData
         gShareDataLock.acquire()
+
         try:
-            gShareData[name].update(value)
+            if gShareData.has_key(name):
+                gShareData[name].update(value)
+            else:
+                gShareData[name]=value
         except Exception as e:
-            gShareData[name]=value
+            self.setFail(str(e)+'\n'+traceback.format_exc())
             print(e)
         gShareDataLock.release()
         return gShareData[name]
@@ -136,6 +140,7 @@ class dut(object):
         try:
             gShareData[name]=value
         except Exception as e:
+            self.setFail(str(e)+'\n'+traceback.format_exc())
             print(e)
         gShareDataLock.release()
         return gShareData[name]
@@ -143,13 +148,15 @@ class dut(object):
         from runner import gShareDataLock, gShareData
         try:
             tmpvalue = gShareData[name]
-            print('%s:%s'%(str(name), pprint.pformat(tmpvalue)))
-            return  gShareData[name]
+            #print('%s:%s'%(str(name), pprint.pformat(tmpvalue)))
+            return  tmpvalue
         except Exception as e:
             print('dump of ShareData')
             print(pprint.pformat(gShareData))
             print(e)
             print('%s is not in shareData'%(str(name)))
+            self.setFail(str(e)+'\n'+traceback.format_exc())
+            return  None
 
     def checkLine(self,str):
         if not self.fErrorPatternCheck:
