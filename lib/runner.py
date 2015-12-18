@@ -594,15 +594,16 @@ def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAI
     response = response+ '''<tr><td>No.</td><td>Result</td><td>Case Name</td><td>Duration(s)</td><td>StartTime</td><td>EndTime</td><td>Line No</td><td>Error Message</td></tr>'''
     #NewRecord = [index,caseResult,caseline[2][1], errormessage,logdir, LineNo]
     for result in Report:
-        index,caseResult,caseLine, errormessage,logdir, LineNo ,ExecutionDuration, caseStartTime,caseEndTime=result
+        index, caseResult, caseLine, errormessage, logdir, LineNo, ExecutionDuration, caseStartTime, caseEndTime =result
         caseStartTime =time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(caseStartTime))
         caseEndTime =time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(caseEndTime))
         errormessage =pprint.pformat(errormessage)
 
         if errormessage:
-            errormessage = re.search('\*ERROR MESSAGE:(.*?)\*Traceback',errormessage,re.IGNORECASE|re.DOTALL)
-        if errormessage:
-            errormessage= errormessage.group(1).replace('*\t','')
+            m = re.search('\*ERROR MESSAGE:(.*?)\*Traceback',errormessage,re.IGNORECASE|re.DOTALL)
+            if m:
+                errormessage=m.group(1).replace('*\t','')
+
         bgcolor="#00FF00"
         if caseResult=='FAIL':
             bgcolor = "#FF0000"

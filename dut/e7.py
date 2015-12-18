@@ -118,30 +118,8 @@ class e7(winTelnet):
                 preTimeStamp=now
                 now = datetime.datetime.now()
                 duration = now-startTime
-                output = self.find('.*\n',1)
-                lines = output.split('\n')
-                for line in lines:
-                    event_found, is_clear, is_raise, port_name =parseDslEvent(line, patEventRaise, patEventClear)
-                    if is_clear:
-                            #new dsl reachs showtime
-                    elif is_raise:
-
-                    if event_found:
 
 
-                        tmpShowTime =MaxReachTime.total_seconds()-duration.total_seconds()
-                        if tmpShowTime>0:
-                            tmpScore=1
-
-                        else:
-                            tmpScore=0
-
-                        line.append(tmpScore)#line score, the first dsl lines get high score
-                        line.append(tmpShowTime)#add time span of line which reach 'showtime' in seconds
-                        tmpLine=copy.deepcopy(line)
-                        self.__vdsl_checkLineStatus(tmpLine, duration.total_seconds(),ignoreList, varName_DslInfo)
-                        del tmpLine
-                        del tmpScore
 
                 output = self.singleStep(cmd, '.+>', 180)
 
@@ -393,6 +371,10 @@ class e7(winTelnet):
             return  None
         str = re.sub('\s+', ' ', line)
         item = str.split(' ')
+        if item[2].find('*')!=-1:
+            pass
+        else:
+            item.insert(2,' ')
         #str =line# '1/v1     vdsl2/a (*v) 32.654M/96.876M 7.0/7.4     Showtime (2d22h13m20s/1)'
 
 
@@ -418,7 +400,7 @@ class e7(winTelnet):
                 base=1024.
             rate_ds=float(mRate.group(3))/base
         snr=item[4]#str[38:49].strip()
-        snr_ds,snr_us=snr.split('/')
+        snr_ds,snr_us =snr.split('/')
         snr_us=float(snr_us.strip())
         snr_ds=float(snr_ds.strip())
         status=' '.join(item[5:])#str[50:].strip()
