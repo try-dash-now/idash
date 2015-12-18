@@ -11,6 +11,7 @@ import time
 import re
 import pprint,traceback
 from common import GetFunctionbyName
+from runner import gShareDataLock, gShareData
 class dut(object):
     '''
     streamOut:  string of Software/Device's output, __init__ will set it to ''
@@ -111,17 +112,20 @@ class dut(object):
         else:
             self.shareData={}
     def appendValue(self,name,value):
-        from runner import gShareDataLock, gShareData
+       # from runner import gShareDataLock, gShareData
         gShareDataLock.acquire()
         try:
-            gShareData[name].append(value)
+            if gShareData.has_key(name):
+                gShareData[name].append(value)
+            else:
+                gShareData[name]=value
         except Exception as e:
-            gShareData[name]=value
+            self.setFail(str(e)+'appendValue(name=%s)\n'%name+traceback.format_exc())
             print(e)
         gShareDataLock.release()
         return gShareData[name]
     def updateValue(self, name, value):
-        from runner import gShareDataLock, gShareData
+        #from runner import gShareDataLock, gShareData
         gShareDataLock.acquire()
 
         try:
@@ -130,12 +134,12 @@ class dut(object):
             else:
                 gShareData[name]=value
         except Exception as e:
-            self.setFail(str(e)+'\n'+traceback.format_exc())
+            self.setFail(str(e)+'updateValue(name=%s)\n'%name+traceback.format_exc())
             print(e)
         gShareDataLock.release()
         return gShareData[name]
     def setValue(self, name, value):
-        from runner import gShareDataLock, gShareData
+        #from runner import gShareDataLock, gShareData
         gShareDataLock.acquire()
         try:
             gShareData[name]=value
@@ -145,17 +149,20 @@ class dut(object):
         gShareDataLock.release()
         return gShareData[name]
     def getValue(self, name):
-        from runner import gShareDataLock, gShareData
+
         try:
-            tmpvalue = gShareData[name]
+            if gShareData.has_key(name):
+                tmpvalue = gShareData[name]
             #print('%s:%s'%(str(name), pprint.pformat(tmpvalue)))
-            return  tmpvalue
+                return  tmpvalue
+            else:
+                return  None
         except Exception as e:
             print('dump of ShareData')
             print(pprint.pformat(gShareData))
             print(e)
             print('%s is not in shareData'%(str(name)))
-            self.setFail(str(e)+'\n'+traceback.format_exc())
+            self.setFail(str(e)+'getValue(name=%s\n'%name+traceback.format_exc())
             return  None
 
     def checkLine(self,str):
@@ -322,11 +329,11 @@ call function(%s)
         time.sleep(float(wait))
 
     def singleStep(self, cmd, expect, wait, ctrl=False, noPatternFlag=False, noWait=False):
-
+        self.show()
         self.send(cmd, ctrl, noWait)
         self.show()
-        import time
-        time.sleep(0.01)
+        #import time
+        #time.sleep(0.01)
         output = self.find(expect, float(wait), noPattern=noPatternFlag)
         self.show()
         return output
@@ -458,9 +465,9 @@ call function(%s)
         if noWait:
             pass
         else:
-            #self.lockStreamOut.acquire()
+            self.lockStreamOut.acquire()
             self.idxSearch =self.streamOut.__len__() #move the Search window to the end of streamOut
-            #self.lockStreamOut.release()
+            self.lockStreamOut.release()
 
         if self.loginDone:
             linesep=self.attribute['LINESEP']
@@ -473,7 +480,9 @@ call function(%s)
             self.write(ch)
         else:
             self.write(cmd+linesep)
+        self.lockStreamOut.acquire()
         self.idxSearch =self.streamOut.__len__() #move the Search window to the end of streamOut
+        self.lockStreamOut.release()
         self.timestampCmd=time.time()
     def find(self, pattern, timeout = 1.0, flags=0x18, noPattern=False):
         '''find a given patten within given time(timeout),
