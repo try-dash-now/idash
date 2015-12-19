@@ -75,7 +75,7 @@ class e7(winTelnet):
                 now = datetime.datetime.now()
                 startTime    =  self.getValue(startTimeName)
                 MaxReachTime =  datetime.timedelta(seconds=self.getValue(MaxReachTimeName))
-                IgnoreDsls   =  self.getValue(ignoreList)
+                IgnoreDsls   =  ignoreList
                 if not IgnoreDsls:
                     IgnoreDsls=[]
                 #1/v1     vdsl2/a (*v) 32.654M/96.876M 7.0/7.4     Showtime (2d22h13m20s/1)
@@ -123,7 +123,7 @@ class e7(winTelnet):
                     duration = now-startTime
                     self.send('#try %d, duration(s):%f'%(counter,duration.total_seconds()))
                     self.singleStep('show time', '.+>', 180)
-                    output = self.singleStep(cmd, '.+>', 180)
+                    output = self.singleStep(cmd, '---.+>', 180)#------
                     lines = output.split('\r\n')
                     for line in lines:
                         line = self.__vdsl_getSingleLineInfo(line)
@@ -313,7 +313,7 @@ class e7(winTelnet):
             except Exception as e:
                 print(e)
                 self.setFail("can't find port %s in Vectoring test result"%(nport))
-                lstVTimeSpan.append(-9999)
+                lstVTimeSpan.append('-9999')
                 lstVScore.append(minVscore)
                 msgMode+='%s mode is Known FAIL\n'%(nport)
                 msgStatus_retrain+='%s retrain is known FAIL\n'%(nport)

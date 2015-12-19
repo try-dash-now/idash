@@ -7,11 +7,13 @@ provides:
 2. show the output, just the updated recently
 3. searching given pattern from a given range, e.g. right after last command entered
 '''
-import time
+import traceback, inspect
+import time, datetime,os, sys
 import re
 import pprint,traceback
-from common import GetFunctionbyName
+from common import GetFunctionbyName, FunctionArgParser,csvfile2array
 from runner import gShareDataLock, gShareData
+import threading
 class dut(object):
     '''
     streamOut:  string of Software/Device's output, __init__ will set it to ''
@@ -29,6 +31,7 @@ class dut(object):
     SessionAlive:
                 bool, initial is True, when session is closing, set it to False
     '''
+
     streamOut   =   None
     idxSearch   =   0
     idxUpdate   =   0
@@ -51,6 +54,11 @@ class dut(object):
     errorLines=None
     fErrorPatternCheck = False
     shareData=None
+    lockRelogin  =None
+    lockStreamOut = None
+    lockSearch = None
+    remain_in_update_buffer=None
+
     def __del__(self):
         self.SessionAlive=False
         if self.logfile:
@@ -111,6 +119,11 @@ class dut(object):
             self.shareData =shareData
         else:
             self.shareData={}
+        self.lockStreamOut = threading.Lock()
+        self.lockRelogin = threading.Lock()
+        self.lockSearch =  threading.Lock()
+        self.streamOut=''
+        self.remain_in_update_buffer=''
     def appendValue(self,name,value):
        # from runner import gShareDataLock, gShareData
         gShareDataLock.acquire()
@@ -153,7 +166,6 @@ class dut(object):
         try:
             if gShareData.has_key(name):
                 tmpvalue = gShareData[name]
-            #print('%s:%s'%(str(name), pprint.pformat(tmpvalue)))
                 return  tmpvalue
             else:
                 return  None
@@ -212,7 +224,7 @@ class dut(object):
         '''
         logpath, a folder path, where log to be found
         '''
-        import os
+
         if not logpath:
             logpath = os.getcwd()
         log = os.path.abspath(logpath)
@@ -223,8 +235,10 @@ class dut(object):
             self.logfile=None
             tmplog.close()
             self.logger.info('streamOut size is %d, to be reset to 0'%(len(self.streamOut)))
+            self.lockStreamOut.acquire()
             self.streamOut   =  ''
-            self.idxSearch   =   0
+            self.lockStreamOut.release()
+            self.__move_search_window() #self.idxSearch   =   0
             self.idxUpdate   =   0
         self.logfile = open(log, "wb")
 
@@ -236,19 +250,27 @@ class dut(object):
             raise NotImplementedError('please implement function show in your class')
         newIndex = self.streamOut.__len__()
         result = self.streamOut[self.idxUpdate  :  newIndex+1]
-        self.idxUpdate= newIndex
-        #print('print::%d'%result.__len__())
-        if result!='' and result[-1]!='\n' and result[-1]!='\r':
+        if result==self.remain_in_update_buffer:
+            self.remain_in_update_buffer=''
+            self.idxUpdate= newIndex+1
+        else:
+            last_new_line = result.rfind('\n')
+            if last_new_line!=-1:
+                result = result[0:last_new_line+1]
+                self.idxUpdate= self.idxUpdate+last_new_line+1#newIndex
+                self.remain_in_update_buffer= self.streamOut[self.idxUpdate  :]
+            else:
+                self.remain_in_update_buffer=result
+        if result!='':
             #import sys
             #sys.stdout.write('\t%s'%(result.replace('\n', '\n\t')))
             result= self.colorString(result)
-            print('\t%s'%(result.replace('\n', '\n\t').replace('\r\n','\n'))),
+            print('%s'%(result.replace('\n', '\n\t').replace('\r\n','\n'))),
         return result
 
 
         #raise NotImplementedError('please implement function show in your class')
     def write(self, buffer=''):
-        import time
         self.timestampCmd= time.time()
 
     def write2file(self, data, filename=None):
@@ -265,7 +287,6 @@ class dut(object):
             self.info(data)
 
     def formatMsg(self, msg):
-        import datetime
         now =datetime.datetime.now()
         msg = '%s\t%s\t%s'%(now.isoformat().replace("T", ' '), self.name, msg)
         print(msg)
@@ -299,7 +320,6 @@ class dut(object):
         try:
             return fun(*args, **kwargs)
         except:
-            import inspect
             (arg, varargs, keywords, defaults) =inspect.getargspec(fun)
             msg ='''
 call function(%s)
@@ -325,7 +345,6 @@ call function(%s)
         )
             raise ValueError(msg)
     def sleep(self, wait):
-        import time
         time.sleep(float(wait))
 
     def singleStep(self, cmd, expect, wait, ctrl=False, noPatternFlag=False, noWait=False):
@@ -378,7 +397,7 @@ call function(%s)
             mFun    = re.match(reFunction, NewCommand)
             FunName = 'singleStep'
             if mFun:
-                from common import FunctionArgParser
+
                 if mFun.group(1) !=None:
                     FunName = mFun.group(1)
                     ListArg, DicArg = FunctionArgParser(mFun.group(2))
@@ -425,7 +444,6 @@ call function(%s)
                     IsFail=False
                     break
                 except Exception as e:
-                    import traceback
                     print(traceback.format_exc())
                     errormessage=e.__str__()#+'\n'+traceback.format_exc()
                     continue
@@ -459,16 +477,7 @@ call function(%s)
         Ctrl, bool, default is False, if it's True, then send a key combination: Ctrl+first_char_of_cmd
         noWait, bool, defualt is False, means move searching index, otherwise doesn't move the searching index
         '''
-
-        import os
         tmp =[]
-        if noWait:
-            pass
-        else:
-            self.lockStreamOut.acquire()
-            self.idxSearch =self.streamOut.__len__() #move the Search window to the end of streamOut
-            self.lockStreamOut.release()
-
         if self.loginDone:
             linesep=self.attribute['LINESEP']
         else:
@@ -480,10 +489,24 @@ call function(%s)
             self.write(ch)
         else:
             self.write(cmd+linesep)
-        self.lockStreamOut.acquire()
-        self.idxSearch =self.streamOut.__len__() #move the Search window to the end of streamOut
-        self.lockStreamOut.release()
+
+        if noWait:
+            pass
+        else:
+            self.__move_search_window()
         self.timestampCmd=time.time()
+    def __move_search_window(self, step=None):
+        self.lockSearch.acquire()
+        if not step:
+            self.idxSearch =self.streamOut.__len__()# +1# #move the Search window to the end of streamOut
+        else:
+            self.idxSearch +=step
+        self.lockSearch.release()
+    def get_search_buffer(self):
+        self.lockSearch.acquire()
+        buf = self.streamOut[self.idxSearch:]
+        self.lockSearch.release()
+        return buf
     def find(self, pattern, timeout = 1.0, flags=0x18, noPattern=False):
         '''find a given patten within given time(timeout),
         if pattern found, move idxSearch to index where is right after the pattern in streamOut
@@ -493,22 +516,24 @@ call function(%s)
         flags: number, same as RE flags, default is re.MULTILINE|re.DOTALL 0x18
         noPattern: don't want to find the given pattern
         '''
+        flag =False
+        if pattern=='.+CalixE7>':
+            flag=True
 
 
         pat = re.compile(pattern,flags)
         if timeout<0.1:
             timeout =0.1
         interval = 0.1 #second
-        import  time
         starttime = time.time()
         endtime = starttime+timeout+interval
         currentTime = starttime
         match=None
         buffer = ''
         findduration= time.strftime("::Find Duration: %Y-%m-%d %H:%M:%S --", time.localtime())
-
+        tmp_idx_search=self.idxSearch
         while currentTime<endtime:
-            buffer = self.streamOut[self.idxSearch:]
+            buffer = self.streamOut[tmp_idx_search:]
             match = re.search(pat ,buffer )
 
             if match:
@@ -518,7 +543,16 @@ call function(%s)
         findduration+= time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())+' %f'%timeout
         #print findduration
         if match:
-            self.idxSearch += buffer.find(pattern)+match.group().__len__()+1
+            found = match.group()
+            self.__move_search_window(buffer.find(found)+found.__len__())
+            if flag and found.find('1/v1 ')==-1:
+                pass
+            tmp = found.replace('\n','\n****')
+            print('-'*30+'\n')
+            print('===='+buffer[0:buffer.find(found)].replace('\n','\n===='))
+            print('****'+tmp)
+            print('===='+buffer[buffer.find(found)+1+buffer.__len__():].replace('\n','\n===='))
+            print('\n'+'-'*30)
             if noPattern:
                 delta = endtime-time.time()
                 delta = int(delta+0.5)
@@ -533,7 +567,7 @@ call function(%s)
                 return match.group()
         else:
             if noPattern:
-                self.idxSearch += buffer.__len__()+1
+                self.__move_search_window(buffer.__len__())
                 return ''
             else:
                 msg = 'pattern(%s) doesn\'t find with %f, buffer is:\n--buffer start--\n%s\n--buffer end here--\n'%(pattern,timeout, buffer)
@@ -542,11 +576,9 @@ call function(%s)
     def login(self):
         self.loginDone=False
         login = 'login'.upper()
-        import time
         time.sleep(0.5)
         self.show()
         if self.attribute.has_key(login):
-            from common import csvfile2array
             seq = csvfile2array(self.attribute[login])
             lineno =0
             for singlestep in seq:

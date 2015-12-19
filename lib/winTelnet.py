@@ -96,12 +96,13 @@ NOOPT = chr(0)
 from dut import dut
 import threading
 import os
+import time
+import re
 class winTelnet(dut):#, spawn
-    streamOutLock =None
+
 
     def __del__(self):
         self.SessionAlive= False
-        import time
         time.sleep(0.1)
         if self.sock:
             self.write('quit')
@@ -111,13 +112,13 @@ class winTelnet(dut):#, spawn
 
         host=""
         port=23
-        import re as sre
-        reHostOnly=  sre.compile('\s*telnet\s+([\d.\w\-_]+)\s*',sre.I)
-        reHostPort = sre.compile('\s*telnet\s+([\d.\w]+)\s+(\d+)', sre.I )
+
+        reHostOnly=  re.compile('\s*telnet\s+([\d.\w\-_]+)\s*',re.I)
+        reHostPort = re.compile('\s*telnet\s+([\d.\w]+)\s+(\d+)', re.I )
 
         command = self.attribute.get('CMD')
-        m1=sre.match(reHostOnly, command)
-        m2=sre.match(reHostPort, command)
+        m1=re.match(reHostOnly, command)
+        m2=re.match(reHostPort, command)
         if m2:
             host= m2.group(1)
             port= int(m2.group(2))
@@ -144,9 +145,7 @@ class winTelnet(dut):#, spawn
         self._has_poll = hasattr(select, 'poll')
         if host is not None:
             self.open(str(host), port, timeout)
-        self.lockStreamOut =threading.Lock()
-        self.lockRelogin =threading.Lock()
-        self.streamOut=''
+
         th =threading.Thread(target=self.ReadDataFromSocket)
         th.start()
         self.debuglevel=0
@@ -344,7 +343,7 @@ class winTelnet(dut):#, spawn
 
         self.sock = socket.create_connection((host, port), timeout)
     def ReadDataFromSocket(self):
-        import time, os
+
         maxInterval = 60*5
         if self.timestampCmd ==None:
             self.timestampCmd= time.time()

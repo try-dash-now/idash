@@ -609,11 +609,12 @@ def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAI
             if m:
                 errormessage=m.group(1).replace('*\t','')
         errormessage = re.sub('\'|\"', '', errormessage )
-        errormessage= re.sub('\\\\n','&#10', errormessage)
-        errormessage= re.sub('\\\\r','&#10', errormessage)
+        errormessage= re.sub('\\\\n','&#10;', errormessage)
+        errormessage= re.sub('\\\\r','&#10;', errormessage)
         errormessage= re.sub('\\\\t','    ', errormessage)
-        errormessage= re.sub('\r\n','&#10',errormessage)
-        errormessage= re.sub('\n|\r','&#10',errormessage)
+        errormessage= re.sub('\r\n','&#10;',errormessage)
+        errormessage= re.sub('\n|\r','&#10;',errormessage)
+
         max_length_of_error_message=100
         short_error= errormessage[:max_length_of_error_message]+'...' if len(errormessage)>max_length_of_error_message else errormessage[:max_length_of_error_message]
         bgcolor="#00FF00"
