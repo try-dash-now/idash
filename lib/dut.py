@@ -59,9 +59,11 @@ class dut(object):
     lockSearch = None
     remain_in_update_buffer=None
     max_session_read_error_counter= 50
-    def isSessionAlive(self):
+    def closeSession(self):
+        self.__del__()
+    def isAlive(self, cmd='\r\n'):
         try:
-            self.singleStep('\r\n','.+',60)
+            self.singleStep(cmd,'.+',60)
             return True
         except Exception as e:
             emsg = e.__str__()+'\n'+traceback.format_exc()

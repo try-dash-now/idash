@@ -480,7 +480,11 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
                     newduts.append(nd)
 
             for od in oldduts:
-                dut_pool[od].openLogfile(logdir)
+                if dut_pool[od].isAlive():
+                    dut_pool[od].openLogfile(logdir)
+                else:
+                    dut_pool[od].closeSession()
+                    newduts.append(od)
             errormessage =[]
             duts= initDUT(errormessage,bench,newduts,logger, logdir)
 
