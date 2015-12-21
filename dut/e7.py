@@ -158,8 +158,8 @@ class e7(winTelnet):
                     elif int(preReachRate)!=int(tmpReachRate):
                         msgReachRate+='%f,%f\n'%(tmpReachRate,duration.total_seconds())
                         preReachRate=tmpReachRate
-
-                    if duration.total_seconds()>=(MaxReachTime.total_seconds()*2):
+                    multiple_of_wait_time=5
+                    if duration.total_seconds()>=(MaxReachTime.total_seconds()*multiple_of_wait_time):
                         msgReachRate+='%f,%f\n'%(tmpReachRate,duration.total_seconds())
                         stop=True
                         if duration.total_seconds()>=MaxReachTime.total_seconds():

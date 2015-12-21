@@ -146,7 +146,7 @@ class winTelnet(dut):#, spawn
         if host is not None:
             self.open(str(host), port, timeout)
 
-        th =threading.Thread(target=self.ReadDataFromSocket)
+        th =threading.Thread(target=self.ReadOutput)
         th.start()
         self.debuglevel=0
 
@@ -342,7 +342,7 @@ class winTelnet(dut):#, spawn
         self.timeout = timeout
 
         self.sock = socket.create_connection((host, port), timeout)
-    def ReadDataFromSocket(self):
+    def ReadOutput(self):
 
         maxInterval = 60*5
         if self.timestampCmd ==None:
@@ -355,7 +355,7 @@ class winTelnet(dut):#, spawn
                 #    self.relogin()
                 if self.sock:
                     if (time.time()-self.timestampCmd)>maxInterval:
-                        self.write(chr(0x08))
+                        self.write('\r\n')
                         self.timestampCmd = time.time()
                 else:
                     raise Exception('[Errno 10053] An established connection was aborted by the software in your host machine')

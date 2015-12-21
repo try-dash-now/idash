@@ -48,7 +48,7 @@ class SSH(dut.dut, object):
             self.lockStreamOut.acquire()
             try:
                 if (time.time()-self.timestampCmd)>maxInterval:
-                    self.write(os.linesep)
+                    self.write('\r\n')
                     self.timestampCmd = time.time()
                 if self.client and self.chan:
                     out = self.chan.recv(64)

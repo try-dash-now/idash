@@ -58,7 +58,9 @@ class dut(object):
     lockStreamOut = None
     lockSearch = None
     remain_in_update_buffer=None
-
+    max_session_read_error_counter= 50
+    def ReadOutput(self):
+        raise ImportError
     def __del__(self):
         self.SessionAlive=False
         if self.logfile:
@@ -234,10 +236,11 @@ class dut(object):
             tmplog = self.logfile
             self.logfile=None
             tmplog.close()
-            self.logger.info('streamOut size is %d, to be reset to 0'%(len(self.streamOut)))
+            self.logger.info('%s streamOut size is %d, to be reset to 0'%(self.name, len(self.streamOut)))
             self.lockStreamOut.acquire()
             self.streamOut   =  ''
             self.lockStreamOut.release()
+            self.logger.info('%s is reset to 0'%(self.name))
             self.__move_search_window() #self.idxSearch   =   0
             self.idxUpdate   =   0
         self.logfile = open(log, "wb")
