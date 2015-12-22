@@ -107,6 +107,7 @@ class e7(winTelnet):
                         isEventFound = True
                         portName= '%s:%s'%(self.name, mRaise.group(2))
                     return isEventFound,isClear, isRaise,portName
+
                 def updateDslSpanTimeAndScore(name_shareData, port, span_time, max_span_time):
                     dsl_info =self.getValue(name_shareData)
                     if dsl_info.has_key(port):
@@ -123,7 +124,22 @@ class e7(winTelnet):
                     duration = now-startTime
                     self.send('#try %d, duration(s):%f'%(counter,duration.total_seconds()))
                     self.singleStep('show time', '.+>', 180)
+                    debug_cmd = [
+                        'debug card 1',
+
+                        '/xdsl/bcm getvectcounters 46',
+                        '/xdsl/vec getpacketcounters',
+                        #'/xdsl/vec getcounters 46 0',
+                        '/xdsl/bcm getcounters 46 0',
+
+                        '/xdsl/obj logshowtimedrop 46',
+                        'exit'
+                    ]
+                    for tcmd in debug_cmd:
+                        self.singleStep(tcmd, '>',180)
                     output = self.singleStep(cmd, '---.+>', 180)#------
+                    for tcmd in debug_cmd:
+                        self.singleStep(tcmd, '>',180)
                     lines = output.split('\r\n')
                     for line in lines:
                         line = self.__vdsl_getSingleLineInfo(line)
@@ -151,8 +167,8 @@ class e7(winTelnet):
                     if tmpReachRate>= targReachRate:
                         msgReachRate+='%f,%f\n'%(tmpReachRate,duration.total_seconds())
                         stop=True
-                        if duration.total_seconds()>=MaxReachTime.total_seconds():
-                            deviation = now-preTimeStamp
+                        deviation = now-preTimeStamp
+                        if duration.total_seconds()>=(MaxReachTime.total_seconds()+deviation.total_seconds()):
                             msg = '\nTimeSpan %fs exceeded %f for %f%s train rate, interval is %fs between last 2 checkpoints\n%s'%(duration.total_seconds(), MaxReachTime.total_seconds(), tmpReachRate, '%',deviation.total_seconds() ,msgReachRate)
                             self.setFail(msg)
                     elif int(preReachRate)!=int(tmpReachRate):

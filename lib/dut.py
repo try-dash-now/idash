@@ -248,7 +248,16 @@ class dut(object):
         if self.logfile:
             tmplog = self.logfile
             self.logfile=None
-            tmplog.close()
+            max_counter=5
+            counter= 0
+            while max_counter>counter:
+                counter+=1
+                try:
+                    tmplog.close()
+                    break
+                except Exception as e:
+                    time.sleep(1)
+                    pass
             self.logger.info('%s streamOut size is %d, to be reset to 0'%(self.name, len(self.streamOut)))
             self.lockStreamOut.acquire()
             self.streamOut   =  ''
