@@ -573,11 +573,11 @@ call function(%s)
             if flag and found.find('1/v1 ')==-1:
                 pass
             tmp = found.replace('\n','\n****')
-            print('-'*30+'\n')
-            print('===='+buffer[0:buffer.find(found)].replace('\n','\n===='))
-            print('****'+tmp)
-            print('===='+buffer[buffer.find(found)+1+buffer.__len__():].replace('\n','\n===='))
-            print('\n'+'-'*30)
+            #print('-'*30+'\n')
+            #print('===='+buffer[0:buffer.find(found)].replace('\n','\n===='))
+            #print('****'+tmp)
+            #print('===='+buffer[buffer.find(found)+1+buffer.__len__():].replace('\n','\n===='))
+            #print('\n'+'-'*30)
             if noPattern:
                 delta = endtime-time.time()
                 delta = int(delta+0.5)
@@ -595,7 +595,7 @@ call function(%s)
                 self.__move_search_window(buffer.__len__())
                 return ''
             else:
-                msg = 'pattern(%s) doesn\'t find with %f, buffer is:\n--buffer start--\n%s\n--buffer end here--\n'%(pattern,timeout, buffer)
+                msg = '%s:pattern(%s) doesn\'t find with %f, buffer is:\n--buffer start--\n%s\n--buffer end here--\n'%(self.name,pattern,timeout, buffer)
                 raise RuntimeError(msg)
 
     def login(self):

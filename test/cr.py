@@ -71,7 +71,7 @@ if __name__ == "__main__":
         releaseDUTs(duts, logger)
         if caseFail:
             print(CaseErrorMessage)
-            Exception(CaseErrorMessage)
+            raise Exception(CaseErrorMessage)
         else:
             print ("\r\n---------------------------------- CASE PASS ----------------------------------")
             os._exit(0)

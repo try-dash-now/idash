@@ -105,8 +105,12 @@ class winTelnet(dut):#, spawn
         self.SessionAlive= False
         time.sleep(0.1)
         if self.sock:
+            self.write('exit')
+            self.write('exit')
+            self.write('exit')
+            self.send(']',Ctrl=True)
             self.write('quit')
-            self.sock.close()
+            #self.sock.close()
     def __init__(self, name, attr =None,logger=None,  logpath= None, shareData=None):
         dut.__init__(self, name,attr,logger, logpath , shareData)
 
@@ -380,7 +384,7 @@ class winTelnet(dut):#, spawn
                         try:
                             if self.sock:
                                 #self.write('quit\r\n')
-                                self.sock.close()
+                                #self.sock.close()
                                 self.sock = 0
                                 self.eof = 1
                                 self.iacseq = ''
@@ -392,7 +396,7 @@ class winTelnet(dut):#, spawn
 
 
                         except Exception as e:
-                            print('\nReadDataFromSocket Exception2 %d:'%(fail_counter)+e.__str__()+'\n')
+                            print('\nReadDataFromSocket Exception2%s %d:'%(self.name, fail_counter)+e.__str__()+'\n')
                     else:
                         print("ReadDataFromSocket Exception: %s"%(str(e)))
                         import traceback
@@ -431,7 +435,13 @@ class winTelnet(dut):#, spawn
             self.counterRelogin+=1
             self.loginDone=False
             if self.sock:
-                #self.write('quit\n\r\n')
+                self.write('quit\n\r\n')
+                for i in range(0,3):
+                    self.write('exit')
+                self.send(']',Ctrl=True)
+                self.send('quit')
+                self.send(']',Ctrl=True)
+                self.send('e')
                 self.sock.close()
                 self.sock = 0
                 self.eof = 1

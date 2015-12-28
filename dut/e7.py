@@ -50,7 +50,9 @@ class e7(winTelnet):
 
         try:
             tmpIgnoreDsls = self.getValue(var_name)
-            tmpIgnoreDsls+= lstIgnoreDsls
+            for iport in lstIgnoreDsls:
+                if iport not in tmpIgnoreDsls:
+                    tmpIgnoreDsls.append(iport)
             self.setValue(var_name, tmpIgnoreDsls)
         except:
             self.setValue(var_name, lstIgnoreDsls)
@@ -136,10 +138,16 @@ class e7(winTelnet):
                         'exit'
                     ]
                     for tcmd in debug_cmd:
-                        self.singleStep(tcmd, '>',180)
+                        try:
+                            self.singleStep(tcmd, '>',10)
+                        except:
+                            pass
                     output = self.singleStep(cmd, '---.+>', 180)#------
                     for tcmd in debug_cmd:
-                        self.singleStep(tcmd, '>',180)
+                        try:
+                            self.singleStep(tcmd, '>',10)
+                        except:
+                            pass
                     lines = output.split('\r\n')
                     for line in lines:
                         line = self.__vdsl_getSingleLineInfo(line)
@@ -269,8 +277,8 @@ class e7(winTelnet):
         if non_vectoring_file:
             pass
         else:
-            vectoring_file = basename+'/raw_fext.csv'
-        non_vectoring_file = os.path.basename(non_vectoring_file)
+            non_vectoring_file = basename+'/raw_fext.csv'
+        #non_vectoring_file = os.path.basename(non_vectoring_file)
         vect    = csvfile2array(vectoring_file)
         nvect   = csvfile2array(non_vectoring_file)
         msgMode=''
