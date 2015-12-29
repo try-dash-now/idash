@@ -70,6 +70,8 @@ if __name__ == "__main__":
         from runner import releaseDUTs
         releaseDUTs(duts, logger)
         if caseFail:
+            with open('%s/case_error.txt'%casefolder, 'a+') as ef:
+                ef.write(CaseErrorMessage)
             print(CaseErrorMessage)
             raise Exception(CaseErrorMessage)
         else:

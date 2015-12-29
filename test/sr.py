@@ -103,7 +103,10 @@ if __name__ == "__main__":
 
         shareData ={}
         if FuncName == run_case_in_suite:
-            logdir =createLogDir(casename, logpath)# logpath#
+            logdir = '%s/%s'%(logpath,casename)
+            if not os.path.exists(logdir):
+                os.mkdir(logdir)
+            #logdir =createLogDir(casename, logpath)# logpath#
 
             patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
             m =  re.match(patDash, cmd)
@@ -136,7 +139,6 @@ if __name__ == "__main__":
                     breakFlag=True
 
         elif FuncName == concurrent:
-
             conCaseTotal, conCasePass, conCaseFail, conReport, conLstFailCase , breakFlag=concurrent(index-1, logpath, caseline[2][1],report, logger, shareData)
             statsPass+=conCasePass
             statsFail+=conCaseFail

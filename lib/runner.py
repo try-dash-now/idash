@@ -94,7 +94,7 @@ def createLogDir(name,logpath='./'):
     tm =  re.sub(pat, '', tm)
     fullname = name+'-'+tm
     for dir in logpath:
-        print(os.getcwd())
+        #print(os.getcwd())
         if os.path.exists(dir):
             #print(os.getcwd())
             os.chdir(dir)
@@ -349,7 +349,9 @@ def concurrent(startIndex, logpath, cmdConcurrent, report, suiteLogger, shareDat
         LineNo =int(LineNo)
         indexInSuite=int(indexInSuite)
         caseStartTime=time.time()
-        logdir = createLogDir(str(index+1)+"-"+ re.sub('[^\w\-._]','-',cmd)[:80], logpath)
+        logdir = '%s/%s'%(logpath,str(index+1)+"-"+ re.sub('[^\w\-._]','-',cmd)[:80])
+        os.mkdir(logdir)
+        #logdir = createLogDir(str(index+1)+"-"+ re.sub('[^\w\-._]','-',cmd)[:80], logpath)
         returncode, errormessage, benchfile,bench, dut_pool =run1case(casename, cmd,'',None,None, logdir, suiteLogger, shareData)
         caseEndTime=time.time()
 
@@ -520,7 +522,9 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
                 newcmd =m.group(2)
                 exe_cmd ='python '+ cmd+" "+logdir
                 caselogger.info('running case: %s'%exe_cmd)
-                pp = subprocess.Popen(args = exe_cmd ,shell =True)
+                pp = subprocess.Popen(args = exe_cmd ,shell =True,stderr=subprocess.PIPE)
+
+                    #errormessage += stderr
 
             import time
             ChildRuning = True
@@ -535,6 +539,15 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
                     ChildRuning = False
 
             returncode = pp.returncode
+            if returncode:
+                try:
+                    stdout, stderr =pp.communicate()
+                    if stderr!='':
+                        errormessage +=stderr
+                    with open('%s/case_error.txt'%logdir,'a+') as f:
+                        f.write(stderr)
+                except Exception as e:
+                    print(e)
 
     except Exception as e:
 

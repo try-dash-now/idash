@@ -50,6 +50,12 @@ if __name__ == "__main__":
         e7_name, e7debug_name, cfa1_name,cfa2_name = ldut
         ldut = list(['sbb62','sbb62debug1'])
         e7_name, e7debug_name = ldut
+        debug_cmd = '''
+/xdsl/bcm getvectcounters 46
+/xdsl/vec getpacketcounters
+/xdsl/bcm getcounters 46 0
+/xdsl/obj logshowtimedrop 46
+        '''
         cmd_turn_on_debug_trace = '''
         /log/stl -t XRPT +s all
 /log/stl -t XPRX +s all
@@ -238,7 +244,7 @@ if __name__ == "__main__":
             index_of_first_all_leave= 0
             patEventRaise = re.compile('(major ALARM) for DSL port "([0-9/]+)v(\d+)" at (?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)\s+(?P<hour>\d+):(?P<minute>\d+):(?P<second>\d+).(?P<microsecond>\d+):', re.IGNORECASE)
             patEventClear = re.compile('(Alarm CLEARED) for DSL port "([0-9/]+)v(\d+)" at (?P<year>\d+)/(?P<month>\d+)/(?P<day>\d+)\s+(?P<hour>\d+):(?P<minute>\d+):(?P<second>\d+).(?P<microsecond>\d+):', re.IGNORECASE)
-            global gn_dsl_info,gn_dsl_info_b,gn_reach_time, gn_reach_rate
+            global gn_dsl_info,gn_dsl_info_b,gn_reach_time, gn_reach_rate,debug_cmd
             index_of_last_search = 0
             pre_reach_rate= 0.
             #dut.send('\r\n')
@@ -246,15 +252,12 @@ if __name__ == "__main__":
             pre_time_stamp=now
             if dutdebug:
                 pre_time_stamp= now
-                global debug_cmd
                 enter(dutdebug, debug_cmd)
             while checking:
-
                 now = datetime.datetime.now()
                 if dutdebug:
                     if (now -pre_time_stamp).total_seconds()>10:
                         pre_time_stamp= now
-                        global debug_cmd
                         enter(dutdebug, debug_cmd)
                 output = dut.get_search_buffer()
                 #print(output)
@@ -384,7 +387,7 @@ if __name__ == "__main__":
             status=' '.join(item[5:])#str[50:].strip()
             reStatus=re.compile('([\w.]+)\s*\(([\d\w]+)/(\d+)\)')
             mStatus = re.match(reStatus,status)
-            status_status,status_time,status_retrain='','',0
+            status_status,status_time,status_retrain='','','0'
             if mStatus:
                 status_status   =   mStatus.group(1)
                 status_time     =   mStatus.group(2)
@@ -486,12 +489,7 @@ if __name__ == "__main__":
             dut.write2file(msgRate_us+"\n", fileResult)
             dut.write2file(msgRate_ds+"\n", fileResult)
 
-        debug_cmd = '''
-/xdsl/bcm getvectcounters 46
-/xdsl/vec getpacketcounters
-/xdsl/bcm getcounters 46 0
-/xdsl/obj logshowtimedrop 46
-        '''
+
         cmd_stop_all= '''
 set sess page dis alarm ena event ena
 debug
@@ -524,12 +522,17 @@ exit
         dsl_info_before_test = get_train_rate_data(e7 )
         file_name_dsl_info_before_test = 'dsl_info_before_test.csv'
         save_dsl_info(e7,file_name_dsl_info_before_test,dsl_info_before_test)
-        enter(e7,cmd_stop_all)
-        wait_before_start_all= 30
-        time.sleep(wait_before_start_all)
-        enter(e7,cmd_start_all)
-        tm_start_dut, tm_start_local, tm_delta_e7 =get_time(e7)
-        time.sleep(5)
+        new_way = False
+        if new_way:
+            enter(e7,cmd_stop_all)
+            wait_before_start_all= 30
+            time.sleep(wait_before_start_all)
+            enter(e7,cmd_start_all)
+            tm_start_dut, tm_start_local, tm_delta_e7 =get_time(e7)
+            time.sleep(5)
+        else:
+            disable_enable_port(e7,1,[])
+            tm_start_dut, tm_start_local, tm_delta_e7 =get_time(e7)
         e7.singleStep('\r\n','major ALARM for DSL port.+>|>',60)
         e7.send('\r\n')
         thread_e7_1 = threading.Thread(target=get_reach_time, args=[e7, e7debug, 48, tm_start_local, tm_delta_e7 ,100, [],3] )
@@ -589,5 +592,6 @@ exit
         print ("\r\n---------------------------------- CASE FAIL ----------------------------------")
         with open('%s/case_error.txt'%casefolder, 'a+') as ef:
             ef.write(CaseErrorMessage)
+            ef.write('\n'+traceback.format_exc()+'\n')
 
         os._exit(1)  #exit(1)
