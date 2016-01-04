@@ -38,7 +38,7 @@ if __name__ == "__main__":
             os.mkdir(defaultlogdir)
         #defaultlogdir+='/ut_runner'
         casename = 'tr249_reachTime'
-        casefolder = createLogDir(casename,defaultlogdir)
+        casefolder = defaultlogdir#createLogDir(casename,defaultlogdir)
         logger = createLogger(casename, casefolder)
 
 
@@ -170,7 +170,7 @@ if __name__ == "__main__":
                     exp = lstcmd[1]
                     waittime=lstcmd[2]
                 dut.singleStep(tcmd, exp, waittime)
-        def disable_enable_port(dut, card,ignore_ports, waittime=10):
+        def disable_enable_port(dut, card,ignore_ports, waittime=10, checkSuccess=True):
             for port in range(1,49,1):
                 cmd = 'disable dsl-port %s/v%d'%(str(card), port)
                 dut.singleStep(cmd, 'success', waittime)
@@ -180,7 +180,12 @@ if __name__ == "__main__":
                     pass
                 else:
                     cmd = 'enable dsl-port %s/v%d'%(str(card), port)
-                    dut.singleStep(cmd, 'success', waittime)
+                    if checkSuccess:
+                        dut.singleStep(cmd, 'success', waittime)
+                    else:
+                        dut.write(cmd+'\r\n')
+                        dut.show()
+            dut.singleStep('\r\n','.*',1)
         def get_time(dut):
             '''
             Tue Dec 22 00:10:39 2015
@@ -253,6 +258,7 @@ if __name__ == "__main__":
             if dutdebug:
                 pre_time_stamp= now
                 enter(dutdebug, debug_cmd)
+            raise_again_ports=[]
             while checking:
                 now = datetime.datetime.now()
                 if dutdebug:
@@ -269,7 +275,9 @@ if __name__ == "__main__":
                         found, is_clear, is_raise, portName ,event_time =  parseDslEvent(dut.name, line , patEventRaise, patEventClear)
                         if found:
                             if is_raise:
-                                dut.setFail('%s: LOS raised, after DSL port enabled\n')
+                                if portName not in raise_again_ports:
+                                    raise_again_ports.append(portName)
+                                    dut.setFail('%s: %s LOS raised, after DSL port enabled\n'%(dut.name,portName))
                             elif is_clear:
                                 if portName in g_reach_time:#
                                     new_duration = (event_time-start_time).total_seconds()+ delta_time
@@ -451,7 +459,7 @@ if __name__ == "__main__":
                         dut.setFail('%s,RATE DS, VECTOR, %s, FEXT, %s, \tFAIL\n'%(port,rate_ds, nrate_ds))
 
                     if status_retrain!='0':
-                        dut.setFail('%s mode is %s FAIL\n'%(port,nstatus_retrain))
+                        dut.setFail('%s retrain is %s FAIL\n'%(port,status_retrain))
                         msgStatus_retrain+='%s retrain is %s FAIL\n'%(port,status_retrain)
 
                     else:
@@ -530,12 +538,28 @@ exit
             enter(e7,cmd_start_all)
             tm_start_dut, tm_start_local, tm_delta_e7 =get_time(e7)
             time.sleep(5)
+            e7.singleStep('\r\n','major ALARM for DSL port.+>|>',60)
+            e7.send('\r\n')
         else:
-            disable_enable_port(e7,1,[])
             tm_start_dut, tm_start_local, tm_delta_e7 =get_time(e7)
-        e7.singleStep('\r\n','major ALARM for DSL port.+>|>',60)
-        e7.send('\r\n')
-        thread_e7_1 = threading.Thread(target=get_reach_time, args=[e7, e7debug, 48, tm_start_local, tm_delta_e7 ,100, [],3] )
+            disable_enable_port(e7,1,[],waittime=10,checkSuccess=False)
+            cmd_stop_all= '''
+set sess page dis alarm ena event ena
+debug
+/xdsl/retrain 1 48
+/xdsl/bcm cfg extra all ginp.reincfg 164 164
+exit
+'''
+            enter(e7,cmd_stop_all)
+            #wait_before_start_all= 30
+            #time.sleep(wait_before_start_all)
+            #enter(e7,cmd_start_all)
+            tm_start_dut, tm_start_local, tm_delta_e7 =get_time(e7)
+            time.sleep(5)
+            e7.singleStep('\r\n','major ALARM for DSL port.+>|>',60)
+            e7.send('\r\n')
+
+        thread_e7_1 = threading.Thread(target=get_reach_time, args=[e7, None, 48, tm_start_local, tm_delta_e7 ,100, [],3] )
 #th =threading.Thread(target=inner_vdsl_CheckReachTime, args=[totalDslUnderTest , cmd,reachRate,resultFile, startTimeName ,MaxReachTimeName, varName_DslInfo , ignoreList, StopSignalName])
  #      start()
 
@@ -553,7 +577,7 @@ exit
 
         reachtime = getValue(gn_reach_time)
         for portName in dsl_info:
-            dsl_info[portName][-1]=str(int(dsl_info[portName][-1]) - int(dsl_info_before_test[portName][-1])-1)
+            dsl_info[portName][-1]=str(max(int(dsl_info[portName][-1]) - int(dsl_info_before_test[portName][-1])-1,0))
             rt = reachtime[portName]
             score = max_reach_time-rt
             bscore = 1 if score>0 else 0

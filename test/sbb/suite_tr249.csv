@@ -33,6 +33,13 @@ tr249_reachTime.py 3000_3000_3000,continue
 tr249_reachTime.py 3000_3000_3000,continue
 tr249_reachTime.py 3000_3000_3000,continue
 tr249_reachTime.py 3000_3000_3000,continue
+blv_set_loop_len.py bench.csv cfa83 cfa84 3000 2000 1000,break
+blv_bench_mark.py bench.csv sbb62 1   3000 2000 1000,break
+tr249_reachTime.py 3000_2000_1000,continue
+tr249_reachTime.py 3000_2000_1000,continue
+tr249_reachTime.py 3000_2000_1000,continue
+tr249_reachTime.py 3000_2000_1000,continue
+tr249_reachTime.py 3000_2000_1000,continue
 blv_set_loop_len.py bench.csv cfa83 cfa84 1000 2000 3000,break
 blv_bench_mark.py bench.csv sbb62 1   1000 2000 3000,break
 tr249_reachTime.py 1000_2000_3000,continue
@@ -41,6 +48,7 @@ tr249_reachTime.py 1000_2000_3000,continue
 tr249_reachTime.py 1000_2000_3000,continue
 tr249_reachTime.py 1000_2000_3000,continue
 tr249_reachTime.py 1000_2000_3000,continue
+tr249_reachTime.py 3000_2000_1000,continue
 tr249_reachTime.py 1000_2000_3000,continue
 tr249_reachTime.py 1000_2000_3000,continue
 tr249_reachTime.py 1000_2000_3000,continue
@@ -4228,11 +4236,3 @@ tr249_reachTime.py 1000_2000_3000,continue
 tr249_reachTime.py 1000_2000_3000,continue
 tr249_reachTime.py 1000_2000_3000,continue
 tr249_reachTime.py 1000_2000_3000,continue
-tr249_reachTime.py 1000_2000_3000,continue
-tr249_reachTime.py 1000_2000_3000,continue
-tr249_reachTime.py 1000_2000_3000,continue
-tr249_reachTime.py 1000_2000_3000,continue
-tr249_reachTime.py 1000_2000_3000,continue
-tr249_reachTime.py 1000_2000_3000,continue
-tr249_reachTime.py 1000_2000_3000,continue
-

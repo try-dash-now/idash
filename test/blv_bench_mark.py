@@ -359,16 +359,18 @@ if __name__ == "__main__":
         def prov_vect_single_dsl_port(dut, card, ignorelist=[], waittime=120):
             for port in range(1,49,1):
                 if port not in ignorelist:
-                    cmd = '''set dsl-port %s/v%d basic service-type vdsl2 vdsl-profile 17a ds-min-rate 128 us-min-rate 128 ds-max-rate 512000 us-max-rate 512000 ds-intrlv-max-latency 8 us-intrlv-max-latency 8 ds-min-inp 2 us-min-inp 2  ds-min-snr 0 us-min-snr 0 ds-target-snr 6 us-target-snr 6 ds-max-snr 31 us-max-snr 31 path-latency interleaved
+                    cmds = '''set dsl-port %s/v%d basic service-type vdsl2 vdsl-profile 17a ds-min-rate 128 us-min-rate 128 ds-max-rate 512000 us-max-rate 512000 ds-intrlv-max-latency 8 us-intrlv-max-latency 8 ds-min-inp 2 us-min-inp 2  ds-min-snr 0 us-min-snr 0 ds-target-snr 6 us-target-snr 6 ds-max-snr 31 us-max-snr 31 path-latency interleaved
 set dsl-port %s/v%d  advanced ds-rate-adapt-mode dynamic us-rate-adapt-mode dynamic ptm-override ptm ds-downshift-adapt-margin 5 ds-downshift-adapt-time 2 ds-upshift-adapt-margin 7 ds-upshift-adapt-time 8 us-downshift-adapt-margin 5 us-downshift-adapt-time 2 us-upshift-adapt-margin 7 us-upshift-adapt-time 8
 set dsl-port %s/v%d  advanced ds-enhanced-inp ginp us-enhanced-inp ginp ds-ginp-delaymax 17 us-ginp-delaymax 17 ds-ginp-inpmin-shine 41 us-ginp-inpmin-shine 41 ds-ginp-shineratio 0.002 us-ginp-shineratio 0.002 ds-ginp-inpmin-rein 2 us-ginp-inpmin-rein 2 ds-ginp-iat-rein 120 us-ginp-iat-rein 120
 set dsl-port %s/v%d  psd upbo-band-1-a 53 upbo-band-1-b 16.2 upbo-band-2-a 54 upbo-band-2-b 10.2
 set dsl-port %s/v%d  psd dsl-vectoring-grp 1/1 ds-vectoring enabled us-vectoring enabled'''
-
-                    cmd = 'set dsl-port %s/v%d  basic service-type vdsl2 vdsl-profile 17a'%(str(card), port)
-                    dut.singleStep(cmd, 'success', waittime)
-                    cmd = 'set dsl-port %s/v%d psd dsl-vectoring-grp 1/1 ds-vectoring enabled us-vectoring enabled'%(str(card), port)
-                    dut.singleStep(cmd, 'success', waittime)
+                    for cmd in cmds.split('\n'):
+                        cmd= cmd%(str(card),port)
+                        dut.singleStep(cmd, 'success', waittime)
+                    #cmd = 'set dsl-port %s/v%d  basic service-type vdsl2 vdsl-profile 17a'%(str(card), port)
+                    #dut.singleStep(cmd, 'success', waittime)
+                    #cmd = 'set dsl-port %s/v%d psd dsl-vectoring-grp 1/1 ds-vectoring enabled us-vectoring enabled'%(str(card), port)
+                    #dut.singleStep(cmd, 'success', waittime)
             disable_enable_port(dut,card,ignorelist,waittime)
 
         card_under_test = [card]

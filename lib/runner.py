@@ -542,10 +542,17 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
             if returncode:
                 try:
                     stdout, stderr =pp.communicate()
+                    try:
+                        with open('%s/case_error.txt'%logdir,'r') as f:
+                            errormessage +='\n'.join(f.readall()[:10])
+                    except Exception as e:
+                        pass
+
                     if stderr!='':
                         errormessage +=stderr
-                    with open('%s/case_error.txt'%logdir,'a+') as f:
-                        f.write(stderr)
+                        with open('%s/case_error.txt'%logdir,'a+') as f:
+                            f.write(stderr)
+
                 except Exception as e:
                     print(e)
 

@@ -263,7 +263,7 @@ class dut(object):
             self.streamOut   =  ''
             self.lockStreamOut.release()
             self.logger.info('%s is reset to 0'%(self.name))
-            self.__move_search_window() #self.idxSearch   =   0
+            self.move_search_window() #self.idxSearch   =   0
             self.idxUpdate   =   0
         self.logfile = open(log, "wb")
 
@@ -518,9 +518,9 @@ call function(%s)
         if noWait:
             pass
         else:
-            self.__move_search_window()
+            self.move_search_window()
         self.timestampCmd=time.time()
-    def __move_search_window(self, step=None):
+    def move_search_window(self, step=None):
         self.lockSearch.acquire()
         if not step:
             self.idxSearch =self.streamOut.__len__()# +1# #move the Search window to the end of streamOut
@@ -569,7 +569,7 @@ call function(%s)
         #print findduration
         if match:
             found = match.group()
-            self.__move_search_window(buffer.find(found)+found.__len__())
+            self.move_search_window(buffer.find(found)+found.__len__())
             if flag and found.find('1/v1 ')==-1:
                 pass
             tmp = found.replace('\n','\n****')
@@ -592,7 +592,7 @@ call function(%s)
                 return match.group()
         else:
             if noPattern:
-                self.__move_search_window(buffer.__len__())
+                self.move_search_window(buffer.__len__())
                 return ''
             else:
                 msg = '%s:pattern(%s) doesn\'t find with %f, buffer is:\n--buffer start--\n%s\n--buffer end here--\n'%(self.name,pattern,timeout, buffer)
