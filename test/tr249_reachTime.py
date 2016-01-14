@@ -46,9 +46,9 @@ if __name__ == "__main__":
         benchfile = './bench.csv'
         bench =bench2dict(benchfile)
 
-        ldut = list(['sbb62','sbb62debug1','cfa83','cfa84'])
+        ldut = list(['sbb93','sbb93debug1','cfa81','cfa82'])
         e7_name, e7debug_name, cfa1_name,cfa2_name = ldut
-        ldut = list(['sbb62','sbb62debug1'])
+        ldut = list(['sbb93','sbb93debug1'])
         e7_name, e7debug_name = ldut
         debug_cmd = '''
 /xdsl/bcm getvectcounters 46
@@ -282,7 +282,7 @@ if __name__ == "__main__":
                                 if portName in g_reach_time:#
                                     new_duration = (event_time-start_time).total_seconds()+ delta_time
                                     if g_reach_time[portName]!=new_duration:
-                                        dut.setFail('%s: clear LOS again, last arrive duration %f, new %f\n'%(dut,g_reach_time[portName], new_duration ))
+                                        dut.setFail('%s %s: clear LOS again, last arrive duration %f, new %f\n'%(dut.name, portName,g_reach_time[portName], new_duration ))
                                 else:
                                     if portName not in ignore_ports:
                                         g_reach_time[portName]=(event_time-start_time).total_seconds()+ delta_time
@@ -578,12 +578,13 @@ exit
         reachtime = getValue(gn_reach_time)
         for portName in dsl_info:
             dsl_info[portName][-1]=str(max(int(dsl_info[portName][-1]) - int(dsl_info_before_test[portName][-1])-1,0))
-            rt = reachtime[portName]
-            score = max_reach_time-rt
-            bscore = 1 if score>0 else 0
-            dsl_info[portName].append(str(bscore))
-            dsl_info[portName].append(str(rt))
-            dsl_info[portName].append(str(score))
+            if portName in reachtime:
+                rt = reachtime[portName]
+                score = max_reach_time-rt
+                bscore = 1 if score>0 else 0
+                dsl_info[portName].append(str(bscore))
+                dsl_info[portName].append(str(rt))
+                dsl_info[portName].append(str(score))
 
         save_dsl_info(e7,'dsl_info_after_test.csv',dsl_info)
         file_name_dsl_info_after_test = 'dsl_info_after_test.csv'

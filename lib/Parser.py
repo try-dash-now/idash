@@ -67,7 +67,7 @@ class caseParser(object):
 
         self.name = name
         m = mode.lower()
-        modeset = {'full', 'f', 'run', 'r', 'setup', 's', 'tear', 't', 'norun', 'nr', 'nosetup', 'ns', 'notear', 'nt'}
+        modeset = ['full', 'f', 'run', 'r', 'setup', 's', 'tear', 't', 'norun', 'nr', 'nosetup', 'ns', 'notear', 'nt']
         if m not in modeset:
             errormessage = 'mode(%s) is wrong,it should be one of %s, not case-sensitive '%(mode, str(modeset))
             self.error(errormessage)
