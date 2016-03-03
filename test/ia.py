@@ -3,7 +3,7 @@ __author__ = 'Sean Yu'
 '''created @2015/11/13'''
 import os, sys
 pardir =os.path.dirname(os.path.realpath(os.getcwd()))
-subfolder = ['lib', 'dut', '../tr249/plugfest/']
+subfolder = ['lib', 'dut']
 for sub in subfolder:
     libpath = os.path.sep.join([pardir,sub])
     if libpath not in sys.path:
