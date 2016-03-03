@@ -637,26 +637,3 @@ class ia(Cmd, object):
                     readline.set_completer(self.old_completer)
                 except ImportError:
                     pass
-print('ia.exe/ia.py bench_file DUT1 [DUT2, DUT3 ...]')
-if len(sys.argv)>2:
-    benchfile = sys.argv[1]
-    dutNames = sys.argv[2:]
-else:
-    benchfile = './bench.csv'
-    dutNames = ['PS']
-i=ia(benchfile, dutNames)
-print('#'*80)
-
-flagEndCase = False
-i.do_setCheckLine('enable')
-while not i.flagEndCase:
-    try:
-        #i.complete('show alar\t', 0)
-        i.cmdloop()
-        time.sleep(.1)
-    except Exception as e:
-        msg = traceback.format_exc()
-        print(msg)
-        i.save2file()
-
-os._exit(0)
