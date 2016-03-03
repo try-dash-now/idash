@@ -78,10 +78,13 @@ class ia(Cmd, object):
             if sut !='tc':
                 self.sut[sut].setOutputColor(self.color)
     def monitor_keyboard(self):
-        phm = pyHook.HookManager()
-        phm.KeyDown=check_keyboard_tab_down
-        phm.HookKeyboard()
-        pythoncom.PumpMessages()
+        self.keyboard = pyHook.HookManager()
+        #print(self.keyboard.KeyDown)
+        self.keyboard.KeyDown=check_keyboard_tab_down
+        self.keyboard.HookKeyboard()
+        while self.flag_running:
+            pythoncom.PumpWaitingMessages()#PumpMessages()
+
 
     def checkQuestionMarkEnd(self):
         while not self.flagEndCase:
@@ -120,6 +123,7 @@ class ia(Cmd, object):
     def __init__(self, benchfile, dutname):
         global pid,keyboard
         keyboard = PyKeyboard()
+        self.flag_running = True
         pid = os.getpid()
         self.tmCreated = datetime.datetime.now()
         self.tmTimeStampOfLastCmd = self.tmCreated
@@ -401,6 +405,7 @@ class ia(Cmd, object):
         response =fun(*real_vars)
         return response
 
+
     def RunCmd(self, cmd):
         try:
             #cmd='sh\t'
@@ -518,6 +523,7 @@ class ia(Cmd, object):
         from common import array2csvfile
         array2csvfile(self.record,csvfile)
     def do_Exit(self, name =None):
+        self.flag_running=False
         if not name :
             name = 'tc'
         self.save2file(name)
@@ -637,3 +643,12 @@ class ia(Cmd, object):
                     readline.set_completer(self.old_completer)
                 except ImportError:
                     pass
+
+    def do_bench(self, file_name):
+
+        self.bench_file = file_name
+
+
+
+
+

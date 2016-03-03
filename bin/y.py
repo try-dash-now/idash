@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-import sys, time, os
+import sys, time, os, traceback
 pardir =os.path.dirname(os.path.realpath(os.getcwd()))
 subfolder = ['lib', 'dut']
 for sub in subfolder:
