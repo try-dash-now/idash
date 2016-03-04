@@ -323,7 +323,7 @@ class ia(Cmd, object):
         global flag_tab_down
         if flag_tab_down:
             flag_tab_down=False
-            ignored =('', line,'')
+            ignored =('', line+'\t','')
             self.completedefault(*ignored)
 
 
