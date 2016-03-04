@@ -20,16 +20,21 @@ import re
 gDefaultTimeout = '2'
 pid =0
 keyboard =None
+flag_tab_down=False
+line_buffer=''
 def check_keyboard_tab_down(event):
     try:
+        global flag_tab_down
         if pid != os.getpid():
             return True
         if os.name =='nt':
             if chr(event.Ascii) == '\t':
                 #keyboard.tap_key('\r')
 
+                flag_tab_down=True
                 keyboard.tap_key('\n')
-                #print('tab down!')
+
+
     except Exception as e:
         pass
     return True
@@ -80,6 +85,7 @@ class ia(Cmd, object):
     def monitor_keyboard(self):
         self.keyboard = pyHook.HookManager()
         #print(self.keyboard.KeyDown)
+
         self.keyboard.KeyDown=check_keyboard_tab_down
         self.keyboard.HookKeyboard()
         while self.flag_running:
@@ -87,6 +93,8 @@ class ia(Cmd, object):
 
 
     def checkQuestionMarkEnd(self):
+        global flag_tab_down
+
         while not self.flagEndCase:
             if self.rl:
                 buf = self.rl.get_line_buffer()
@@ -251,13 +259,11 @@ class ia(Cmd, object):
         if stop!=None and len(str(stop))!=0 and self.sutname!='tc':
 
             out = self.sut[self.sutname].show()+'\n'+self.prompt+str(stop)+self.prompt
-            #print(self.InteractionOutput,end='')
         stop = False
         if self.flagEndCase:
             stop =True
         return stop
     def sut_complete(self, text):
-        #print('sut_complet', text)
         sutresponse=None
         if self.sutname!='tc':
 
@@ -269,27 +275,12 @@ class ia(Cmd, object):
             self.lenCompleteBuffer = len(text)
             try:
                 sutresponse = sut.find('%s.+'%text, 1)
-                #print('here is sut response', sutresponse)
-                #print('here is sut response end')
-                #lresp= sutresponse.split('\n')
-                #line = lresp[-1]
-
                 sutresponse=re.search('.*(%s.+).*$'%text,sutresponse).group(1)
                 self.lenCompleteBuffer = len(sutresponse)
 
-                #print(self.prompt)
-                #sutresponse = '\b'*self.lenCompleteBuffer+sutresponse
-                #print('2here is sut response', sutresponse)
-                #print('2here is sut response end')
-                #import readline
-                #print('####hello###1',readline.get_line_buffer())
-                #readline.insert_text(sutresponse)
-                #print('####hello###2',readline.get_line_buffer())
-                #print('sutresponse1', sutresponse)
                 sutresponse = sutresponse.strip()
                 sutresponse=sutresponse.split(' ')
 
-                #print('sutresponse2', sutresponse)
                 sutresponse=sutresponse[-1]+' '
             except Exception as e:
                 print(e)
@@ -321,19 +312,7 @@ class ia(Cmd, object):
         #print(ignored)
         #print('complete default')
         if self.sutname!='tc':
-            #print('ignored', ignored)
             response = self.sut_complete(ignored[1])
-            #print('response here:', response)
-            #lResp = ignored[1].split(' ')
-            #lenResp = len(lResp)
-            #response =
-            #response =' '.join(lResp[lenResp/2:-1])
-            #response+=' '+ lResp[-1]
-            #self.onecmd(ignored[1])#+'\t'
-            #i.cmdqueue=[]
-            #pass
-            #self.RunCmd(ignored[1]+'\t')
-
             return [response]#Cmd.completedefault(self ,ignored)
         else:
             #print('ignored', ignored)
@@ -341,10 +320,13 @@ class ia(Cmd, object):
 
 
     def precmd(self,line):
-        #print('line:',line)
-        #linetemp = line.strip()
-        #line='\t'
-        #print('')
+        global flag_tab_down
+        if flag_tab_down:
+            flag_tab_down=False
+            ignored =('', line,'')
+            self.completedefault(*ignored)
+
+
         temp =line.strip().lstrip()
 
         if self.sutname!='tc':
@@ -468,7 +450,10 @@ class ia(Cmd, object):
                     sut.write(cmd)
                     #sut.stepCheck('casename', self.cp, cmd, expectPat,str(timeout))
                     sutresponse = str(cmd).strip()[:-1]+' '
-                    self.rl.insert_text(sutresponse)
+                    if self.rl:
+                        self.rl.insert_text(sutresponse)
+                    else:
+                        print(sutresponse)
                     #self.cmdLineBuffer=sutresponse
                     #import  readline
                     #print('inert text to readline :',sutresponse)
@@ -523,7 +508,7 @@ class ia(Cmd, object):
         from common import array2csvfile
         array2csvfile(self.record,csvfile)
     def do_Exit(self, name =None):
-        self.flag_running=False
+        self.flagEndCase=False
         if not name :
             name = 'tc'
         self.save2file(name)
@@ -647,6 +632,8 @@ class ia(Cmd, object):
     def do_bench(self, file_name):
 
         self.bench_file = file_name
+    def __del__(self):
+        self.flagEndCase=False
 
 
 

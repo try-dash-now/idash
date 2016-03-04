@@ -41,5 +41,5 @@ if __name__ =='__main__':
             msg = traceback.format_exc()
             print(msg)
             i.save2file()
-
+    del i
     os._exit(0)
