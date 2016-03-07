@@ -21,6 +21,7 @@ import re
 
 gDefaultTimeout = '2'
 pid = 0
+tid = 0
 keyboard = None
 flag_tab_down = False
 line_buffer = ''
@@ -28,11 +29,10 @@ line_buffer = ''
 
 def check_keyboard_tab_down(event):
     try:
-        global flag_tab_down
-        if pid != os.getpid():
-            return True
-        if os.name == 'nt':
-            if chr(event.Ascii) == '\t':
+        global flag_tab_down,tid
+        if chr(event.Ascii) == '\t':
+            if os.name == 'nt' and pid == os.getpid() :#and threading.current_thread().ident==tid :
+
                 # keyboard.tap_key('\r')
 
                 flag_tab_down = True
@@ -144,7 +144,7 @@ class ia(Cmd, object):
         array2csvfile(record, self.dftCaseFile)
 
     def __init__(self, benchfile, dutname):
-        global pid, keyboard
+        global pid, keyboard,tid
         keyboard = PyKeyboard()
         self.flag_running = True
         pid = os.getpid()
@@ -205,7 +205,8 @@ class ia(Cmd, object):
 
         keyboard_monitor_thread = threading.Thread(target=self.monitor_keyboard)
         keyboard_monitor_thread.start()
-
+        tid =threading.current_thread().ident
+        print(tid)
     def CreateDoc4Sut(self, sutname=None):
         if not sutname:
             self.sutname = sutname
@@ -267,14 +268,17 @@ class ia(Cmd, object):
                     print('\t' + self.helpDoc[self.sutname][fun])
 
     def do_setsut(self, sutname='tc'):
+        output =''
         if sutname == '':
             sutname = 'tc'
         if self.sut.get(sutname) or sutname == 'tc' or sutname == '__case__':
             self.sutname = sutname
             self.prompt = '%s@%s::>' % (os.linesep, self.sutname)
-            return 'current SUT: %s' % (self.sutname)
+            output= 'current SUT: %s' % (self.sutname)
         else:
-            return 'sutsut(\'%s\') is not defined' % sutname
+            output ='sutsut(\'%s\') is not defined' % sutname
+        print(output)
+        return output
 
     def postcmd(self, stop, line):
         if stop != None and len(str(stop)) != 0 and self.sutname != 'tc':
@@ -328,7 +332,7 @@ class ia(Cmd, object):
                 resp.append(sutresp)
         return resp
 
-    def completedefault(self, *ignored):
+    def completedefaultx(self, *ignored):
         # print(ignored)
         # print('complete default')
         if self.sutname != 'tc':
