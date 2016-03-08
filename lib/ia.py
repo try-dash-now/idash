@@ -24,11 +24,11 @@ pid = 0
 keyboard = None
 flag_tab_down = False
 line_buffer = ''
-
+ia_instance =None
 
 def check_keyboard_tab_down(event):
     try:
-        global flag_tab_down, IA_INSTANCE
+        global flag_tab_down, ia_instance
         if pid != os.getpid():
             return True
         if os.name == 'nt':
@@ -38,6 +38,8 @@ def check_keyboard_tab_down(event):
                     #print('hit tab!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
                     #flag_tab_down = True
                     #keyboard.tap_key('\r')
+                    if ia_instance:
+                        ia_instance
                     #keyboard.tap_key('\n')
                     pass
                     #print('hit tab@@@')
@@ -97,7 +99,7 @@ class ia(Cmd, object):
 
     def complete_help(self, *args):
         print('aaaaaaaaaaaaaa')
-        return [['1', '2']]
+        return ['1', '2']
 
     def color(self, enable='disable'):
         if enable.lower().strip() == 'disable':
@@ -326,9 +328,12 @@ class ia(Cmd, object):
 
 
 
-    def complete(self, text, state):
+    def completexxxxx(self, text, state):
         response_of_complete = super(ia,self).complete(text,state)
-        #print(response_of_complete)
+
+        print(response_of_complete)
+        print('\n')
+        time.sleep(2)
         print(self.prompt)
         if  not response_of_complete:
             response_of_completenames = self.completenames(text)
@@ -341,11 +346,13 @@ class ia(Cmd, object):
                 for char in response_of_complete[len(text):]:
                     keyboard.tap_key(char)
                 keyboard.tap_key(' ')
+            time.sleep(2)
         else:
             print('\n')
             for opt in response_of_complete:
                 print('\t'+opt)
             print('\n')
+            time.sleep(2)
 
     def precmd(self, line):
         if self.sutname != 'tc':
