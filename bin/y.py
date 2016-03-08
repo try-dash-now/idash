@@ -6,6 +6,7 @@ for sub in subfolder:
     libpath = os.path.sep.join([pardir,sub])
     if libpath not in sys.path:
         sys.path.insert(0,libpath)
+
 if __name__ =='__main__':
     from ia import ia
     tmpout = sys.stdout

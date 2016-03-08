@@ -28,17 +28,16 @@ line_buffer = ''
 
 def check_keyboard_tab_down(event):
     try:
-        global flag_tab_down
+        global flag_tab_down, IA_INSTANCE
         if pid != os.getpid():
             return True
         if os.name == 'nt':
             if chr(event.Ascii) == '\t':
-                # keyboard.tap_key('\r')
-
                 flag_tab_down = True
-                keyboard.tap_key('\n')
-
-
+                try:
+                    keyboard.tap_key('\r')
+                except NotImplementedError:
+                    pass
     except Exception as e:
         pass
     return True
@@ -88,6 +87,7 @@ class ia(Cmd, object):
 
     def complete_help(self, *args):
         print('aaaaaaaaaaaaaa')
+        return ['1', '2']
 
     def color(self, enable='disable'):
         if enable.lower().strip() == 'disable':
@@ -139,9 +139,7 @@ class ia(Cmd, object):
         for sut in self.sut.keys():
             self.sut[sut].setErrorPatternCheck(self.fErrorPatternCheck)
 
-    def write2TcFile(self, record):
-        from common import array2csvfile
-        array2csvfile(record, self.dftCaseFile)
+
 
     def __init__(self, benchfile, dutname):
         global pid, keyboard
@@ -168,7 +166,7 @@ class ia(Cmd, object):
         self.tabend = 'disable'
         self.record = [['#var'], ['defaultTime', '30'], ['#setup'],
                        ['#SUT_Name', 'Command_or_Function', 'Expect', 'Max_Wait_Time', 'TimeStamp', 'Interval']]
-        self.write2TcFile(self.record)
+        self.save2file()
         # self.write2TcFile(self.record[0])
         self.intro = '''welcome to InterAction of DasH'''
         logpath = '../../log'
@@ -316,7 +314,7 @@ class ia(Cmd, object):
 
         return sutresponse
 
-    def completenames(self, text, *ignored):
+    def completenamesx(self, text, *ignored):
         # print('hello')
         resp = []
         if self.sutname == 'tc':
@@ -338,15 +336,27 @@ class ia(Cmd, object):
             # print('ignored', ignored)
             return Cmd.completedefault(self, ignored)
 
+
     def precmd(self, line):
         global flag_tab_down
-        if flag_tab_down:
+        response =None
+        if flag_tab_down and False:
             flag_tab_down = False
+            txt = line
             ignored = ('', line + '\t', '')
 
-            self.completedefault(*ignored)
-
+            response = self.completenames(txt, *ignored)
+            for opt in response:
+                print('\t'+opt)
+            if self.rl:
+                for c in self.complete(line,0):
+                    keyboard.tap_key(c)
         temp = line.strip().lstrip()
+
+
+        if response:
+            pass
+
 
         if self.sutname != 'tc':
             if line == ' ':
@@ -545,15 +555,12 @@ class ia(Cmd, object):
         releaseDUTs(self.sut, self.logger)
         self.flagEndCase = True
 
-    def complete(self, text, state):
+    def completex(self, text, state):
         """Return the next possible completion for 'text'.
 
         If a command has not been entered, then complete against command list.
         Otherwise try to call complete_<command> to get list of completions.
         """
-        # print('complete function hell')
-        # print(text)
-        # print(state)
         if state == 0:
             import readline
             origline = readline.get_line_buffer()  # ('show alar\t'#
@@ -574,20 +581,9 @@ class ia(Cmd, object):
                 compfunc = self.completenames
             self.completion_matches = compfunc(text, line, begidx, endidx)
         try:
-            # print(self.completion_matches)
-            # print(state)
-            # print(type(text))
-
-            # self.RunCmd(str(text)+'\t')
             return self.completion_matches[state]
 
         except Exception as e:  # IndexError :
-            # print(e)
-            # import traceback
-            # print(traceback.format_exc())
-            # print('hit here!!!')
-            # print('text: %s'%(str(text)))
-            # return  str(text)+'\t'
             return None
 
     def cmdloop(self, intro=None):

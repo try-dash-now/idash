@@ -559,7 +559,10 @@ call function(%s)
         tmp_idx_search=self.idxSearch
         while currentTime<endtime:
             buffer = self.streamOut[tmp_idx_search:]
-            match = re.search(pat ,buffer )
+            try:
+                match = re.search(pat ,buffer )
+            except RuntimeError as e :
+                match = None
 
             if match:
                 break
