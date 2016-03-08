@@ -21,7 +21,6 @@ import re
 
 gDefaultTimeout = '2'
 pid = 0
-tid = 0
 keyboard = None
 flag_tab_down = False
 line_buffer = ''
@@ -29,16 +28,22 @@ line_buffer = ''
 
 def check_keyboard_tab_down(event):
     try:
-        global flag_tab_down,tid
-        if chr(event.Ascii) == '\t':
-            if os.name == 'nt' and pid == os.getpid() :#and threading.current_thread().ident==tid :
+        global flag_tab_down, IA_INSTANCE
+        if pid != os.getpid():
+            return True
+        if os.name == 'nt':
 
-                # keyboard.tap_key('\r')
-
-                flag_tab_down = True
-                keyboard.tap_key('\n')
-
-
+            if chr(event.Ascii) == '\t':
+                try:
+                    #print('hit tab!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+                    #flag_tab_down = True
+                    #keyboard.tap_key('\r')
+                    #keyboard.tap_key('\n')
+                    pass
+                    #print('hit tab@@@')
+                except NotImplementedError:
+                    print('not implemented Error ')
+                    pass
     except Exception as e:
         pass
     return True
@@ -80,14 +85,19 @@ class ia(Cmd, object):
     output = None
 
     def complete_cmdx(self, text, line, start_index, end_index):
+        print('cmdx ', text, line, start_index, end_index)
         if text:
+            print([command for command in commands
+                    if command.startswith(text)])
             return [command for command in commands
                     if command.startswith(text)]
         else:
+            print(commands)
             return commands
 
     def complete_help(self, *args):
         print('aaaaaaaaaaaaaa')
+        return [['1', '2']]
 
     def color(self, enable='disable'):
         if enable.lower().strip() == 'disable':
@@ -108,49 +118,43 @@ class ia(Cmd, object):
             pythoncom.PumpWaitingMessages()  # PumpMessages()
 
     def checkQuestionMarkEnd(self):
+        print('check question mark')
         while not self.flagEndCase:
             if self.rl:
                 buf = self.rl.get_line_buffer()
-                # buf="aaaa?"
+                print('buffer is', buf)
                 if str(buf).endswith('?'):
                     if self.sutname != 'tc':
                         sut = self.sut[self.sutname]
                         sut.write(buf + '\b' * (len(buf)))
-                        # print("##################",self.rl.mode)
                         self.rl.mode.l_buffer.set_line(buf[:-1])
 
-                        # print('#############',self.rl.get_line_buffer())
-                    #                        self.rl.insert_text('\b')
-                    # VOID keybd_event(BYTE bVk, BYTE bScan, DWORD dwFlags, PTR dwExtraInfo);
-                    # user32.keybd_event(keycode,0,1,0) #is the code for KEYDOWN
-                    # user32.keybd_event(keycode,0,2,0) #is the code for KEYDOWN
-                    # time.sleep(0.5)
-                    # break
 
-    def emptyline(self):
-        return ''
+
 
     def do_setCheckLine(self, enable='enable'):
         if enable.strip().lower() == 'enable':
             self.fErrorPatternCheck = True
-
         else:
             self.fErrorPatternCheck = False
         for sut in self.sut.keys():
             self.sut[sut].setErrorPatternCheck(self.fErrorPatternCheck)
+        print('%s check error in line '%('enabled' if self.fErrorPatternCheck else 'disabled'))
 
-    def write2TcFile(self, record):
-        from common import array2csvfile
-        array2csvfile(record, self.dftCaseFile)
 
     def __init__(self, benchfile, dutname):
-        global pid, keyboard,tid
+        global pid, keyboard
         keyboard = PyKeyboard()
         self.flag_running = True
         pid = os.getpid()
         self.tmCreated = datetime.datetime.now()
         self.tmTimeStampOfLastCmd = self.tmCreated
-        Cmd.__init__(self, 'tab', sys.stdin, sys.stdout)
+        Cmd.__init__(self)#, 'tab', sys.stdin, sys.stdout)
+        try:
+            from readline import rl
+            self.rl = rl
+        except ImportError:
+            pass
 
         fullname = 'tc'
         removelist = '\-_.'
@@ -168,8 +172,8 @@ class ia(Cmd, object):
         self.tabend = 'disable'
         self.record = [['#var'], ['defaultTime', '30'], ['#setup'],
                        ['#SUT_Name', 'Command_or_Function', 'Expect', 'Max_Wait_Time', 'TimeStamp', 'Interval']]
-        self.write2TcFile(self.record)
-        # self.write2TcFile(self.record[0])
+        self.save2file()
+        # self.save2file(self.record[0])
         self.intro = '''welcome to InterAction of DasH'''
         logpath = '../../log'
         if not os.path.exists(logpath):
@@ -205,8 +209,7 @@ class ia(Cmd, object):
 
         keyboard_monitor_thread = threading.Thread(target=self.monitor_keyboard)
         keyboard_monitor_thread.start()
-        tid =threading.current_thread().ident
-        print(tid)
+
     def CreateDoc4Sut(self, sutname=None):
         if not sutname:
             self.sutname = sutname
@@ -320,38 +323,31 @@ class ia(Cmd, object):
 
         return sutresponse
 
-    def completenames(self, text, *ignored):
-        # print('hello')
-        resp = []
-        if self.sutname == 'tc':
-            dotext = 'do_' + text
-            resp = [a[3:] for a in self.get_names() if a.startswith(dotext)]
-        else:
-            sutresp = self.sut_complete(text)
-            if sutresp:
-                resp.append(sutresp)
-        return resp
 
-    def completedefaultx(self, *ignored):
-        # print(ignored)
-        # print('complete default')
-        if self.sutname != 'tc':
-            response = self.sut_complete(ignored[1])
-            return [response]  # Cmd.completedefault(self ,ignored)
+
+
+    def complete(self, text, state):
+        response_of_complete = super(ia,self).complete(text,state)
+        #print(response_of_complete)
+        print(self.prompt)
+        if  not response_of_complete:
+            response_of_completenames = self.completenames(text)
+            print(self.prompt+'\n')
+            for opt in response_of_completenames:
+                print('\t'+opt)
+            print('\n')
+            if len(response_of_completenames)==1:
+                #if response_of_complete and text.strip()!='':
+                for char in response_of_complete[len(text):]:
+                    keyboard.tap_key(char)
+                keyboard.tap_key(' ')
         else:
-            # print('ignored', ignored)
-            return Cmd.completedefault(self, ignored)
+            print('\n')
+            for opt in response_of_complete:
+                print('\t'+opt)
+            print('\n')
 
     def precmd(self, line):
-        global flag_tab_down
-        if flag_tab_down:
-            flag_tab_down = False
-            ignored = ('', line + '\t', '')
-
-            self.completedefault(*ignored)
-
-        temp = line.strip().lstrip()
-
         if self.sutname != 'tc':
             if line == ' ':
                 self.RunCmd(line)
@@ -515,7 +511,7 @@ class ia(Cmd, object):
 
             time.sleep(0.1)
 
-    def save2file(self, name=None):
+    def save2file(self, name=None, record=None):
         if not name:
             name = 'tc'
 
@@ -538,7 +534,10 @@ class ia(Cmd, object):
             os.mkdir(self.case_path)
         csvfile = '%s/%s.csv' % (self.case_path, self.tcName)
         from common import array2csvfile
-        array2csvfile(self.record, csvfile)
+        if not record:
+            record = self.record
+        array2csvfile(record, csvfile)
+        self.record=[]
 
     def do_Exit(self, name=None):
         self.flagEndCase = False
@@ -549,119 +548,8 @@ class ia(Cmd, object):
         releaseDUTs(self.sut, self.logger)
         self.flagEndCase = True
 
-    def complete(self, text, state):
-        """Return the next possible completion for 'text'.
 
-        If a command has not been entered, then complete against command list.
-        Otherwise try to call complete_<command> to get list of completions.
-        """
-        # print('complete function hell')
-        # print(text)
-        # print(state)
-        if state == 0:
-            import readline
-            origline = readline.get_line_buffer()  # ('show alar\t'#
-            line = origline.lstrip()
-            stripped = len(origline) - len(line)
-            begidx = readline.get_begidx() - stripped
-            endidx = readline.get_endidx() - stripped
-            if begidx > 0:
-                cmd, args, foo = self.parseline(line)
-                if cmd == '':
-                    compfunc = self.completedefault
-                else:
-                    try:
-                        compfunc = getattr(self, 'complete_' + cmd)
-                    except AttributeError:
-                        compfunc = self.completedefault
-            else:
-                compfunc = self.completenames
-            self.completion_matches = compfunc(text, line, begidx, endidx)
-        try:
-            # print(self.completion_matches)
-            # print(state)
-            # print(type(text))
 
-            # self.RunCmd(str(text)+'\t')
-            return self.completion_matches[state]
-
-        except Exception as e:  # IndexError :
-            # print(e)
-            # import traceback
-            # print(traceback.format_exc())
-            # print('hit here!!!')
-            # print('text: %s'%(str(text)))
-            # return  str(text)+'\t'
-            return None
-
-    def cmdloop(self, intro=None):
-        """Repeatedly issue a prompt, accept input, parse an initial prefix
-        off the received input, and dispatch to action methods, passing them
-        the remainder of the line as argument.
-
-        """
-
-        self.preloop()
-        if self.use_rawinput and self.completekey:
-            try:
-                import readline
-                self.readline = readline
-
-                self.old_completer = readline.get_completer()
-                readline.set_completer(self.complete)
-                readline.parse_and_bind(self.completekey + ": complete")
-                self.rl = readline.rl
-                if self.cmdLineBuffer != '':
-                    self.readline.insert_text(self.cmdLineBuffer)
-                    self.rl._update_prompt_pos(len(self.cmdLineBuffer))
-                    # rl.prompt_begin_pos =
-                    self.rl._update_line()
-                    # readline.parse_and_bind('?: completeQuestion')
-            except ImportError:
-                pass
-        try:
-            if intro is not None:
-                self.intro = intro
-            if self.intro:
-                self.stdout.write(str(self.intro) + "\n")
-            stop = None
-            while not stop:
-                if self.cmdqueue:
-                    line = self.cmdqueue.pop(0)
-                else:
-                    if self.use_rawinput:
-                        try:
-                            line = raw_input(self.prompt)  # +self.cmdLineBuffer
-
-                        except EOFError:
-                            line = 'EOF'
-                    else:
-                        self.stdout.write(self.prompt)
-                        self.stdout.flush()
-                        line = self.stdin.readline()
-                        if not len(line):
-                            line = 'EOF'
-                        else:
-                            line = line.rstrip('\r\n')
-                if len(self.cmdLineBuffer):
-                    self.rl.console.write(self.cmdLineBuffer)
-                    self.rl.console.flush()
-                    line = self.cmdLineBuffer + line
-                    self.readline.insert_text(self.cmdLineBuffer)
-
-                    self.cmdLineBuffer = ''
-                line = self.precmd(line)
-                stop = self.onecmd(line)
-                stop = self.postcmd(stop, line)
-            self.postloop()
-        finally:
-            if self.use_rawinput and self.completekey:
-
-                try:
-                    import readline
-                    readline.set_completer(self.old_completer)
-                except ImportError:
-                    pass
 
     def do_bench(self, file_name):
 

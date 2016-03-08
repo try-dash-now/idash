@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+# -*- coding: utf-8 -*-
 import sys, time, os, traceback
 pardir =os.path.dirname(os.path.realpath(os.getcwd()))
 subfolder = ['lib', 'dut']
@@ -6,6 +7,7 @@ for sub in subfolder:
     libpath = os.path.sep.join([pardir,sub])
     if libpath not in sys.path:
         sys.path.insert(0,libpath)
+
 if __name__ =='__main__':
     from ia import ia
     tmpout = sys.stdout
