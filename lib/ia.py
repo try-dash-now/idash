@@ -85,16 +85,18 @@ class ia(Cmd, object):
     bench_file = None  # the file name of bench file, if not given, it will be ./bench.csv
     case_path = None  # default is ../../test, it's to make the log file not part of this project
     output = None
-
+    def do_cmdx(self, arg):
+        print('arg:')
+        print(arg)
     def complete_cmdx(self, text, line, start_index, end_index):
-        print('cmdx ', text, line, start_index, end_index)
+        #print('cmdx ', text, line, start_index, end_index)
         if text:
-            print([command for command in commands
-                    if command.startswith(text)])
+            #print([command for command in commands
+                    #if command.startswith(text)])
             return [command for command in commands
                     if command.startswith(text)]
         else:
-            print(commands)
+            #print(commands)
             return commands
 
     def complete_help(self, *args):
