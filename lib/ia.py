@@ -20,6 +20,7 @@ import datetime
 import traceback
 from runner import *
 import re
+from reload import reload
 
 gDefaultTimeout = '2'
 pid = 0
@@ -87,6 +88,74 @@ class ia(Cmd, object):
     bench_file = None  # the file name of bench file, if not given, it will be ./bench.csv
     case_path = None  # default is ../../test, it's to make the log file not part of this project
     output = None
+    __args=None
+    __kwargs=None
+
+    def convert_args(self, *args, **kwargs):
+        self.__args = args
+        self.__kwargs = kwargs
+        return self.__args, self.__kwargs
+    def match_functions(self,function_name, sutname=None):
+        if not sutname:
+            sutname= self.sutname
+        members = inspect.getmembers(self.sut[sutname], inspect.ismethod)
+        match =[]
+        match_pair=[]
+        index =0
+        for k,v in members:
+
+            if k.lower().find(function_name.lower())!=-1:
+                match.append(index)
+                match_pair.append((k,v))
+            index+=1
+        if len(match)==1:
+            match_pair=[members[match[0]]]
+        elif len(match)>1:
+            for k in match:
+                if re.match("^%s$"%function_name,members[k][0]):
+                    match_pair=[members[k]]
+                    break
+                elif re.match("^%s$"%function_name,members[k][0],re.IGNORECASE):
+                    match_pair=[members[k]  ]
+        return  match_pair
+
+    def handle_command(self, command, sutname=None):
+
+        options = self.__parseline__(command)
+        if not sutname:
+            sutname = self.sutname
+        modulename = self.sut[sutname].__module__
+        import imp
+        module_info =imp.find_module(modulename )# imp.new_module(modulename)
+        module_dyn = imp.load_module(modulename ,*module_info)
+        #eval('import %s'%modulename)
+        #import modulename
+        for p in sys.path:
+            print(p)
+        reload(module_dyn)
+        len_option = len(options)
+        if len_option>0:
+            function_name = options[0]
+            candidate_function_pair = self.match_functions(function_name, sutname)
+            len_candidate_fun = len(candidate_function_pair)
+            if len_candidate_fun>1:
+                for k,v in candidate_function_pair:
+                    print(k+'\n')
+            elif len_candidate_fun==0:
+                print('no function match!!!')
+            else:
+                arg,kwargs=[],{}
+                if len_option>1:
+                    cmd = 'self.convert_args(%s)'%(', '.join(options[1:])       )
+                    eval(cmd, globals(),locals())
+                    arg, kwargs = self.__args, self.__kwargs
+                function_obj = candidate_function_pair[0][1]
+
+                function_obj(*arg, **kwargs)
+
+
+
+
 
     def help_set(self):
         print('''set variable in module ia:
@@ -284,7 +353,7 @@ class ia(Cmd, object):
                 match.append(index)
             index+=1
         if len(match)==1:
-            members[match[0]](*options[2:])
+            members[match[0]][1](*options[2:])
         elif len(match)>1:
             for k in match:
                 if re.match(function_name,members[k][0]):
@@ -367,6 +436,10 @@ class ia(Cmd, object):
             output ='sutsut(\'%s\') is not defined' % sutname
         print(output)
         return output
+    def default(self, line):
+        super(ia, self).default(line)
+        self.handle_command(line, self.sutname)
+
 
     def postcmd(self, stop, line):
         if stop != None and len(str(stop)) != 0 and self.sutname != 'tc':

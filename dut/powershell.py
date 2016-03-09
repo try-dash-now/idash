@@ -75,6 +75,8 @@ class powershell(dut):
 
 
     def send(self,cmd, Ctrl=False, noWait=False):
+        print('thiing changed!!!!!!!!!!!!!!!')
+        print('thiing 2 changed!!!!!!!!!!!!!!!')
         import os
         tmp =[]
         stdin = self.shellsession.stdin
