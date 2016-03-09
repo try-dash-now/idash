@@ -14,6 +14,7 @@ from cmd import Cmd
 import pyHook, sys, pythoncom
 from pykeyboard import PyKeyboard
 import sys, time
+import shlex
 import datetime
 import traceback
 from runner import *
@@ -85,9 +86,50 @@ class ia(Cmd, object):
     bench_file = None  # the file name of bench file, if not given, it will be ./bench.csv
     case_path = None  # default is ../../test, it's to make the log file not part of this project
     output = None
-    def do_cmdx(self, arg):
-        print('arg:')
-        print(arg)
+
+    def help_set(self):
+        print('''set variable in module ia:
+        set bench ''')
+    def complete_set(self, text, line, start_index,end_index):
+        option = ['bench\n',
+                  'bench <bench_file_name>\n',
+                  'logpath',
+                 'logpath <path_of_log>\n',
+                  'sut',
+                 'sut <sut_name>\n'
+                  ]
+        return  self.__complete_common(option, text,line,start_index,end_index)
+
+    def do_show(self, line):
+        cmd = self.__parseline__(line)
+        if len(cmd)==0:
+            for var in dir(self):
+                if not var.startswith('_'):
+                    print(var)
+            if self.sutname in ['tc', None, 'case', '__case__']:
+                pass
+            else:
+                print('-%s below-'%self.sutname)
+                for var in dir(self.sut[self.sutname]):
+                    if not var.startswith('_'):
+                        print('\t'+var)
+            return
+        var = cmd[0]
+        print(var.lower(), self.__getattribute__(var.lower()))
+    def do_set(self, line):
+
+        cmd = self.__parseline__(line)
+        var, value = cmd[:2]
+        self.__setattr__(var.lower(), value.lower())
+    def __complete_common(self, commands, text, line, start_index, end_index):
+        if text:
+            #print([command for command in commands
+                    #if command.startswith(text)])
+            return [command for command in commands
+                    if command.startswith(text)]
+        else:
+            #print(commands)
+            return commands
     def complete_cmdx(self, text, line, start_index, end_index):
         #print('cmdx ', text, line, start_index, end_index)
         if text:
@@ -329,7 +371,7 @@ class ia(Cmd, object):
 
 
 
-    def precmd(self, line):
+    def precmdx(self, line):
         temp =line.strip()
         if self.sutname != 'tc':
             if line == ' ':
@@ -342,7 +384,7 @@ class ia(Cmd, object):
 
         return line
 
-    def default(self, line):
+    def xdefault(self, line):
         try:
             if line[-1] == '\t':
                 print("@" * 80)
@@ -355,6 +397,13 @@ class ia(Cmd, object):
         except Exception as e:
             msg = traceback.format_exc()
             print(msg)
+    def __parseline__(self,line):
+
+        lex = shlex.shlex(line)
+        lex.quotes = '"'
+        lex.whitespace_split = True
+        cmd = list(lex)
+        return cmd
 
     def IARunCmd(self, data):
         import shlex
@@ -474,7 +523,8 @@ class ia(Cmd, object):
                         newRecord = [self.sutname, cmd, expectPat, strTimeout, now.isoformat('_'),
                                      now - self.tmTimeStampOfLastCmd]
                         self.record.append(newRecord)
-                        self.write2TcFile([newRecord])
+                        self.save2file(record = [newRecord])
+
                         self.tmTimeStampOfLastCmd = now
                     else:
                         self.repeatCounter += 1
@@ -522,7 +572,7 @@ class ia(Cmd, object):
         array2csvfile(record, csvfile)
         self.record=[]
 
-    def do_Exit(self, name=None):
+    def do_eof(self, name=None):
         self.flagEndCase = False
         if not name:
             name = 'tc'

@@ -337,6 +337,7 @@ def releaseDUTs(duts, logger):
             dut.SessionAlive=False
             if dut.logfile:
                 dut.logfile.flush()
+                dut.logfile.close()
 errorlogger = None
 def concurrent(startIndex, logpath, cmdConcurrent, report, suiteLogger, shareData):
     import Queue,threading
