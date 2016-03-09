@@ -11,6 +11,7 @@ for sub in subfolder:
         sys.path.insert(0, libpath)
 import threading
 from cmd import Cmd
+import inspect
 import pyHook, sys, pythoncom
 from pykeyboard import PyKeyboard
 import sys, time
@@ -99,12 +100,26 @@ class ia(Cmd, object):
                  'sut <sut_name>\n'
                   ]
         return  self.__complete_common(option, text,line,start_index,end_index)
+    def do_help(self, line):
+
+        options = self.__parseline__(line)
+        number_of_options = len(options)
+        if number_of_options==0:
+            response =super(ia, self).do_help(line)
+        elif number_of_options==1:
+            if options[0] in dir(self) and self.sutname in ['tc', '__case__', None]:
+                function =self.__getattribute__(options[0])
+                function(' '.join(options[1:]))
+
+
+
+
 
     def do_show(self, line):
         cmd = self.__parseline__(line)
         if len(cmd)==0:
             for var in dir(self):
-                if not var.startswith('_'):
+                if not var.startswith('_') :
                     print(var)
             if self.sutname in ['tc', None, 'case', '__case__']:
                 pass
@@ -114,6 +129,7 @@ class ia(Cmd, object):
                     if not var.startswith('_'):
                         print('\t'+var)
             return
+
         var = cmd[0]
         print(var.lower(), self.__getattribute__(var.lower()))
     def do_set(self, line):
@@ -255,7 +271,30 @@ class ia(Cmd, object):
 
         keyboard_monitor_thread = threading.Thread(target=self.monitor_keyboard)
         keyboard_monitor_thread.start()
+    def do_r(self,line):
+        options = self.__parseline__(line)
 
+        sutname ,function_name = options[:2]
+        members = inspect.getmembers(self.sut[sutname], inspect.ismethod)
+        match =[]
+        index =0
+        for k,v in members:
+
+            if k.lower().find(function_name.lower())!=-1:
+                match.append(index)
+            index+=1
+        if len(match)==1:
+            members[match[0]](*options[2:])
+        elif len(match)>1:
+            for k in match:
+                if re.match(function_name,members[k][0]):
+                    members[k][1](*options[2:])
+                    break
+                elif re.match(function_name,members[k][0],re.IGNORECASE):
+                    members[k][1](*options[2:])
+                    break
+                else :
+                    print(members[k][0]+"\n")
     def CreateDoc4Sut(self, sutname=None):
         if not sutname:
             self.sutname = sutname
@@ -268,7 +307,7 @@ class ia(Cmd, object):
             if m.startswith('__'):
                 pass
             else:
-                import inspect
+
                 try:
                     try:
                         fundef = inspect.getsource(
@@ -297,12 +336,12 @@ class ia(Cmd, object):
                     listoffun = fundef.split('\n')
                     ret = eval('self.sut[self.sutname].%s.__doc__' % m)
                     if ret:
-                        fundefstr = fundefstr + '\n\t' + '\n\t'.join(ret.split('\n'))
+                        fundefstr = fundefstr + '\n\t'.join(ret.split('\n'))
                     self.helpDoc[self.sutname].update({m: fundefstr})
                 except Exception as e:
                     pass
 
-    def doc(self, functionName=None):
+    def do_man(self, functionName=None):
         print('SUT:%s\n' % self.sutname)
         if self.sutname not in ['tc', '__case__']:
             self.CreateDoc4Sut(self.sutname)
