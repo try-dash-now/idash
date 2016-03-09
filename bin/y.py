@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 import sys, time, os, traceback
 pardir =os.path.dirname(os.path.realpath(os.getcwd()))
-subfolder = ['lib', 'dut']
+subfolder = ['lib', 'dut', '../../tr249/dlv']
 for sub in subfolder:
     libpath = os.path.sep.join([pardir,sub])
+    libpath = os.path.abspath(libpath)
     if libpath not in sys.path:
         sys.path.insert(0,libpath)
 

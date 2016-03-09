@@ -126,7 +126,7 @@ class ia(Cmd, object):
         while not self.flagEndCase:
             if self.rl:
                 buf = self.rl.get_line_buffer()
-                print('buffer is', buf)
+                #print('buffer is', buf)
                 if str(buf).endswith('?'):
                     if self.sutname != 'tc':
                         sut = self.sut[self.sutname]
@@ -329,34 +329,8 @@ class ia(Cmd, object):
 
 
 
-
-    def completexxxxx(self, text, state):
-        response_of_complete = super(ia,self).complete(text,state)
-
-        print(response_of_complete)
-        print('\n')
-        time.sleep(2)
-        print(self.prompt)
-        if  not response_of_complete:
-            response_of_completenames = self.completenames(text)
-            print(self.prompt+'\n')
-            for opt in response_of_completenames:
-                print('\t'+opt)
-            print('\n')
-            if len(response_of_completenames)==1:
-                #if response_of_complete and text.strip()!='':
-                for char in response_of_complete[len(text):]:
-                    keyboard.tap_key(char)
-                keyboard.tap_key(' ')
-            time.sleep(2)
-        else:
-            print('\n')
-            for opt in response_of_complete:
-                print('\t'+opt)
-            print('\n')
-            time.sleep(2)
-
     def precmd(self, line):
+        temp =line.strip()
         if self.sutname != 'tc':
             if line == ' ':
                 self.RunCmd(line)
@@ -365,7 +339,7 @@ class ia(Cmd, object):
             elif temp.lower() == 'help' or temp == '?':
                 self.RunCmd(line)
                 line = ''
-        # print(self.InteractionOutput,end='')
+
         return line
 
     def default(self, line):

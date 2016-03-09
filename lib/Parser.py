@@ -93,7 +93,7 @@ class caseParser(object):
                 msg ='\n'*8+DumpStack(e)+'\n'+msg
                 print(msg)
                 import os
-                with open(os.getcwd()+'/error.txt','a+') as errorfile:
+                with open(os.getcwd()+'/../../log/error.txt','a+') as errorfile:
                     errorfile.write(msg)
                 raise RuntimeError(msg)
             return inner
