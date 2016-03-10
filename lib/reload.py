@@ -24,7 +24,7 @@ Does NOT:
 
 import inspect, os, sys, __builtin__, gc, traceback
 #from debug import printExc
-
+debug =True
 def reloadAll(prefix=None, debug=False):
     """Automatically reload everything whose __file__ begins with prefix.
     - Skips reload if the file has not been updated (if .pyc is newer than .py)

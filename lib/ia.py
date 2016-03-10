@@ -21,7 +21,7 @@ import traceback
 from runner import *
 import re
 from reload import reload
-
+import imp
 gDefaultTimeout = '2'
 pid = 0
 keyboard = None
@@ -98,7 +98,8 @@ class ia(Cmd, object):
     def match_functions(self,function_name, sutname=None):
         if not sutname:
             sutname= self.sutname
-        members = inspect.getmembers(self.sut[sutname], inspect.ismethod)
+        class_obj =self.do_reload(sutname)
+        members = inspect.getmembers(class_obj, inspect.ismethod)
         match =[]
         match_pair=[]
         index =0
@@ -107,6 +108,9 @@ class ia(Cmd, object):
             if k.lower().find(function_name.lower())!=-1:
                 match.append(index)
                 match_pair.append((k,v))
+                import types
+                v =types.MethodType(v, self.sut[self.sutname])
+
             index+=1
         if len(match)==1:
             match_pair=[members[match[0]]]
@@ -126,6 +130,7 @@ class ia(Cmd, object):
             sutname = self.sutname
 
         len_option = len(options)
+
         if len_option>0:
             function_name = options[0]
             candidate_function_pair = self.match_functions(function_name, sutname)
@@ -138,16 +143,12 @@ class ia(Cmd, object):
             else:
                 arg,kwargs=[],{}
                 if len_option>1:
-                    cmd = 'self.convert_args(%s)'%(', '.join(options[1:])       )
+                    cmd = 'self.convert_args(self.sut[sutname], %s)'%(', '.join(options[1:]) )
                     eval(cmd, globals(),locals())
                     arg, kwargs = self.__args, self.__kwargs
-                function_obj = candidate_function_pair[0][1]
+                function_name, function_to_be_called = candidate_function_pair[0]
 
-                function_obj(*arg, **kwargs)
-
-
-
-
+                self.do_reload(sutname).__dict__[function_name](*arg, **kwargs)
 
     def help_set(self):
         print('''set variable in module ia:
@@ -432,7 +433,6 @@ class ia(Cmd, object):
         super(ia, self).default(line)
         self.handle_command(line, self.sutname)
 
-
     def postcmd(self, stop, line):
         if stop != None and len(str(stop)) != 0 and self.sutname != 'tc':
             out = self.sut[self.sutname].show() + '\n' + self.prompt + str(stop) + self.prompt
@@ -488,19 +488,7 @@ class ia(Cmd, object):
 
         return line
 
-    def xdefault(self, line):
-        try:
-            if line[-1] == '\t':
-                print("@" * 80)
-            if self.sutname != 'tc':
-                if self.tabend != 'disable':
-                    line += '\t'
 
-                self.RunCmd(line)
-
-        except Exception as e:
-            msg = traceback.format_exc()
-            print(msg)
     def __parseline__(self,line):
 
         lex = shlex.shlex(line)
@@ -696,14 +684,11 @@ class ia(Cmd, object):
         if not sutname:
             sutname = self.sutname
         modulename = self.sut[sutname].__module__
-        import imp
+
         module_info =imp.find_module(modulename )# imp.new_module(modulename)
         module_dyn = imp.load_module(modulename ,*module_info)
-        #eval('import %s'%modulename)
-        #import modulename
-        for p in sys.path:
-            print(p)
         reload(module_dyn)
+        return module_dyn.__dict__[self.sut[sutname].__class__.__name__]
 
     def __del__(self):
         self.flagEndCase = False

@@ -18,9 +18,7 @@ class powershell(dut):
         a  = ['C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\powershell.exe',
                  '/c',
                  'pwd']
-        #self.fw= open(self.logfile.name,'wb')
-        #self.fr= open(self.logfile.name, 'r')
-        #mystdin = open(self.logfile.name+'.in','wb')
+
         self.shellsession = subprocess.Popen(args = exe_cmd ,shell =True, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
         import threading
         self.lockStreamOut =threading.Lock()
@@ -74,13 +72,13 @@ class powershell(dut):
         return result
 
 
+
+
     def send(self,cmd, Ctrl=False, noWait=False):
-        print('thiing changed!!!!!!!!!!!!!!!')
-        print('thiing 2 changed!!!!!!!!!!!!!!!')
         import os
         tmp =[]
         stdin = self.shellsession.stdin
-
+        print('3333dddddddddddddd')
         if Ctrl:
             ascii = ord(cmd[0]) & 0x1f
             ch = chr(ascii)
