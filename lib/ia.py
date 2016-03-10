@@ -107,9 +107,10 @@ class ia(Cmd, object):
 
             if k.lower().find(function_name.lower())!=-1:
                 match.append(index)
-                match_pair.append((k,v))
-                import types
-                v =types.MethodType(v, self.sut[self.sutname])
+                func =class_obj.__dict__[k]
+
+                match_pair.append((k,func))
+
 
             index+=1
         if len(match)==1:
@@ -147,7 +148,7 @@ class ia(Cmd, object):
                     eval(cmd, globals(),locals())
                     arg, kwargs = self.__args, self.__kwargs
                 function_name, function_to_be_called = candidate_function_pair[0]
-
+                #function_to_be_called(*arg, **kwargs)
                 self.do_reload(sutname).__dict__[function_name](*arg, **kwargs)
 
     def help_set(self):
