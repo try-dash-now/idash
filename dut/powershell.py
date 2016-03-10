@@ -78,7 +78,7 @@ class powershell(dut):
         import os
         tmp =[]
         stdin = self.shellsession.stdin
-        print('3333dddddddddddddd')
+        print('dddd')
         if Ctrl:
             ascii = ord(cmd[0]) & 0x1f
             ch = chr(ascii)
