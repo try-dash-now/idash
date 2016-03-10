@@ -124,15 +124,7 @@ class ia(Cmd, object):
         options = self.__parseline__(command)
         if not sutname:
             sutname = self.sutname
-        modulename = self.sut[sutname].__module__
-        import imp
-        module_info =imp.find_module(modulename )# imp.new_module(modulename)
-        module_dyn = imp.load_module(modulename ,*module_info)
-        #eval('import %s'%modulename)
-        #import modulename
-        for p in sys.path:
-            print(p)
-        reload(module_dyn)
+
         len_option = len(options)
         if len_option>0:
             function_name = options[0]
@@ -699,6 +691,19 @@ class ia(Cmd, object):
     def do_bench(self, file_name):
 
         self.bench_file = file_name
+
+    def do_reload(self,sutname=None):
+        if not sutname:
+            sutname = self.sutname
+        modulename = self.sut[sutname].__module__
+        import imp
+        module_info =imp.find_module(modulename )# imp.new_module(modulename)
+        module_dyn = imp.load_module(modulename ,*module_info)
+        #eval('import %s'%modulename)
+        #import modulename
+        for p in sys.path:
+            print(p)
+        reload(module_dyn)
 
     def __del__(self):
         self.flagEndCase = False
