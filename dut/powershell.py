@@ -43,10 +43,17 @@ class powershell(dut):
                     self.timestampCmd = time.time()
                 if self.shellsession:
                     out = self.shellsession.stdout.readline()
+
                     if len(out):
                         self.streamOut+=out
-                if self.logfile and len(out)!=0:
+                    err = self.shellsession.stderr.readline()
+                    if len(err):
+                        self.streamOut+=err
+                if self.logfile and len(out)!=0 :
                     self.logfile.write(out)
+                    self.logfile.flush()
+                if self.logfile and len(err)!=0:
+                    self.logfile.write(err)
                     self.logfile.flush()
                 counter = 0
             except Exception as e:

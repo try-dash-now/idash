@@ -213,6 +213,7 @@ def run(casename,duts, seqs ,mode, logger, sharedata):
                     print(stepinfo)
 
                     session.stepCheck(casename, lineno, cmd, expect, due)
+                    session.show()
                     stepindex+=1
 
 
