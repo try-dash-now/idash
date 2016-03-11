@@ -41,10 +41,10 @@ if __name__ == "__main__":
 
         if not os.path.exists(defaultlogdir):
             os.mkdir(defaultlogdir)
-        #defaultlogdir+='/ut_runner'
-        casename = sys.argv[1]
-        casefolder = createLogDir(casename,defaultlogdir)
-        logger = createLogger(casename, casefolder)
+        defaultlogdir=sys.argv[-1]
+        basename_casename = os.path.basename(sys.argv[1])
+        casefolder = createLogDir(basename_casename,defaultlogdir)
+        logger = createLogger(basename_casename, casefolder)
 
 
         from common import bench2dict
@@ -54,18 +54,18 @@ if __name__ == "__main__":
 
         from Parser import  caseParser
         mode = sys.argv[3]
-        cs = caseParser(casename, mode, casefolder)
-        casefile = casename
+        case_file_name =os.path.abspath(sys.argv[1])
+        cs = caseParser(case_file_name, mode, casefolder)
+        casefile = case_file_name
         sdut, lvar, lsetup, lrun, ltear =cs.load(casefile, sys.argv)
         ldut = list(sdut)
-
         errormessage =[]
         sharedata ={}
         #duts= initDUT(errormessage,bench,ldut,logger, casefolder)#['lnx1', 'lnx2']
         duts= initDUT(errormessage,bench, ldut,logger, casefolder, sharedata)
         seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
 
-        caseFail, CaseErrorMessage= case_runner(casename,duts,seq, mode, logger,sharedata)
+        caseFail, CaseErrorMessage= case_runner(case_file_name,duts,seq, mode, logger,sharedata)
 
         from runner import releaseDUTs
         releaseDUTs(duts, logger)
@@ -75,11 +75,13 @@ if __name__ == "__main__":
             print(CaseErrorMessage)
             raise Exception(CaseErrorMessage)
         else:
+            print('log: "@%s"'%os.path.abspath(casefolder))
             print ("\r\n---------------------------------- CASE PASS ----------------------------------")
             os._exit(0)
     except Exception as e:
         import traceback
         print(traceback.format_exc())
+        print('log: <@%s>'%os.path.abspath(casefolder))
         print ("\r\n---------------------------------- CASE FAIL ----------------------------------")
         os._exit(1)
         #exit(1)

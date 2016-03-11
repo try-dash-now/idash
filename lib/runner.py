@@ -34,7 +34,8 @@ def logAction(fun):
             kwargstring = pp.pformat(kwargs)
             #for k,v in kwargs:
             #    kwargstring += '\n\t\t%s: %s'%(str(k),str(v))
-            print('!!!ERROR!!!:'+pprint.pformat(traceback.format_exc()))
+            #print('!!!ERROR!!!:\n')
+            #print(traceback.format_exc())
             msg ='*logAction dump:\n\tFunction Name: \t\t%s\n\tArguments: \t\t%s\n\tKeyword Arguments: \t\t%s'%(fun.__name__, argstring, kwargstring)
             from common import DumpStack
             msg =msg +'\n-------------------------------------------------------------------------------'+DumpStack(e)
@@ -52,7 +53,7 @@ def createLogger(name, logpath='./'):
     if not os.path.exists(logpath):
         os.mkdir(logpath)
     import logging
-    logfile = logpath+"/%s.log"%(name)
+    logfile = os.path.abspath(logpath)+"/%s.log"%(name)
     logger = logging.Logger(name,logging.DEBUG)
     hdrlog = logging.FileHandler(logfile)
     hdrlog .setFormatter(logging.Formatter('%(asctime)s -%(levelname)s:    %(message)s'))

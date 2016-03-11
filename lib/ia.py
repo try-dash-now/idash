@@ -90,7 +90,7 @@ class ia(Cmd, object):
     output = None
     __args=None
     __kwargs=None
-
+    script_file_name =None
     def convert_args(self, *args, **kwargs):
         self.__args = args
         self.__kwargs = kwargs
@@ -154,6 +154,7 @@ class ia(Cmd, object):
                 for o in options[1:]:
                     record.append(o)
                 script_line = '\t%s.%s(%s)'%(sutname, function_name, ', '.join(options[1:]))
+                self.__add_new_command__(sutname,function_name,', '.join(options[1:]) , arg, kwargs)
 
 
 
@@ -287,6 +288,29 @@ class ia(Cmd, object):
             self.rl = rl
         except ImportError:
             pass
+#script file
+
+        name = 'tc'
+
+        fullname = name[:60]
+        removelist = '\-_.'
+        pat = r'[^\w' + removelist + ']'
+        name = re.sub(pat, '', fullname)
+        tm = ''
+        if name == 'tc':
+            tm = '-' + self.tmCreated.isoformat('_')
+
+        tm = re.sub(pat, '', tm)
+        fullname = name + tm
+        self.tcName = fullname
+        if self.case_path:
+            pass
+        else:
+            self.case_path = '../../test'
+        if not os.path.exists(self.case_path):
+            os.mkdir(self.case_path)
+        self.script_file_name = '%s/%s.csv' % (self.case_path, self.tcName)
+        ###########
 
         fullname = 'tc'
         removelist = '\-_.'
@@ -299,19 +323,30 @@ class ia(Cmd, object):
         tm = re.sub(pat, '', tm)
         self.dftCaseFile = name + tm + '.csv'
 
+
         self.tcName = 'tc'
         self.sutname = 'tc'
         self.tabend = 'disable'
-        self.record = [['#var'], ['defaultTime', '30'], ['#setup'],
-                       ['#SUT_Name', 'Command_or_Function', 'Expect', 'Max_Wait_Time', 'TimeStamp', 'Interval']]
-        self.save2file()
+        self.record = [['#var'],
+                       ['defaultTime', '30'],
+                       ['#setup'],
+                       ['#SUT_Name', 'Command_or_Function', 'Expect', 'Max_Wait_Time', 'TimeStamp', 'Interval']
+                       ]
+        for record in self.record:
+            self.save2file(None,[record])
         # self.save2file(self.record[0])
         self.intro = '''welcome to InterAction of DasH'''
         logpath = '../../log'
+
+
         if not os.path.exists(logpath):
             os.mkdir(logpath)
         logpath = createLogDir('ia', logpath)
         self.logger = createLogger('ia', logpath)
+
+
+
+
         # benchfile = './bench.csv'
         from common import bench2dict
         if os.path.exists(benchfile):
@@ -643,52 +678,40 @@ class ia(Cmd, object):
                     pass
 
             time.sleep(0.1)
-    def __add_new_command__(self, sutname, function_name, arg=None, kwarg=None):
+    def __add_new_command__(self, sutname, function_name,arg_string, arg=None, kwarg=None):
         if not arg:
             arg=[]
         if not kwarg:
             kwarg={}
-        self.record
-        self.script
+        now = datetime.datetime.now()
+        strTimeout = '${defaultTime}'
+        new_record =  [sutname, '%s(%s)'%(function_name, arg_string), '.*', strTimeout, now.isoformat('_'),
+                                     now - self.tmTimeStampOfLastCmd]
+        self.tmTimeStampOfLastCmd = now
+        self.record.append(new_record)
+        self.save2file(None, [new_record])
+
     def save2file(self, name=None, record=None):
-        if not name:
-            name = 'tc'
-
-        fullname = name[:60]
-        removelist = '\-_.'
-        pat = r'[^\w' + removelist + ']'
-        name = re.sub(pat, '', fullname)
-        tm = ''
-        if name == 'tc':
-            tm = '-' + self.tmCreated.isoformat('_')
-
-        tm = re.sub(pat, '', tm)
-        fullname = name + tm
-        self.tcName = fullname
-        if self.case_path:
-            pass
-        else:
-            self.case_path = '../../test'
-        if not os.path.exists(self.case_path):
-            os.mkdir(self.case_path)
-        csvfile = '%s/%s.csv' % (self.case_path, self.tcName)
+        csvfile= self.script_file_name
         from common import array2csvfile
         if not record:
-            record = self.record
+            record = self.record[-1]
         array2csvfile(record, csvfile)
-        self.record=[]
 
     def do_eof(self, name=None):
         self.flagEndCase = False
-        if not name:
-            name = 'tc'
-        self.save2file(name)
+        if name:
+            fullname = name[:60]
+            removelist = '\-_.'
+            pat = r'[^\w' + removelist + ']'
+            name = re.sub(pat, '', fullname)
+            new_file_name = os.path.dirname(self.script_file_name)+'/'+name
+            os.rename(self.script_file_name,new_file_name )
+            self.script_file_name= new_file_name
+        print('saved to file %s '%(os.path.abspath(self.script_file_name)))
         from runner import releaseDUTs
         releaseDUTs(self.sut, self.logger)
         self.flagEndCase = True
-
-
-
 
     def do_bench(self, file_name):
 

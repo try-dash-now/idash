@@ -19,7 +19,7 @@ class powershell(dut):
                  '/c',
                  'pwd']
 
-        self.shellsession = subprocess.Popen(args = exe_cmd ,shell =True, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+        self.shellsession = subprocess.Popen(args = exe_cmd ,shell =True, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
         import threading
         self.lockStreamOut =threading.Lock()
         self.streamOut=''
@@ -78,7 +78,6 @@ class powershell(dut):
         import os
         tmp =[]
         stdin = self.shellsession.stdin
-        print('3333dddddddddddddd')
         if Ctrl:
             ascii = ord(cmd[0]) & 0x1f
             ch = chr(ascii)
