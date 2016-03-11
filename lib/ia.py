@@ -150,6 +150,13 @@ class ia(Cmd, object):
                 function_name, function_to_be_called = candidate_function_pair[0]
                 #function_to_be_called(*arg, **kwargs)
                 self.do_reload(sutname).__dict__[function_name](*arg, **kwargs)
+                record = [sutname, function_name]
+                for o in options[1:]:
+                    record.append(o)
+                script_line = '\t%s.%s(%s)'%(sutname, function_name, ', '.join(options[1:]))
+
+
+
 
     def help_set(self):
         print('''set variable in module ia:
@@ -636,7 +643,13 @@ class ia(Cmd, object):
                     pass
 
             time.sleep(0.1)
-
+    def __add_new_command__(self, sutname, function_name, arg=None, kwarg=None):
+        if not arg:
+            arg=[]
+        if not kwarg:
+            kwarg={}
+        self.record
+        self.script
     def save2file(self, name=None, record=None):
         if not name:
             name = 'tc'
