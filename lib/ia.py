@@ -91,6 +91,7 @@ class ia(Cmd, object):
     __args=None
     __kwargs=None
     script_file_name =None
+
     def convert_args(self, *args, **kwargs):
         self.__args = args
         self.__kwargs = kwargs
@@ -107,7 +108,11 @@ class ia(Cmd, object):
 
             if k.lower().find(function_name.lower())!=-1:
                 match.append(index)
-                func =class_obj.__dict__[k]
+                try:
+                    func =class_obj.__dict__[k]
+                except KeyError:
+                    #k is a member function of parent class
+                    func = v
 
                 match_pair.append((k,func))
 
@@ -149,7 +154,14 @@ class ia(Cmd, object):
                     arg, kwargs = self.__args, self.__kwargs
                 function_name, function_to_be_called = candidate_function_pair[0]
                 #function_to_be_called(*arg, **kwargs)
-                self.do_reload(sutname).__dict__[function_name](*arg, **kwargs)
+                try:
+                    self.do_reload(sutname).__dict__[function_name](*arg, **kwargs)
+                except KeyError:
+                    cmd = 'self.convert_args(%s)'%(', '.join(options[1:]) )
+                    eval(cmd, globals(),locals())
+                    arg, kwargs = self.__args, self.__kwargs
+                    getattr(self.sut[sutname],function_name)(*arg, **kwargs)
+
                 record = [sutname, function_name]
                 for o in options[1:]:
                     record.append(o)
@@ -691,6 +703,10 @@ class ia(Cmd, object):
             removelist = '\-_.'
             pat = r'[^\w' + removelist + ']'
             name = re.sub(pat, '', fullname)
+            if name.endswith('.csv') or name.endswith('.CSV'):
+                pass
+            else:
+                name+='.csv'
             new_file_name = os.path.dirname(self.script_file_name)+'/'+name
             os.rename(self.script_file_name,new_file_name )
             self.script_file_name= new_file_name
