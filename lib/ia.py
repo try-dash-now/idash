@@ -476,10 +476,12 @@ class ia(Cmd, object):
         super(ia, self).default(line)
         self.handle_command(line, self.sutname)
 
+
     def postcmd(self, stop, line):
         if stop != None and len(str(stop)) != 0 and self.sutname != 'tc':
             out = self.sut[self.sutname].show() + '\n' + self.prompt + str(stop) + self.prompt
         stop = False
+        self.emptyline()
         if self.flagEndCase:
             stop = True
         return stop
@@ -515,22 +517,6 @@ class ia(Cmd, object):
         # print('3here is sut response end')
 
         return sutresponse
-
-
-
-    def precmdx(self, line):
-        temp =line.strip()
-        if self.sutname != 'tc':
-            if line == ' ':
-                self.RunCmd(line)
-            elif temp == '':
-                self.RunCmd(line)
-            elif temp.lower() == 'help' or temp == '?':
-                self.RunCmd(line)
-                line = ''
-
-        return line
-
 
     def __parseline__(self,line):
 
@@ -730,3 +716,26 @@ class ia(Cmd, object):
 
     def __del__(self):
         self.flagEndCase = False
+    def do_path(self,path):
+        abs_path = os.path.abspath(path)
+        if os.path.exists(abs_path) and path not in sys.path and abs_path not in sys.path:
+            sys.path.insert(0, abs_path)
+            print('add abs path(%s) to sys.path, original is %s'%(abs_path, path))
+        elif path in sys.path or abs_path in sys.path:
+            print('%s or %s is already in sys.path \n%s'%(abs_path, path, '\n'.join(sys.path)))
+
+        else:
+            print('path(%s) is not existed! please double check it'%(path))
+    def help_path(self):
+        print ( 'add a new path')
+
+    def emptyline(self):
+        """Called when an empty line is entered in response to the prompt.
+
+        If this method is not overridden, it repeats the last nonempty
+        command entered.
+
+        """
+        if self.lastcmd:
+            self.lastcmd = ""
+            return self.onecmd('\n')

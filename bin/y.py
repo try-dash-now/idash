@@ -39,6 +39,7 @@ if __name__ =='__main__':
         try:
             #i.complete('show alar\t', 0)
             i.cmdloop()
+
             time.sleep(.1)
         except Exception as e:
             msg = traceback.format_exc()
