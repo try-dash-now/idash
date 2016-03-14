@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys, time, os, traceback
 pardir =os.path.dirname(os.path.realpath(os.getcwd()))
-subfolder = ['lib', 'dut', '../../tr249/dlv']
+subfolder = ['lib', 'dut', '../../workspace/tr249/dlv', '../../workspace/tr249/product']
 for sub in subfolder:
     libpath = os.path.sep.join([pardir,sub])
     libpath = os.path.abspath(libpath)

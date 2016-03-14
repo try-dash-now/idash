@@ -143,11 +143,12 @@ def initDUT(errormessage ,bench, dutnames, logger=None, casepath='./', shareData
                     dut_attr['SUT'] ='winTelnet'
 
             classname = dut_attr["SUT"]
+            #print(sys.path)
             ModuleName = __import__(classname)
             ClassName = ModuleName.__getattribute__(classname)
 
             ses= ClassName(dutname, dut_attr,logger=logger ,logpath = path, shareData = shareData)
-            ses.login()
+            #ses.login()
             dictDUTs[dutname]=ses
             return  ses
         except Exception as e:

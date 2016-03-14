@@ -722,6 +722,7 @@ class ia(Cmd, object):
             sutname = self.sutname
         modulename = self.sut[sutname].__module__
 
+        import imp
         module_info =imp.find_module(modulename )# imp.new_module(modulename)
         module_dyn = imp.load_module(modulename ,*module_info)
         reload(module_dyn)
