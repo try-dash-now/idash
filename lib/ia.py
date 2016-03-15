@@ -99,24 +99,24 @@ class ia(Cmd, object):
     def match_functions(self,function_name, sutname=None):
         if not sutname:
             sutname= self.sutname
-        class_obj =self.do_reload(sutname)
-        members = inspect.getmembers(class_obj, inspect.ismethod)
+        #class_obj =self.do_reload(function_name, sutname)
+        members = inspect.getmembers(self.sut[sutname],inspect.ismethod)
         match =[]
         match_pair=[]
         index =0
         for k,v in members:
-
             if k.lower().find(function_name.lower())!=-1:
                 match.append(index)
                 try:
-                    func =class_obj.__dict__[k]
+                    func =self.sut[sutname].__dict__[k]
                 except KeyError:
-                    #k is a member function of parent class
+                    parents = type.mro(type(self.sut[sutname]))[:-1]
+                    for p in parents:
+                        if p.__dict__.has_key(k):
+                            func = p.__dict__[k]
+                            break
                     func = v
-
                 match_pair.append((k,func))
-
-
             index+=1
         if len(match)==1:
             match_pair=[members[match[0]]]
@@ -142,8 +142,9 @@ class ia(Cmd, object):
             candidate_function_pair = self.match_functions(function_name, sutname)
             len_candidate_fun = len(candidate_function_pair)
             if len_candidate_fun>1:
+                print('more than 1 functions matched the input:')
                 for k,v in candidate_function_pair:
-                    print(k+'\n')
+                    print('\t'+k)
             elif len_candidate_fun==0:
                 print('no function match!!!')
             else:
@@ -155,7 +156,7 @@ class ia(Cmd, object):
                 function_name, function_to_be_called = candidate_function_pair[0]
                 #function_to_be_called(*arg, **kwargs)
                 try:
-                    self.do_reload(sutname).__dict__[function_name](*arg, **kwargs)
+                    self.do_reload(function_name, sutname).__dict__[function_name](*arg, **kwargs)
                 except KeyError:
                     cmd = 'self.convert_args(%s)'%(', '.join(options[1:]) )
                     eval(cmd, globals(),locals())
@@ -719,32 +720,24 @@ class ia(Cmd, object):
 
         self.bench_file = file_name
 
-    def do_reload(self,sutname=None):
+    def do_reload(self,function_name, sutname=None):
         if not sutname:
             sutname = self.sutname
         modulename = self.sut[sutname].__module__
-
-        parent =[]
-        parent_module=[modulename]
-        type_of_parent = None
-        end_type = type(object)
-        class_type = self.sut[sutname].__class__
-        type_of_parent= class_type.__bases__[0]
-        while type_of_parent!=end_type:
-            parent.append(type_of_parent)
-            parent_module.append(type_of_parent.__module__)
-            if len(type_of_parent.__bases__):
-                type_of_parent = type_of_parent.__bases__[0]
-            else:
+        parents = type.mro(type(self.sut[sutname]))[:-1]
+        parents.insert(0, self.sut[sutname])
+        class_name = 0
+        for p in parents:
+            if p.__dict__.has_key(function_name):
+                modulename= p.__module__
                 break
-
         import imp
-        for m in ['dut']:##parent_module[::-1]:# #[]
-            module_info =imp.find_module(m )# imp.new_module(modulename)
-            module_dyn = imp.load_module(m ,*module_info)
-            reload(module_dyn)
 
-        return module_dyn.__dict__['dut']#module_dyn.__dict__[self.sut[sutname].__class__.__name__]
+        module_info =imp.find_module(modulename )# imp.new_module(modulename)
+        module_dyn = imp.load_module(modulename ,*module_info)
+        reload(module_dyn)
+
+        return module_dyn.__dict__[modulename]#module_dyn.__dict__[self.sut[sutname].__class__.__name__]
 
     def __del__(self):
         self.flagEndCase = False
