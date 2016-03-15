@@ -153,6 +153,10 @@ class ia(Cmd, object):
                     cmd = 'self.convert_args(self.sut[sutname], %s)'%(', '.join(options[1:]) )
                     eval(cmd, globals(),locals())
                     arg, kwargs = self.__args, self.__kwargs
+                else:
+                    cmd = 'self.convert_args(self.sut[sutname])'
+                    eval(cmd, globals(),locals())
+                    arg, kwargs = self.__args, self.__kwargs
                 function_name, function_to_be_called = candidate_function_pair[0]
                 #function_to_be_called(*arg, **kwargs)
                 try:
@@ -475,6 +479,7 @@ class ia(Cmd, object):
 
     def do_setsut(self, sutname='tc'):
         output =''
+        print('SUTs avaiable: %s'%( ', '.join(self.sut)))
         if sutname == '':
             sutname = 'tc'
         if self.sut.get(sutname) or sutname == 'tc' or sutname == '__case__':
