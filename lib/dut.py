@@ -503,6 +503,7 @@ call function(%s)
         noWait, bool, defualt is False, means move searching index, otherwise doesn't move the searching index
         '''
         tmp =[]
+        print('aaaaaaaaaaaaaa xx')
         if self.loginDone:
             linesep=self.attribute['LINESEP']
         else:

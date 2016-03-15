@@ -98,7 +98,7 @@ import threading
 import os
 import time
 import re
-class winTelnet(dut):#, spawn
+class winTelnet(dut, object):#, spawn
 
 
     def __del__(self):
@@ -185,7 +185,9 @@ class winTelnet(dut):#, spawn
         self.msg("send %r", buffer)
         if self.sock:
             self.sock.sendall(buffer)
-        super(winTelnet,self).write()
+
+        super(winTelnet, self).write()
+
 
     def msg(self, msg, *args):
         """Print a debug message, when the debug level is > 0.

@@ -724,11 +724,27 @@ class ia(Cmd, object):
             sutname = self.sutname
         modulename = self.sut[sutname].__module__
 
+        parent =[]
+        parent_module=[modulename]
+        type_of_parent = None
+        end_type = type(object)
+        class_type = self.sut[sutname].__class__
+        type_of_parent= class_type.__bases__[0]
+        while type_of_parent!=end_type:
+            parent.append(type_of_parent)
+            parent_module.append(type_of_parent.__module__)
+            if len(type_of_parent.__bases__):
+                type_of_parent = type_of_parent.__bases__[0]
+            else:
+                break
+
         import imp
-        module_info =imp.find_module(modulename )# imp.new_module(modulename)
-        module_dyn = imp.load_module(modulename ,*module_info)
-        reload(module_dyn)
-        return module_dyn.__dict__[self.sut[sutname].__class__.__name__]
+        for m in ['dut']:##parent_module[::-1]:# #[]
+            module_info =imp.find_module(m )# imp.new_module(modulename)
+            module_dyn = imp.load_module(m ,*module_info)
+            reload(module_dyn)
+
+        return module_dyn.__dict__['dut']#module_dyn.__dict__[self.sut[sutname].__class__.__name__]
 
     def __del__(self):
         self.flagEndCase = False
