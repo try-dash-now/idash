@@ -2,7 +2,7 @@ __author__ = 'Sean Yu'
 '''created @2015/12/4''' 
 
 
-import os, sys
+import os, sys,time
 pardir =os.path.dirname(os.path.realpath(os.getcwd()))
 subfolder = ['lib', 'dut']
 for sub in subfolder:
@@ -11,7 +11,7 @@ for sub in subfolder:
         sys.path.insert(0,libpath)
 import ssh
 import dut
-class SSH(dut.dut, object):
+class SSH(dut.dut):
     chan=None
     client=None
 
@@ -37,6 +37,7 @@ class SSH(dut.dut, object):
         th =threading.Thread(target=self.ReadOutput)
         th.start()
         self.debuglevel=0
+        self.login()
 
     def ReadOutput(self):
         import time, os
@@ -102,6 +103,7 @@ class SSH(dut.dut, object):
         self.lockRelogin.release()
 
     def write(self, data):
-        super(SSH, self).write(data)
+        self.timestampCmd= time.time()
+        #super(SSH, self).write(data)
         if self.client:
             self.chan.send(data)
