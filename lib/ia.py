@@ -732,17 +732,31 @@ class ia(Cmd, object):
         parents = type.mro(type(self.sut[sutname]))[:-1]
         parents.insert(0, self.sut[sutname])
         class_name = 0
+        import imp
+        target_module_name =None
+        target_module = None
         for p in parents:
             if p.__dict__.has_key(function_name):
-                modulename= p.__module__
+                target_module_name= p.__module__
                 break
-        import imp
 
-        module_info =imp.find_module(modulename )# imp.new_module(modulename)
-        module_dyn = imp.load_module(modulename ,*module_info)
-        reload(module_dyn)
 
-        return module_dyn.__dict__[modulename]#module_dyn.__dict__[self.sut[sutname].__class__.__name__]
+        for p in parents[::-1]:
+            mn = p.__module__
+            if target_module_name==mn:
+                module_info =imp.find_module(mn )# imp.new_module(modulename)
+                module_dyn = imp.load_module(mn ,*module_info)
+                reload(module_dyn)
+                target_module= module_dyn
+
+
+
+
+        #module_info =imp.find_module(modulename )# imp.new_module(modulename)
+        #module_dyn = imp.load_module(modulename ,*module_info)
+        #reload(module_dyn)
+
+        return target_module.__dict__[target_module_name]#module_dyn.__dict__[self.sut[sutname].__class__.__name__]
 
     def __del__(self):
         self.flagEndCase = False
