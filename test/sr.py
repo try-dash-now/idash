@@ -40,7 +40,7 @@ if __name__ == "__main__":
             caserange= sorted(drange)
         CaseRange=caserange
         return CaseRange
-    suitelogdir = './log'
+    suitelogdir = '../../log'
     rangelist = sys.argv[2]
     arglist = sys.argv[3:]
     if not os.path.exists(suitelogdir):
