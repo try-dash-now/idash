@@ -91,6 +91,7 @@ class ia(Cmd, object):
     __args=None
     __kwargs=None
     script_file_name =None
+    update =True # show output of sut immediately
 
     def convert_args(self, *args, **kwargs):
         self.__args = args
@@ -390,7 +391,7 @@ class ia(Cmd, object):
             self.cmdbank = []
             self.output = 'no test bench assigned, please try "set bench [path/file_name] or [file_name]", the default path is ../../test'
             print(self.output)
-
+        self.update =True
         keyboard_monitor_thread = threading.Thread(target=self.monitor_keyboard)
         keyboard_monitor_thread.start()
     def do_r(self,line):
@@ -675,7 +676,7 @@ class ia(Cmd, object):
 
     def show(self):
         while not self.flagEndCase:
-            if self.sutname != 'tc':
+            if self.sutname != 'tc' and self.update not in ['0', 'False', 0,'null', 'off', False]:
                 try:
                     self.sut[self.sutname].show()
                 except:

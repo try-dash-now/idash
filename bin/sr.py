@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
     suitefile =sys.argv[1]
     name = '-'.join(sys.argv[1:])
-    name = re.sub('[^\w\-_]','-',name)[:60]+' '+datetime.datetime.now().isoformat(':').replace(':','').replace('-','')
+    name = re.sub('[^\w\-_]','-',name)[:60]+' '+datetime.datetime.now().isoformat(':').replace(':','').replace('-','').replace('--','-')
     def  GetRange(caserange='all'):
         if str(caserange).strip().lower()=='all':
             caserange = 'all'

@@ -12,7 +12,8 @@ for sub in subfolder:
         sys.path.insert(0,libpath)
 import os
 import pprint,traceback
-
+for path in sys.path:
+    print(path)
 def logAction(fun):
     def inner(*arg, **kwargs):
         try:

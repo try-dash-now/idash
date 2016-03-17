@@ -185,8 +185,10 @@ class winTelnet(dut, object):#, spawn
         self.msg("send %r", buffer)
         if self.sock:
             self.sock.sendall(buffer)
-
-        super(winTelnet, self).write()
+        try:
+            super(winTelnet, self).write()
+        except:
+            pass
 
 
     def msg(self, msg, *args):
