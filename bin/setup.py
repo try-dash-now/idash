@@ -138,9 +138,9 @@ def copy_dir(dir_path):
 try:
     dist = setup(
         windows = [],#'../bin/dash.py'
-        console=["../test/cr.py",
-                    "../test/sr.py",
-                    "../test/ia.py",
+        console=["./cr.py",
+                    "./sr.py",
+                    './y.py',#"../lib/ia.py",
                     "../bin/ImportModule.py",#to include tcl things in the distribute package
                           ],
 
@@ -183,7 +183,7 @@ except:
     print(traceback.format_exc())
 
 
-folder = './dist'
+folder = '../../dist'
 for op in sys.argv:
 
     indexOfd = op.find('-d')

@@ -14,8 +14,11 @@ if __name__ =='__main__':
     tmpout = sys.stdout
     f = open(os.devnull, 'w')
 
+    try:
+        file_name =os.path.basename( __file__)
+    except NameError:  # We are the main py2exe script, not a module
+        file_name = os.path.dirname(os.path.abspath(sys.argv[0]))
 
-    file_name =os.path.basename( __file__)
 
     print('''%s
     or
