@@ -1,5 +1,5 @@
 __author__ = 'Sean Yu'
-'''created @2015/10/12''' 
+'''created @2015/10/12'''
 import unittest
 import os
 import sys

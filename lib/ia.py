@@ -161,7 +161,8 @@ class ia(Cmd, object):
                 function_name, function_to_be_called = candidate_function_pair[0]
                 #function_to_be_called(*arg, **kwargs)
                 try:
-                    self.do_reload(function_name, sutname).__dict__[function_name](*arg, **kwargs)
+                    new_module =self.do_reload(function_name, sutname)
+                    new_module.__dict__[function_name](*arg, **kwargs)
                 except KeyError:
                     cmd = 'self.convert_args(%s)'%(', '.join(options[1:]) )
                     eval(cmd, globals(),locals())
@@ -742,7 +743,7 @@ class ia(Cmd, object):
                 break
 
 
-        for p in parents[::-1]:
+        for p in parents:#[::-1]:
             mn = p.__module__
             if target_module_name==mn:
                 module_info =imp.find_module(mn )# imp.new_module(modulename)
@@ -756,8 +757,8 @@ class ia(Cmd, object):
         #module_info =imp.find_module(modulename )# imp.new_module(modulename)
         #module_dyn = imp.load_module(modulename ,*module_info)
         #reload(module_dyn)
-
-        return target_module.__dict__[target_module_name]#module_dyn.__dict__[self.sut[sutname].__class__.__name__]
+        #return module_dyn.__dict__[self.sut[sutname].__class__.__name__]
+        return target_module.__dict__[target_module_name]#
 
     def __del__(self):
         self.flagEndCase = False

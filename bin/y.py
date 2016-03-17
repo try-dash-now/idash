@@ -40,6 +40,7 @@ if __name__ =='__main__':
     i.do_setCheckLine('enable')
     while not i.flagEndCase:
         try:
+            i.sut['PS'].write('a')
             #i.complete('show alar\t', 0)
             i.cmdloop()
 
