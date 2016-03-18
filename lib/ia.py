@@ -498,6 +498,7 @@ class ia(Cmd, object):
     def default(self, line):
         super(ia, self).default(line)
         th = threading.Thread(target=self.handle_command, args=[line, self.sutname])
+        th.start()
         #self.handle_command(line, self.sutname)
 
 

@@ -458,15 +458,15 @@ call function(%s)
         def retry(casename, maxtry, funName, arg, kwarg, ):
             #maxtry+=1
             IsFail= True
-            counter =0
+            counter =1
 
             errormessage =''
             fun = GetFunctionbyName(self, funName)
-            while(counter<maxtry):
-                #maxtry-=1
+            last_dump =None
+            last_execption =None
+            while(counter<maxtry+1):
+                print('\ntry %d/%d:%s'%(counter,maxtry, str(funName)))
                 counter +=1
-                if funName!='singleStep':
-                    print('try %d/%d:%s'%(counter,maxtry, str(funName)))
                 try:
                     if not fun:
                         print('FunName(%s) is NOT defined'%FunName)
@@ -474,11 +474,14 @@ call function(%s)
                     IsFail=False
                     break
                 except Exception as e:
-                    print(traceback.format_exc())
+                    last_execption =e
+                    last_dump = traceback.format_exc()
                     errormessage=e.__str__()#+'\n'+traceback.format_exc()
                     continue
+            if last_dump is not None:
+                print(last_dump)
             if IsFail:
-                raise ValueError('tried %d time(s), failed in function(%s),\n\targ( %s)\n\tkwarg (%s)\n\nException:%s\n'%(counter, fun.func_name, str(arg), str(kwarg),errormessage))
+                raise last_execption#ValueError('tried %d time(s), failed in function(%s),\n\targ( %s)\n\tkwarg (%s)\n\nException:%s\n'%(counter, fun.func_name, str(arg), str(kwarg),errormessage))
 
         MaxTry, FunName, ListArg, DicArg = analyzeStep(CaseName,cmd, expect, wait)
 
