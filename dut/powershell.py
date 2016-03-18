@@ -155,20 +155,6 @@ class powershell(dut):
         self.setValue(str(tmName), format%(ymd,hm))
         print(self.getValue(tmName))
 
-    def xsingleStep(self, cmd, expect, wait, ctrl=False, noPatternFlag=False, noWait=False):
-        exe_cmd='C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\powershell.exe %s'%cmd
-        print exe_cmd
-        #cmd ='ls'
-        #self.shellsession = subprocess.Popen(args = exe_cmd ,shell =True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-        a = self.shellsession.stdin
-        #self.shellsession.stdin.newlines='\r\n'
-        import sys
-        #sys.stdout.write(cmd+'\n')
-        #sys.stdout.flush()
-        self.shellsession.stdin.write('\r\n'+cmd+'\r\n')
-        self.shellsession.stdin.flush()
-        print(self.streamOut)
-        #out,error =self.shellsession.communicate(cmd+'\r\n')#wait
 
 
 
