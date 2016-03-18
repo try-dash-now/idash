@@ -18,6 +18,8 @@ class powershell(dut):
     timestampCmd =None
     q_out = None
     q_err = None
+    index_of_output=0
+    index_of_error= 0
     def __init__(self,name,attr,logger, logpath, shareData):
         dut.__init__(self, name,attr,logger, logpath, shareData)
 
@@ -65,11 +67,24 @@ class powershell(dut):
                     self.write(os.linesep)
                     self.timestampCmd = time.time()
                 if self.shellsession:
-
+                    try:
+                        err = self.q_err.get_nowait() # or q.get(timeout=.1)
+                        #cur_index = self.index_of_error
+                        #self.index_of_error= len(err)
+                        #err = err[cur_index:]
+                        if len(err):
+                            self.streamOut+=err
+                            self.logfile.write(err)
+                            self.logfile.flush()
+                    except Empty:
+                        pass
 
                     try:
                         out = self.q_out.get_nowait() # or q.get(timeout=.1)
-                        self.q_out.empty()
+                        #cur_index = self.index_of_output
+                        #self.index_of_output= len(out)
+                        #out = out[cur_index:]
+
                         if len(out):
                             self.streamOut+=out
                             self.logfile.write(out)
@@ -77,15 +92,7 @@ class powershell(dut):
                     except Empty:
                         pass
 
-                    try:
-                        err = self.q_err.get_nowait() # or q.get(timeout=.1)
-                        self.q_err.empty()
-                        if len(err):
-                            self.streamOut+=err
-                            self.logfile.write(err)
-                            self.logfile.flush()
-                    except Empty:
-                        pass
+
 
                 counter = 0
             except Exception as e:
@@ -102,12 +109,13 @@ class powershell(dut):
             self.lockStreamOut.release()
 
     def show(self):
-        newIndex = self.streamOut.__len__()
-        result = self.streamOut[self.idxUpdate  :  newIndex+1]
+        newIndex = self.streamOut.rfind('\n')#self.streamOut.__len__()
+        result = self.streamOut[self.idxUpdate+1  :  newIndex]
+
         self.idxUpdate= newIndex
         #print('print::%d'%result.__len__())
-        if result!='':
-            print('\t%s'%(result.replace('\n', '\n\t')))
+        if result not in ['', '\n', '\r\n', '\r']:
+            print('\t%s'%(result.replace('\r\n','\n').replace('\n', '\n\t')))
         return result
 
 
