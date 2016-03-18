@@ -541,7 +541,7 @@ class ia(Cmd, object):
     def __parseline__(self,line):
 
         lex = shlex.shlex(line)
-        lex.quotes = '"'
+        lex.quotes = "'\""
         lex.whitespace_split = True
         cmd = list(lex)
         return cmd
