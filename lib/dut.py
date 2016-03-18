@@ -389,8 +389,13 @@ call function(%s)
 #            self.show()
             #raise RuntimeError('found pattern(%s) within %s'%(expect,wait))
 
-    def test(self,cmd, expect, wait):
-        self.stepCheck('tc', '', cmd, expect,wait)
+    def step(self, cmd, expect =None,wait=None ):
+        if expect is None:
+            expect ='.*'
+        if wait is None:
+            wait = 30
+
+        self.stepCheck('tc',0,cmd,expect,str(int(wait)))
     def stepCheck(self, CaseName, lineNo, cmd, expect, wait):
         def analyzeStep(casename, command, expect, wait):
             reRetry         = re.compile("^\s*try\s+([0-9]+)\s*:(.*)", re.I)

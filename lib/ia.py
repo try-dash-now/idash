@@ -14,6 +14,7 @@ from cmd import Cmd
 import inspect
 import pyHook, sys, pythoncom
 from pykeyboard import PyKeyboard
+import pprint
 import sys, time
 import shlex
 import datetime
@@ -395,7 +396,7 @@ class ia(Cmd, object):
         self.update =True
         keyboard_monitor_thread = threading.Thread(target=self.monitor_keyboard)
         keyboard_monitor_thread.start()
-    def do_r(self,line):
+    def do_t(self,line):
         options = self.__parseline__(line)
 
         sutname ,function_name = options[:2]
@@ -537,6 +538,7 @@ class ia(Cmd, object):
         # print('3here is sut response end')
 
         return sutresponse
+    def do_dump(self, variable_name):
 
     def __parseline__(self,line):
 
@@ -544,6 +546,9 @@ class ia(Cmd, object):
         lex.quotes = "'\""
         lex.whitespace_split = True
         cmd = list(lex)
+        if len(cmd)>0:
+            if 'send'==cmd[0].lower():
+                cmd=['send', '"%s"'%line[5:]]
         return cmd
 
     def IARunCmd(self, data):
