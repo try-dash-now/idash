@@ -161,6 +161,8 @@ class ia(Cmd, object):
                     arg, kwargs = self.__args, self.__kwargs
                 function_name, function_to_be_called = candidate_function_pair[0]
                 #function_to_be_called(*arg, **kwargs)
+                script_line = '\t%s.%s(%s)'%(sutname, function_name, ', '.join(options[1:]))
+                self.__add_new_command__(sutname,function_name,', '.join(options[1:]) , arg, kwargs)
                 try:
                     new_module =self.do_reload(function_name, sutname)
                     new_module.__dict__[function_name](*arg, **kwargs)
@@ -169,14 +171,6 @@ class ia(Cmd, object):
                     eval(cmd, globals(),locals())
                     arg, kwargs = self.__args, self.__kwargs
                     getattr(self.sut[sutname],function_name)(*arg, **kwargs)
-
-                record = [sutname, function_name]
-                for o in options[1:]:
-                    record.append(o)
-                script_line = '\t%s.%s(%s)'%(sutname, function_name, ', '.join(options[1:]))
-                self.__add_new_command__(sutname,function_name,', '.join(options[1:]) , arg, kwargs)
-
-
 
 
     def help_set(self):
