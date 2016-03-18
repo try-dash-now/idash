@@ -13,7 +13,8 @@ for sub in subfolder:
 import os
 import pprint,traceback
 for path in sys.path:
-    print(path)
+    pass
+    #print(path)
 def logAction(fun):
     def inner(*arg, **kwargs):
         try:

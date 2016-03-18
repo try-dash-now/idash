@@ -284,13 +284,14 @@ class ia(Cmd, object):
 
 
 
-
+    def setErrorPatternCheck(self, enable=True):
+        self.fErrorPatternCheck=enable
     def do_setCheckLine(self, enable='enable'):
         if enable.strip().lower() == 'enable':
             self.fErrorPatternCheck = True
         else:
             self.fErrorPatternCheck = False
-        for sut in self.sut.keys():
+        for sut in self.sut.keys() :
             self.sut[sut].setErrorPatternCheck(self.fErrorPatternCheck)
         print('%s check error in line '%('enabled' if self.fErrorPatternCheck else 'disabled'))
 
@@ -376,6 +377,7 @@ class ia(Cmd, object):
             shareData = {}
             duts = initDUT(errormessage, bench, dutname, self.logger, logpath, shareData)
             self.sut = duts
+            self.sut['tc']=self
 
             th = threading.Thread(target=self.show)
             th.start()
@@ -538,7 +540,18 @@ class ia(Cmd, object):
         # print('3here is sut response end')
 
         return sutresponse
-    def do_dump(self, variable_name):
+    def do_dump(self, variable_name, sut_name=None):
+        if sut_name is None:
+            sut_name =self.sutname
+        if sut_name not in self.sut:
+            print('%s is not a correct sut name, choose one in [%s]'%(sut_name, ', '.join(self.sut)))
+        if variable_name in dir(self.sut[sut_name]):
+            if self.sutname in ['tc', '__case__', 'i']:
+                print(pprint.pformat(self.__getattribute__(variable_name)))
+            else:
+                print(pprint.pformat(self.sut[sut_name].__getattribute__(variable_name)))
+        else:
+            print('ERROR: "%s" is not defined in sut %s'%(variable_name, sut_name))
 
     def __parseline__(self,line):
 
