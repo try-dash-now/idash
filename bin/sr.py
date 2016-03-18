@@ -22,7 +22,9 @@ if __name__ == "__main__":
 
     suitefile =sys.argv[1]
     name = '-'.join(sys.argv[1:])
-    name = re.sub('[^\w\-_]','-',name)[:60]+' '+datetime.datetime.now().isoformat(':').replace(':','').replace('-','').replace('--','-')
+    name = re.sub('[^\w\-_]','-',name)[:60]+' '+datetime.datetime.now().isoformat(':').replace(':','')
+    name = re.sub('-+', '-', name)
+    name = re.sub('^-*', '', name)
     def  GetRange(caserange='all'):
         if str(caserange).strip().lower()=='all':
             caserange = 'all'
@@ -80,7 +82,7 @@ if __name__ == "__main__":
     lstFailCase = []
 
     htmlstring = array2html(suitefile,rangelist,','.join(arglist), statsTotalCase,statsFail+statsPass,statsPass,statsFail, statsTotalCase-statsFail-statsPass,report, suiteStartTime, suiteEndTime)
-    reportfilename = './log/%s.html'%(name)
+    reportfilename = '../../log/%s.html'%(name)
     with open(reportfilename, 'wb') as f:
         f.write(htmlstring.encode(encoding='utf_8', errors='strict'))
     for caseline in suite:
@@ -92,8 +94,11 @@ if __name__ == "__main__":
         print cmd
         if FuncName == run_case_in_suite:
             casename ='%d-%s'%(caseline[0], re.sub('[^\w\-_.]','-',cmd[:80]))#index
+
         elif FuncName == concurrent:
             casename ='%d-%s'%(caseline[0], re.sub('[^\w\-_.]','-',cmd[0][4][:80]))#index
+        casename = re.sub('-+','-',casename)
+        casename = re.sub('^-*','',casename)
         index+=1
         import os
         logpath = suitelogdir#+"/%s"%casename
@@ -103,6 +108,7 @@ if __name__ == "__main__":
 
         shareData ={}
         if FuncName == run_case_in_suite:
+            suite_dir_name = os.path.basename(logpath)
             logdir = '%s/%s'%(logpath,casename)
             if not os.path.exists(logdir):
                 os.mkdir(logdir)
@@ -127,8 +133,8 @@ if __name__ == "__main__":
             else:
                 logger.info('PASS\t%s'%cmd)
                 statsPass+=1
-
-            NewRecord = [index-1,caseResult,caseline[2][1], errormessage,'../'+logdir, LineNo,ExecutionDuration,caseStartTime,caseEndTime ]
+            logdir = '%s/%s'%(suite_dir_name, casename)
+            NewRecord = [index-1,caseResult,caseline[2][1], errormessage,logdir, LineNo,ExecutionDuration,caseStartTime,caseEndTime ]
             print("RESULT:", NewRecord)
 
 
@@ -148,14 +154,14 @@ if __name__ == "__main__":
         print('Pass:',statsPass, 'Fail', statsFail)
         suiteEndTime = time.time()
         htmlstring = array2html(suitefile,rangelist,','.join(arglist), statsTotalCase,statsFail+statsPass,statsPass,statsFail, statsTotalCase-statsFail-statsPass,report, suiteStartTime, suiteEndTime)
-        reportfilename = './log/%s.html'%(name)
+        reportfilename = '../../log/%s.html'%(name)
         with open(reportfilename, 'wb') as f:
             f.write(htmlstring.encode(encoding='utf_8', errors='strict'))
 
         if breakFlag:
             break
         casename='%d'%index
-        logdir ='./log/'+suitefile+'/'+casename
+        logdir ='../../log/'+suitefile+'/'+casename
 
 
 

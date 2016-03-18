@@ -26,7 +26,10 @@ class tcltk(Tkinter.Tk):
         Tkinter.Tk.__init__(self, None, None, 'Tk', 0)
 tcltk()
 from dut import dut
-a =dut('base', {}, logpath='../test/log')
+try:
+    a =dut('base', {}, logpath='../test/log')
+except:
+    pass
 from winTelnet import winTelnet
 try:
     wt = winTelnet('a',{'CMD':'telnet 127.0.0.1'}, logpath='./bin')
@@ -142,7 +145,7 @@ try:
                     "./sr.py",
                     './y.py',#"../lib/ia.py",
                     "../bin/ImportModule.py",#to include tcl things in the distribute package
-                          ],
+                ],
 
         data_files= [
                        '../LICENSE.TXT',
