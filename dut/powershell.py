@@ -8,9 +8,16 @@ sys.path.append(os.path.sep.join([pardir,'lib']))
 from dut import dut
 import time
 import subprocess
+try:
+    from Queue import Queue, Empty
+except ImportError:
+    from queue import Queue, Empty
+
 class powershell(dut):
     shellsession= None
     timestampCmd =None
+    q_out = None
+    q_err = None
     def __init__(self,name,attr,logger, logpath, shareData):
         dut.__init__(self, name,attr,logger, logpath, shareData)
 
@@ -20,19 +27,35 @@ class powershell(dut):
                  'pwd']
 
         self.shellsession = subprocess.Popen(args = exe_cmd ,shell =True, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+        self.q_out = Queue()
+        self.q_err = Queue()
         import threading
         self.lockStreamOut =threading.Lock()
         self.streamOut=''
         th =threading.Thread(target=self.ReadOutput)
         th.start()
+        th2 =threading.Thread(target=self.fill_queue_of_stdout)
+        th3 =threading.Thread(target=self.fill_queue_of_stderr)
+        th2.start()
+        th3.start()
         self.debuglevel=0
 
+    def fill_queue_of_stdout(self):
+        while self.SessionAlive:
+            for line in iter(self.shellsession.stdout.readline, b''):
+                self.q_out.put(line)
+    def fill_queue_of_stderr(self):
+        while self.SessionAlive:
+            for line in iter(self.shellsession.stderr.readline, b''):
+                self.q_err.put(line)
     def ReadOutput(self):
         import time, os
         maxInterval = 60
         if self.timestampCmd ==None:
             self.timestampCmd= time.time()
         counter = 0
+
+
         while self.SessionAlive:
             self.lockStreamOut.acquire()
             try:
@@ -42,19 +65,28 @@ class powershell(dut):
                     self.write(os.linesep)
                     self.timestampCmd = time.time()
                 if self.shellsession:
-                    out = self.shellsession.stdout.readline()
 
-                    if len(out):
-                        self.streamOut+=out
-                    err = self.shellsession.stderr.readline()
-                    if len(err):
-                        self.streamOut+=err
-                if self.logfile and len(out)!=0 :
-                    self.logfile.write(out)
-                    self.logfile.flush()
-                if self.logfile and len(err)!=0:
-                    self.logfile.write(err)
-                    self.logfile.flush()
+
+                    try:
+                        out = self.q_out.get_nowait() # or q.get(timeout=.1)
+                        self.q_out.empty()
+                        if len(out):
+                            self.streamOut+=out
+                            self.logfile.write(out)
+                            self.logfile.flush()
+                    except Empty:
+                        pass
+
+                    try:
+                        err = self.q_err.get_nowait() # or q.get(timeout=.1)
+                        self.q_err.empty()
+                        if len(err):
+                            self.streamOut+=err
+                            self.logfile.write(err)
+                            self.logfile.flush()
+                    except Empty:
+                        pass
+
                 counter = 0
             except Exception as e:
                 counter+=1
