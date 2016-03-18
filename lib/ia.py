@@ -29,7 +29,7 @@ keyboard = None
 flag_tab_down = False
 line_buffer = ''
 ia_instance =None
-
+from common import bench2dict
 def check_keyboard_tab_down(event):
     try:
         global flag_tab_down, ia_instance
@@ -93,7 +93,8 @@ class ia(Cmd, object):
     __kwargs=None
     script_file_name =None
     update =True # show output of sut immediately
-
+    bench=None
+    share_data = {}
     def convert_args(self, *args, **kwargs):
         self.__args = args
         self.__kwargs = kwargs
@@ -189,12 +190,14 @@ class ia(Cmd, object):
 
         options = self.__parseline__(line)
         number_of_options = len(options)
-        if number_of_options==0:
-            response =super(ia, self).do_help(line)
-        elif number_of_options==1:
-            if options[0] in dir(self) and self.sutname in ['tc', '__case__', None]:
-                function =self.__getattribute__(options[0])
-                function(' '.join(options[1:]))
+        response =super(ia, self).do_help(line)
+        #if number_of_options==0:
+
+        #elif number_of_options==1:
+
+        #    if options[0] in dir(self) and self.sutname not in ['tc', '__case__', None]:
+        #        function =self.__getattribute__(options[0])
+        #        function(' '.join(options[1:]))
 
 
 
@@ -265,7 +268,7 @@ class ia(Cmd, object):
             pythoncom.PumpWaitingMessages()  # PumpMessages()
 
     def checkQuestionMarkEnd(self):
-        print('check question mark')
+        #print('check question mark')
         while not self.flagEndCase:
             if self.rl:
                 buf = self.rl.get_line_buffer()
@@ -291,13 +294,13 @@ class ia(Cmd, object):
 
 
     def __init__(self, benchfile, dutname):
-        global pid, keyboard
-        keyboard = PyKeyboard()
+        #global pid, keyboard
+        #keyboard = PyKeyboard()
         self.flag_running = True
         pid = os.getpid()
         self.tmCreated = datetime.datetime.now()
         self.tmTimeStampOfLastCmd = self.tmCreated
-        Cmd.__init__(self)#, 'tab', sys.stdin, sys.stdout)
+        Cmd.__init__(self, 'tab', sys.stdin, sys.stdout)#)#
         try:
             from readline import rl
             self.rl = rl
@@ -350,7 +353,7 @@ class ia(Cmd, object):
         for record in self.record:
             self.save2file(None,[record])
         # self.save2file(self.record[0])
-        self.intro = '''welcome to InterAction of DasH'''
+
         logpath = '../../log'
 
 
@@ -363,13 +366,17 @@ class ia(Cmd, object):
 
 
         # benchfile = './bench.csv'
-        from common import bench2dict
+
         if os.path.exists(benchfile):
             bench = bench2dict(benchfile)
+            self.bench_file= benchfile
+            self.bench= bench
+            self.log_path= logpath
             # dutname = ['N6', 'ix-syu']
             errormessage = ''
             shareData = {}
-            duts = initDUT(errormessage, bench, dutname, self.logger, logpath, shareData)
+            self.share_data = shareData
+            duts = initDUT(errormessage, bench, dutname, self.logger, logpath, self.share_data)
             self.sut = duts
             self.sut['tc']=self
 
@@ -799,3 +806,19 @@ class ia(Cmd, object):
         if self.lastcmd:
             self.lastcmd = ""
             return self.onecmd('\n')
+    def help_init(self):
+        print('"init new_sut_name" to create a new session named as "new_sut_name", defined in a given bench file %s'%self.bench_file)
+    def do_init(self, sut_name):
+        sut_name_list = self.__parseline__(sut_name)
+        if sut_name in self.sut:
+            print('sut(%s) is existed, "setsut %s" to switch to it'%(sut_name,sut_name))
+        else:
+            errormessage = ''
+
+            bench = bench2dict(self.bench_file)
+            duts = initDUT(errormessage, bench, sut_name_list, self.logger, self.log_path, self.share_data)
+            for name in sut_name_list:
+                if name in duts:
+                    self.sut[name]= duts[name]
+                else:
+                    print('failed to init %s'%name)

@@ -20,10 +20,14 @@ if __name__ =='__main__':
         file_name = os.path.dirname(os.path.abspath(sys.argv[0]))
 
 
-    print('''%s
-    or
-%s bench_file DUT1 [DUT2, DUT3 ...]
-          '''%(file_name, file_name))
+    print('''
+################################################################################
+#    welcome to InterAction of DasH
+#    %s\t\t
+#    or
+#    %s bench_file DUT1 [DUT2, DUT3 ...]\t\t
+################################################################################
+'''%(file_name, file_name))
     sys.stdout = f
 
     if len(sys.argv)>2:
@@ -32,8 +36,9 @@ if __name__ =='__main__':
     else:
         benchfile = './bench.csv'
         dutNames = ['PS']
-    i=ia(benchfile, dutNames)
     sys.stdout = tmpout
+    i=ia(benchfile, dutNames)
+
     print('#'*80)
 
     flagEndCase = False

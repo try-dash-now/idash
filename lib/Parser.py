@@ -84,7 +84,7 @@ class caseParser(object):
         def inner(*arg, **kwargs):
             try:
                 msg ='called function: %s'%(fun.func_name)
-                print(msg)
+                #print(msg)
                 response = fun(*arg, **kwargs)
                 return  response
             except Exception as e:

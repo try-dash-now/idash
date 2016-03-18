@@ -19,7 +19,7 @@ def logAction(fun):
     def inner(*arg, **kwargs):
         try:
             msg ='Called function: %s'%(fun.__name__)
-            print(msg)
+            #print(msg)
             response = fun(*arg, **kwargs)
             return  response
         except Exception as e:
