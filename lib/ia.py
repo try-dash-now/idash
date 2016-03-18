@@ -497,7 +497,8 @@ class ia(Cmd, object):
         return output
     def default(self, line):
         super(ia, self).default(line)
-        self.handle_command(line, self.sutname)
+        th = threading.Thread(target=self.handle_command, args=[line, self.sutname])
+        #self.handle_command(line, self.sutname)
 
 
     def postcmd(self, stop, line):

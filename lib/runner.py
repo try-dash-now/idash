@@ -335,7 +335,9 @@ def loop(counter, casename, currentBenchfile, currentBenchinfo,logger,stop_at_fa
 def releaseDUTs(duts, logger):
     if duts==None or duts.keys()==None:
         return
-    for name in duts.keys():
+    for name in duts.keys() :
+        if name is 'tc':
+            continue
         dut = duts[name]
         logger.info('releasing dut: %s'%name)
         if dut :
