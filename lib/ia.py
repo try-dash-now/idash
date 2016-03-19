@@ -817,8 +817,11 @@ class ia(Cmd, object):
 
             bench = bench2dict(self.bench_file)
             duts = initDUT(errormessage, bench, sut_name_list, self.logger, self.log_path, self.share_data)
+            last_sut='tc'
             for name in sut_name_list:
                 if name in duts:
                     self.sut[name]= duts[name]
+                    last_sut=name
                 else:
                     print('failed to init %s'%name)
+            self.do_setsut(last_sut)

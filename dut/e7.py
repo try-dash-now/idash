@@ -21,7 +21,7 @@ class e7(winTelnet):
         if tm:
             self.send('set time %s'%str(tm))
         else:
-            self.send(self.getValue('tm'))
+            self.send('set time '+self.getValue('tm'))
 
     def vdsl_setIgnoreLines(self,IgnoreRange,nodeName=None, var_name='IgnoreDSLs'):
         if not nodeName:

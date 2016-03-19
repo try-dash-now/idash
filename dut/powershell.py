@@ -156,8 +156,15 @@ class powershell(dut):
         #stdin.write('\r\n'+cmd+'\r\n')
         #stdin.flush()
     def getCurrentTime(self,tmName='tm', format='%s:%s'):
-        self.send('date /t')
-        ymd = self.find('(\d{4}/\d{2}/\d{2})', 30)
+
+        try:
+            self.send('date /t')
+            ymd = self.find('(\d{4}/\d{2}/\d{2})', 5)
+        except:
+            self.send('date /t')
+            mdy = self.find('(\d{2})/(\d{2})/(\d{4})', 30)
+            mdy = mdy.split('/')
+            ymd = '%s/%s/%s'%(mdy[2], mdy[0],mdy[1])
         self.send('time /t')
         hm = self.find('(\d{2}:\d{2})', 30)
         self.setValue(str(tmName), format%(ymd,hm))
