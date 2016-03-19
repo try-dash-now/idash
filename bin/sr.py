@@ -114,7 +114,7 @@ if __name__ == "__main__":
                 os.mkdir(logdir)
             #logdir =createLogDir(casename, logpath)# logpath#
 
-            patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
+            patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*(cr.py|cr.exe)\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
             m =  re.match(patDash, cmd)
             returncode = 0
             logger.info('running case: %s'%cmd)

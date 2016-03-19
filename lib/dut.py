@@ -139,6 +139,7 @@ class dut(object):
         self.lockSearch =  threading.Lock()
         self.streamOut=''
         self.remain_in_update_buffer=''
+        self.loginDone=False
     def appendValue(self,name,value):
        # from runner import gShareDataLock, gShareData
         gShareDataLock.acquire()
@@ -370,7 +371,18 @@ call function(%s)
         )
             raise ValueError(msg)
     def sleep(self, wait):
-        time.sleep(float(wait))
+        wait = float(wait)
+
+        if wait>10:
+            counter = wait
+            interval =1.0
+            while counter>0.01:
+                time.sleep(interval)
+                counter-=interval
+                if int(counter)%10==0:
+                    sys.stdout.write('.')
+        else:
+            time.sleep(float(wait))
 
     def singleStep(self, cmd, expect, wait, ctrl=False, noPatternFlag=False, noWait=False):
         self.show()
@@ -610,14 +622,17 @@ call function(%s)
                 raise RuntimeError(msg)
 
     def login(self):
-        self.loginDone=False
+        print('loginDone', self.loginDone)
+        self.lockRelogin.acquire()
         login = 'login'.upper()
         time.sleep(0.5)
         self.show()
-        if self.attribute.has_key(login):
+        if self.attribute.has_key(login) and self.loginDone==False:
             seq = csvfile2array(self.attribute[login])
             lineno =0
             for singlestep in seq:
+                if self.loginDone:
+                    break
                 lenStep = len(singlestep)
                 if lenStep>2:
                     cmd, exp, wait  = singlestep[:3]
@@ -630,10 +645,18 @@ call function(%s)
                 else:
                     continue
                 lineno+=1
-                self.stepCheck(self.name, lineno, cmd, exp, wait)
+                try:
+                    self.stepCheck(self.name, lineno, cmd, exp, wait)
+                except Exception as e :
+                    if self.loginDone:
+                        break
+                    else:
+                        self.lockRelogin.acquire()
+                        raise e
                 self.show()
                 #self.singleStep(cmd, exp, wait)
         self.loginDone=True
+        self.lockRelogin.release()
     def setFail(self, msg):
         self.FailFlag=True
         if self.ErrorMessage:
@@ -648,3 +671,5 @@ call function(%s)
             msg= re.sub('\\\\t','\t', msg)
 
             self.ErrorMessage=msg
+    def relogin(self):
+         self.loginDone=False

@@ -155,6 +155,8 @@ def initDUT(errormessage ,bench, dutnames, logger=None, casepath='./', shareData
             return  ses
         except Exception as e:
             msg = '\ncan\'t init dut(%s)\n%s\n'%(dutname, e.__str__())
+            for p in sorted (sys.path):
+                print(p)
             if type(InitErrorMessage)==type(''):
                 InitErrorMessage+=msg
             elif type(InitErrorMessage) ==type([]):

@@ -26,35 +26,34 @@ class tcltk(Tkinter.Tk):
         Tkinter.Tk.__init__(self, None, None, 'Tk', 0)
 tcltk()
 from dut import dut
+logpath = '../../log'
+if not os.path.exists(logpath):
+    os.mkdir(logpath)
 try:
-    a =dut('base', {}, logpath='../test/log')
+    a =dut('base', {}, logpath=logpath)
 except:
     pass
 from winTelnet import winTelnet
 try:
-    wt = winTelnet('a',{'CMD':'telnet 127.0.0.1'}, logpath='./bin')
+    wt = winTelnet('a',{'CMD':'telnet 127.0.0.1'}, logpath=logpath)
 except:
     pass
 
 from TclInter import TclInter
 try:
-    ti = TclInter('a',{}, logpath='../test/log')
+    ti = TclInter('a',{}, logpath=logpath)
 except:
     pass
 
 from IxNetwork import IxNetwork
 try:
-    ix = IxNetwork('a',{}, logpath='../test/log')
+    ix = IxNetwork('a',{}, logpath=logpath)
 except:
     pass
-from e7 import  e7
-try:
-    e7 = e7('a', {}, logpath='../test/log')
-except:
-    pass
+
 from powershell import powershell
 try:
-    ps = powershell('a', {}, logpath='../test/log')
+    ps = powershell('a', {}, logpath=logpath)
 except:
     pass
 
