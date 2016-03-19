@@ -740,6 +740,8 @@ class ia(Cmd, object):
             os.rename(self.script_file_name,new_file_name )
             self.script_file_name= new_file_name
         print('saved to file %s '%(os.path.abspath(self.script_file_name)))
+        if self.bench_file:
+            print('cr.py %s %s full '%(os.path.abspath(self.script_file_name), os.path.abspath(self.bench_file)))
         from runner import releaseDUTs
         releaseDUTs(self.sut, self.logger)
         self.flagEndCase = True
