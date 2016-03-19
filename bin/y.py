@@ -39,17 +39,17 @@ if __name__ =='__main__':
     sys.stdout = tmpout
     i=ia(benchfile, dutNames)
 
-    print('#'*80)
-
-    flagEndCase = False
+    #print('#'*80)
     i.do_setCheckLine('enable')
     while not i.flagEndCase:
         try:
-            i.sut['PS'].write('a')
+            #i.sut['PS'].write('a')
             #i.complete('show alar\t', 0)
             i.cmdloop()
 
             time.sleep(.1)
+        except KeyboardInterrupt as e:
+            i.do_eof()
         except Exception as e:
             msg = traceback.format_exc()
             print(msg)
