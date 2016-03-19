@@ -407,7 +407,7 @@ call function(%s)
         if wait is None:
             wait = 30
 
-        self.stepCheck('tc',0,cmd,expect,str(int(wait)))
+        return  self.stepCheck('tc',0,cmd,expect,str(int(wait)))
     def stepCheck(self, CaseName, lineNo, cmd, expect, wait):
         def analyzeStep(casename, command, expect, wait):
             reRetry         = re.compile("^\s*try\s+([0-9]+)\s*:(.*)", re.I)
@@ -471,7 +471,7 @@ call function(%s)
             #maxtry+=1
             IsFail= True
             counter =1
-
+            response =None
             errormessage =''
             fun = GetFunctionbyName(self, funName)
             last_dump =None
@@ -482,7 +482,7 @@ call function(%s)
                 try:
                     if not fun:
                         print('FunName(%s) is NOT defined'%FunName)
-                    fun(*arg, **kwarg)
+                    response = fun(*arg, **kwarg)
                     IsFail=False
                     break
                 except Exception as e:
@@ -494,10 +494,10 @@ call function(%s)
                 print(last_dump)
             if IsFail:
                 raise last_execption#ValueError('tried %d time(s), failed in function(%s),\n\targ( %s)\n\tkwarg (%s)\n\nException:%s\n'%(counter, fun.func_name, str(arg), str(kwarg),errormessage))
-
+            return  response
         MaxTry, FunName, ListArg, DicArg = analyzeStep(CaseName,cmd, expect, wait)
 
-        retry(CaseName, int(MaxTry), FunName, ListArg, DicArg)
+        return retry(CaseName, int(MaxTry), FunName, ListArg, DicArg)
     def run(self,*arglist):#name, strFormat='%s'):
         if len(arglist)>1:
             namelist = arglist[:-1]
