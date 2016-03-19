@@ -18,7 +18,7 @@ if __name__ == "__main__":
     try:
         import sys
         #cr.py casefile benchfile segment [arg1 arg2 ...argN] logpath
-        defaultlogdir ='./log'
+        defaultlogdir ='../../log'
         argvlen= len(sys.argv)
         if argvlen>5:
             pass
@@ -38,7 +38,10 @@ if __name__ == "__main__":
             '''
             print(errormessage)
         from runner import case_runner, initDUT, createLogDir      ,createLogger
-
+        if os.path.exists(sys.argv[-1]):
+            pass
+        else:
+            sys.argv.append(defaultlogdir)
         if not os.path.exists(defaultlogdir):
             os.mkdir(defaultlogdir)
         defaultlogdir=sys.argv[-1]
