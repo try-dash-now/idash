@@ -450,14 +450,18 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
     bench = benchinfo
     try:
 
-        patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
+        patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*(cr.py|cr.exe)\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
         m =  re.match(patDash, cmd)
         returncode = 0
         if m:
 
-            argstring = m.group(2)
+            argstring = m.group(3)
             import shlex
-            lstArg = shlex.split(argstring)
+            if os.name =='nt':
+                posix =False
+            else:
+                posix =True
+            lstArg = shlex.split(argstring, posix=posix)
             #0-case.csv, 1-bench, 2-mode, 4...-2- args
             casefile = lstArg[0]
             case_benchfile = lstArg[1]

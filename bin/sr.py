@@ -114,8 +114,7 @@ if __name__ == "__main__":
                 os.mkdir(logdir)
             #logdir =createLogDir(casename, logpath)# logpath#
 
-            patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*(cr.py|cr.exe)\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
-            m =  re.match(patDash, cmd)
+
             returncode = 0
             logger.info('running case: %s'%cmd)
 
@@ -168,7 +167,7 @@ if __name__ == "__main__":
     #if dut_pool.__len__()!={}:
     releaseDUTs(dut_pool, logger)
 
-
+    print('#'*80)
     print('Pass:',statsPass, 'Fail', statsFail)
     os._exit(0)
 
