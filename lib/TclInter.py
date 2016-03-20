@@ -12,6 +12,7 @@ class TclInter(dut):
         th =threading.Thread(target=self.ReadOutput)
         #th.start()
         self.debuglevel=0
+        self.SessionAlive=True
 
     def ReadOutput(self):
         import time, os

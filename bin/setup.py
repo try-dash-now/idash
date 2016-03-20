@@ -4,6 +4,10 @@ __mail__ = 'try.dash.now@gmail.com'
 '''
 created 2015/11/10
 '''
+
+##################################
+#http://www.py2exe.org/index.cgi/ExeWithEggs, install ssh by command 'python setup.py install_scripts to ExeWithEggs
+##################################
 import os,sys
 pardir =os.path.dirname(os.path.realpath(__file__))
 pardir= os.path.sep.join(pardir.split(os.path.sep)[:-1])
@@ -29,35 +33,6 @@ from dut import dut
 logpath = '../../log'
 if not os.path.exists(logpath):
     os.mkdir(logpath)
-try:
-    a =dut('base', {}, logpath=logpath)
-except:
-    pass
-from winTelnet import winTelnet
-try:
-    wt = winTelnet('a',{'CMD':'telnet 127.0.0.1'}, logpath=logpath)
-except:
-    pass
-
-from TclInter import TclInter
-try:
-    ti = TclInter('a',{}, logpath=logpath)
-except:
-    pass
-
-from IxNetwork import IxNetwork
-try:
-    ix = IxNetwork('a',{}, logpath=logpath)
-except:
-    pass
-
-from powershell import powershell
-try:
-    ps = powershell('a', {}, logpath=logpath)
-except:
-    pass
-
-
 
 def compressFile(infile,outfile):
     import zipfile
@@ -103,9 +78,6 @@ class MediaCollector(build_exe):
         for f in files :#glob.glob('tools/'):
             name = os.path.basename(f)
             try:
-                #zf = compressFile(f,'./abc.xpi')
-
-
                 self.copy_file(f, os.path.join(full, name))
                 self.compiled_files.append(os.path.join(media, name))
             except Exception as e:

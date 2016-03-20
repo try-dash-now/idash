@@ -10,34 +10,42 @@ for sub in subfolder:
     if libpath not in sys.path:
         sys.path.insert(0,libpath)
 import ssh
-import dut
-class SSH(dut.dut):
+from dut import dut
+class SSH(dut):
     chan=None
     client=None
 
     def __init__(self, name, attr =None,logger=None, logpath= None, shareData=None):
-        dut.dut.__init__(self, name,attr,logger, logpath, shareData)
-        import re
-        reSSHcmd1 = re.compile('ssh\s+([\w._-]+)@([\w._-]+)\s*:\s*(\d+)', re.I)
-        reSSHcmd2 = re.compile('ssh\s+([\w._-]+)@([\w._-]+)', re.I)
-        m1 = re.match(reSSHcmd1, self.attribute['CMD'])
-        m2 = re.match(reSSHcmd2, self.attribute['CMD'])
-        if m1:
-            self.attribute['USER'] = m1.group(1)
-            self.attribute['HOST'] = m1.group(2)
-            self.attribute['PORT'] = int(m1.groups(3))
-        elif m2:
-            self.attribute['USER'] = m2.group(1)
-            self.attribute['HOST'] = m2.group(2)
-            self.attribute['PORT'] = 22
-        #self.login()
-        import threading
-        self.lockStreamOut =threading.Lock()
-        self.streamOut=''
-        th =threading.Thread(target=self.ReadOutput)
-        th.start()
-        self.debuglevel=0
-        self.login()
+        try:
+            dut.__init__(self, name,attr,logger, logpath, shareData)
+            import re
+            reSSHcmd1 = re.compile('ssh\s+([\w._-]+)@([\w._-]+)\s*:\s*(\d+)', re.I)
+            reSSHcmd2 = re.compile('ssh\s+([\w._-]+)@([\w._-]+)', re.I)
+            if not self.attribute.has_key('CMD'):
+                self.attribute['CMD']='ssh user@localhost'
+                self.attribute['PASSWORD']='PWD'
+            m1 = re.match(reSSHcmd1, self.attribute['CMD'])
+            m2 = re.match(reSSHcmd2, self.attribute['CMD'])
+            if m1:
+                self.attribute['USER'] = m1.group(1)
+                self.attribute['HOST'] = m1.group(2)
+                self.attribute['PORT'] = int(m1.groups(3))
+            elif m2:
+                self.attribute['USER'] = m2.group(1)
+                self.attribute['HOST'] = m2.group(2)
+                self.attribute['PORT'] = 22
+            #self.login()
+            import threading
+            self.lockStreamOut =threading.Lock()
+            self.streamOut=''
+            th =threading.Thread(target=self.ReadOutput)
+            th.start()
+            self.debuglevel=0
+
+            self.login()
+        except Exception as e:
+            self.closeSession()
+            raise e
 
     def ReadOutput(self):
         import time, os
@@ -73,7 +81,7 @@ class SSH(dut.dut):
             time.sleep(0.001)
 
     def login(self):
-        self.loginDone=False
+        #self.loginDone=False
         if self.client:
                 self.client.close()
                 self.chan=None
@@ -103,7 +111,6 @@ class SSH(dut.dut):
         self.lockRelogin.release()
 
     def write(self, data):
-        self.timestampCmd= time.time()
-        #super(SSH, self).write(data)
-        if self.client:
+        self.timestampCmd= time.time()        #super(SSH, self).write(data)
+        if self.c :
             self.chan.send(data)

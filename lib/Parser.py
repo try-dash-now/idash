@@ -91,7 +91,7 @@ class caseParser(object):
                 msg ='\tFunction Name: \t\t%s\n\tArguments: \t\t%s\n\tKeyword Arguments: \t\t%s'%(fun.func_name, str(arg), str(kwargs))
                 from common import DumpStack
                 msg ='\n'*8+DumpStack(e)+'\n'+msg
-                print(msg)
+                #print(msg)
                 import os
                 with open(os.getcwd()+'/../../log/error.txt','a+') as errorfile:
                     errorfile.write(msg)
@@ -160,7 +160,7 @@ class caseParser(object):
                 index = 0
                 tmpline = linestring
                 for gv in global_vars:
-                    tmpline = re.sub('\$\s*\{\s*%d\s*\}'%index, gv, tmpline)
+                    tmpline = re.sub('\$\s*\{\s*%d\s*\}'%index, re.escape(gv), tmpline)
                     index+=1
                 for ln, lv, no in local_vars:
                     tmpline = re.sub('\$\s*\{\s*%s\s*\}'%(ln), lv, tmpline)

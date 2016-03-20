@@ -20,7 +20,7 @@ class powershell(dut):
     q_err = None
     index_of_output=0
     index_of_error= 0
-    def __init__(self,name,attr,logger, logpath, shareData):
+    def __init__(self,name,attr,logger=None, logpath=None, shareData=None):
         dut.__init__(self, name,attr,logger, logpath, shareData)
 
         exe_cmd=['cmd.exe']

@@ -113,46 +113,49 @@ class winTelnet(dut, object):#, spawn
             #self.sock.close()
     def __init__(self, name, attr =None,logger=None,  logpath= None, shareData=None):
         dut.__init__(self, name,attr,logger, logpath , shareData)
+        try:
+            host=""
+            port=23
 
-        host=""
-        port=23
+            reHostOnly=  re.compile('\s*telnet\s+([\d.\w\-_]+)\s*',re.I)
+            reHostPort = re.compile('\s*telnet\s+([\d.\w]+)\s+(\d+)', re.I )
 
-        reHostOnly=  re.compile('\s*telnet\s+([\d.\w\-_]+)\s*',re.I)
-        reHostPort = re.compile('\s*telnet\s+([\d.\w]+)\s+(\d+)', re.I )
+            command = self.attribute.get('CMD')
+            m1=re.match(reHostOnly, command)
+            m2=re.match(reHostPort, command)
+            if m2:
+                host= m2.group(1)
+                port= int(m2.group(2))
+            elif m1:
+                host= m1.group(1)
 
-        command = self.attribute.get('CMD')
-        m1=re.match(reHostOnly, command)
-        m2=re.match(reHostPort, command)
-        if m2:
-            host= m2.group(1)
-            port= int(m2.group(2))
-        elif m1:
-            host= m1.group(1)
+            #import socket
+            #timeout = 30
+            #self.sock = socket.create_connection((host, port), timeout)
+            self.debuglevel = DEBUGLEVEL
+            self.host = host
+            self.port = port
+            timeout=0.5
+            self.timeout = timeout
+            self.sock = None
+            self.rawq = ''
+            self.irawq = 0
+            self.cookedq = ''
+            self.eof = 0
+            self.iacseq = '' # Buffer for IAC sequence.
+            self.sb = 0 # flag for SB and SE sequence.
+            self.sbdataq = ''
+            self.option_callback = None
+            self._has_poll = hasattr(select, 'poll')
+            if host is not None:
+                self.open(str(host), port, timeout)
 
-        #import socket
-        #timeout = 30
-        #self.sock = socket.create_connection((host, port), timeout)
-        self.debuglevel = DEBUGLEVEL
-        self.host = host
-        self.port = port
-        timeout=0.5
-        self.timeout = timeout
-        self.sock = None
-        self.rawq = ''
-        self.irawq = 0
-        self.cookedq = ''
-        self.eof = 0
-        self.iacseq = '' # Buffer for IAC sequence.
-        self.sb = 0 # flag for SB and SE sequence.
-        self.sbdataq = ''
-        self.option_callback = None
-        self._has_poll = hasattr(select, 'poll')
-        if host is not None:
-            self.open(str(host), port, timeout)
-
-        th =threading.Thread(target=self.ReadOutput)
-        th.start()
-        self.debuglevel=0
+            th =threading.Thread(target=self.ReadOutput)
+            th.start()
+            self.debuglevel=0
+        except Exception as e:
+            self.closeSession()
+            raise e
 
     def rawq_getchar(self):
         """Get next char from raw queue.

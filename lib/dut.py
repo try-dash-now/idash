@@ -60,7 +60,10 @@ class dut(object):
     remain_in_update_buffer=None
     max_session_read_error_counter= 50
     def closeSession(self):
-        self.__del__()
+        self.SessionAlive= False
+        if self.logfile:
+            self.logfile.flush()
+        #self.__del__()
     def isAlive(self, cmd='\r\n'):
         try:
             self.singleStep(cmd,'.+',60)
@@ -73,11 +76,9 @@ class dut(object):
                 print(e.__str__()+'\n'+traceback.format_exc())
             return False
     def ReadOutput(self):
-        raise ImportError
-    def __del__(self):
-        self.SessionAlive=False
-        if self.logfile:
-            self.logfile.flush()
+        raise NotImplementedError
+
+
     def setOutputColor(self, enable=True):
         self.color=enable
     def setErrorPatternCheck(self, enable=True):
@@ -96,50 +97,55 @@ class dut(object):
         logger:     a logger instance, allow this term pass message to parent object
         logpath:    string, the path of the log file for this ter
         '''
-        self.errorLines =   ''
-        self.name       =   name
-        self.logger     =   logger
-        if attr:
-            self.attribute =attr
-        else:
-            self.attribute = {}
-        if logger:
-            logger.info('openLogfile %s in %s'%(name,logpath))
-        if self.attribute.get("LINESEP"):
-            LINESEP = self.attribute.get('LINESEP').replace('\\r', '\r').replace('\\n', '\n')
-            self.attribute['LINESEP']=LINESEP
-        else:
-            self.attribute['LINESEP']='\n'
-
-        if self.attribute.get("ERROR_PATTERN"):
-            LINESEP = self.attribute.get('ERROR_PATTERN').replace('\\r', '\r').replace('\\n', '\n')
-            self.attribute['ERROR_PATTERN']=LINESEP
-        else:
-            self.attribute['ERROR_PATTERN']='fail|error| err|\serr |\serr:|wrong'
-
-
-        if self.attribute.get("LOGIN_LINESEP"):
-            LOGIN_LINESEP = self.attribute.get('LOGIN_LINESEP').replace('\\r', '\r').replace('\\n', '\n')
-            self.attribute['LOGIN_LINESEP']=LOGIN_LINESEP
-        else:
-            self.attribute['LOGIN_LINESEP']='\n'
-        self.openLogfile(logpath)
         try:
-            from colorama import Fore, Back, Style, init
-            init()
-            self.color=True
+            self.errorLines =   ''
+            self.name       =   name
+            self.logger     =   logger
+            if attr:
+                self.attribute =attr
+            else:
+                self.attribute = {}
+            if logger:
+                logger.info('openLogfile %s in %s'%(name,logpath))
+            if self.attribute.get("LINESEP"):
+                LINESEP = self.attribute.get('LINESEP').replace('\\r', '\r').replace('\\n', '\n')
+                self.attribute['LINESEP']=LINESEP
+            else:
+                self.attribute['LINESEP']='\n'
+
+            if self.attribute.get("ERROR_PATTERN"):
+                LINESEP = self.attribute.get('ERROR_PATTERN').replace('\\r', '\r').replace('\\n', '\n')
+                self.attribute['ERROR_PATTERN']=LINESEP
+            else:
+                self.attribute['ERROR_PATTERN']='fail|error| err|\serr |\serr:|wrong'
+
+
+            if self.attribute.get("LOGIN_LINESEP"):
+                #self.SessionAlive=True
+                LOGIN_LINESEP = self.attribute.get('LOGIN_LINESEP').replace('\\r', '\r').replace('\\n', '\n')
+                self.attribute['LOGIN_LINESEP']=LOGIN_LINESEP
+            else:
+                self.attribute['LOGIN_LINESEP']='\n'
+            self.openLogfile(logpath)
+            try:
+                from colorama import Fore, Back, Style, init
+                init()
+                self.color=True
+            except Exception as e:
+                self.color=False
+            if shareData:
+                self.shareData =shareData
+            else:
+                self.shareData={}
+            self.lockStreamOut = threading.Lock()
+            self.lockRelogin = threading.Lock()
+            self.lockSearch =  threading.Lock()
+            self.streamOut=''
+            self.remain_in_update_buffer=''
+            self.loginDone=False
         except Exception as e:
-            self.color=False
-        if shareData:
-            self.shareData =shareData
-        else:
-            self.shareData={}
-        self.lockStreamOut = threading.Lock()
-        self.lockRelogin = threading.Lock()
-        self.lockSearch =  threading.Lock()
-        self.streamOut=''
-        self.remain_in_update_buffer=''
-        self.loginDone=False
+            self.SessionAlive =False
+            raise e
     def appendValue(self,name,value):
        # from runner import gShareDataLock, gShareData
         gShareDataLock.acquire()
