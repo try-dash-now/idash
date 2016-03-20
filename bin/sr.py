@@ -135,7 +135,8 @@ if __name__ == "__main__":
                 statsPass+=1
             logdir = '%s/%s'%(suite_dir_name, casename)
             NewRecord = [index-1,caseResult,caseline[2][1], errormessage,logdir, LineNo,ExecutionDuration,caseStartTime,caseEndTime ]
-            pprint("RESULT:", NewRecord)
+            print("RESULT:")
+            pprint(NewRecord)
 
 
             #reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN, Report,htmllogdir
