@@ -8,6 +8,7 @@ created 2015/10/7 
 
 
 import os, sys
+fromt pprint import pprint
 pardir =os.path.dirname(os.path.realpath(os.getcwd()))
 subfolder = ['lib', 'dut']
 for sub in subfolder:
@@ -134,7 +135,7 @@ if __name__ == "__main__":
                 statsPass+=1
             logdir = '%s/%s'%(suite_dir_name, casename)
             NewRecord = [index-1,caseResult,caseline[2][1], errormessage,logdir, LineNo,ExecutionDuration,caseStartTime,caseEndTime ]
-            print("RESULT:", NewRecord)
+            pprint("RESULT:", NewRecord)
 
 
             #reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN, Report,htmllogdir
