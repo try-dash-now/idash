@@ -8,7 +8,7 @@ created 2015/10/7 
 
 
 import os, sys
-fromt pprint import pprint
+from pprint import pprint
 pardir =os.path.dirname(os.path.realpath(os.getcwd()))
 subfolder = ['lib', 'dut']
 for sub in subfolder:
