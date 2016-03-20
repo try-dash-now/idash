@@ -112,5 +112,5 @@ class SSH(dut):
 
     def write(self, data):
         self.timestampCmd= time.time()        #super(SSH, self).write(data)
-        if self.c :
+        if self.chan :
             self.chan.send(data)
