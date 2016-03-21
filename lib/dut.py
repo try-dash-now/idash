@@ -629,7 +629,7 @@ call function(%s)
 
     def login(self):
         print('loginDone', self.loginDone)
-        self.lockRelogin.acquire()
+        #self.lockRelogin.acquire()
         login = 'login'.upper()
         time.sleep(0.5)
         self.show()
@@ -657,12 +657,12 @@ call function(%s)
                     if self.loginDone:
                         break
                     else:
-                        self.lockRelogin.acquire()
+                        #self.lockRelogin.release()
                         raise e
                 self.show()
                 #self.singleStep(cmd, exp, wait)
         self.loginDone=True
-        self.lockRelogin.release()
+        #self.lockRelogin.release()
     def setFail(self, msg):
         self.FailFlag=True
         if self.ErrorMessage:

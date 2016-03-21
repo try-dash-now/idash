@@ -300,6 +300,7 @@ class ia(Cmd, object):
         pid = os.getpid()
         self.tmCreated = datetime.datetime.now()
         self.tmTimeStampOfLastCmd = self.tmCreated
+        self.share_data ={}
         Cmd.__init__(self, 'tab', sys.stdin, sys.stdout)#)#
         try:
             from readline import rl
@@ -374,8 +375,6 @@ class ia(Cmd, object):
             self.log_path= logpath
             # dutname = ['N6', 'ix-syu']
             errormessage = ''
-            shareData = {}
-            self.share_data = shareData
             duts = initDUT(errormessage, bench, dutname, self.logger, logpath, self.share_data)
             self.sut = duts
             self.sut['tc']=self
