@@ -191,7 +191,7 @@ CASE_MODE = set(['full', 'f',
                  'norun', 'nr',
                  'notear', 'noteardown', 'nt',
                  ])
-@logAction
+#@logAction
 def run(casename,duts, seqs ,mode, logger, sharedata):
         global  CASE_MODE
         import datetime
@@ -206,6 +206,7 @@ def run(casename,duts, seqs ,mode, logger, sharedata):
                 segment=segName#'setup'
                 stepindex= 1
                 for dut, cmd,expect , due, lineno in seq:#self.seqSetup:
+
                     session = duts[dut]
                     stepinfo = """
 ###############################################################################
@@ -215,6 +216,11 @@ def run(casename,duts, seqs ,mode, logger, sharedata):
 ###############################################################################
 """%(datetime.datetime.now().isoformat('_'),casename,lineno,segment, stepindex,
                          dut,cmd, expect, due)
+                    loginfo = '''%s
+Case: %s, LineNo:%d, %s.%d
+DUT(%s) Action(%s),Exp(%s),Wait(%s)'''%(datetime.datetime.now().isoformat('_'),casename,lineno,segment, stepindex,
+                         dut,cmd, expect, due)
+                    logger.info(loginfo)
                     print(stepinfo)
 
                     session.stepCheck(casename, lineno, cmd, expect, due)
@@ -236,7 +242,7 @@ def run(casename,duts, seqs ,mode, logger, sharedata):
         index = 0
         totalseg = len(seqlist)
         while index <totalseg:
-            logger.info('starting segment:%d'%index)
+            logger.info('starting segment:%s'%segNamelist[index])
             runSegment(casename, mode, modeset[index], duts,seqlist[index],  segNamelist[index], logger)
             index +=1
 
