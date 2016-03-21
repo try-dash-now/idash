@@ -220,7 +220,8 @@ def run(casename,duts, seqs ,mode, logger, sharedata):
 Case: %s, LineNo:%d, %s.%d
 DUT(%s) Action(%s),Exp(%s),Wait(%s)'''%(datetime.datetime.now().isoformat('_'),casename,lineno,segment, stepindex,
                          dut,cmd, expect, due)
-                    logger.info(loginfo)
+                    for line in loginfo.replace('\r\n','\n').split('\n'):
+                        logger.info(line)
                     print(stepinfo)
 
                     session.stepCheck(casename, lineno, cmd, expect, due)

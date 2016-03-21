@@ -415,6 +415,8 @@ call function(%s)
 
         return  self.stepCheck('tc',0,cmd,expect,str(int(wait)))
     def stepCheck(self, CaseName, lineNo, cmd, expect, wait):
+        if type(wait)!=type(''):
+            wait = str(wait)
         def analyzeStep(casename, command, expect, wait):
             reRetry         = re.compile("^\s*try\s+([0-9]+)\s*:(.*)", re.I)
             reFunction      = re.compile('\s*FUN\s*:\s*(.+?)\s*\(\s*(.*)\s*\)|\s*(.+?)\s*\(\s*(.*)\s*\)\s*$',re.IGNORECASE)

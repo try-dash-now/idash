@@ -382,7 +382,7 @@ class winTelnet(dut, object):#, spawn
             except Exception as e:
                 fail_counter+=1
                 if self.debuglevel:
-                    print('\nReadDataFromSocket Exception %d:'%(counter)+e.__str__()+'\n')
+                    print('\n%s Exception %d:'%(self.name, fail_counter)+e.__str__()+'\n')
                 #self.lockStreamOut.release()
                 if str(e)!='timed out':
                     if str(e) =='[Errno 10053] An established connection was aborted by the software in your host machine' or '[Errno 9] Bad file descriptor'==str(e) or str(e) =='[Errno 10054] An existing connection was forcibly closed by the remote host':
@@ -403,9 +403,9 @@ class winTelnet(dut, object):#, spawn
 
 
                         except Exception as e:
-                            print('\nReadDataFromSocket Exception2%s %d:'%(self.name, fail_counter)+e.__str__()+'\n')
+                            print('\n%s Exception: %d:'%(self.name, fail_counter)+e.__str__()+'\n')
                     else:
-                        print("ReadDataFromSocket Exception: %s"%(str(e)))
+                        print("\n%s Exception: %s"%(self.name, str(e)))
                         import traceback
                         msg = traceback.format_exc()
                         print(msg)
