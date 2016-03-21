@@ -600,7 +600,9 @@ def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAI
     PFAIL = '%.0f'%((CASEFAIL*100.0)/CASERUN*1.0)+'''%'''
     CASENOTRUN  = TOTAL - CASEPASS-CASEFAIL
     PNOTRUN = '%.0f'%((CASENOTRUN*100.0) /TOTAL*1.0)+'''%'''
-
+    duration_in_second = suiteEndTime-suiteStartTime
+    days = 0 if duration_in_second<(3600*24) else str(duration_in_second/(3600*24))
+    suit_duration_str = str(datetime.timedelta(days= days, seconds=duration_in_second))
     import datetime
     response ="""
 <HTML>
@@ -634,7 +636,7 @@ def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAI
 <BR>
 <BR>
 <table cellspacing="1" cellpadding="2" border="1">
-"""%(time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(suiteStartTime)), time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(suiteEndTime)),str(datetime.timedelta(seconds=suiteEndTime-suiteStartTime)),reportname, CaseRangeStr, ArgStr ,TOTAL, CASEPASS, CASEFAIL, CASENOTRUN, PPASS,PFAIL,PNOTRUN)
+"""%(time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(suiteStartTime)), time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(suiteEndTime)),suit_duration_str,reportname, CaseRangeStr, ArgStr ,TOTAL, CASEPASS, CASEFAIL, CASENOTRUN, PPASS,PFAIL,PNOTRUN)
 
     response = response+ '''<tr><td>No.</td><td>Result</td><td>Case Name</td><td>Duration(s)</td><td>StartTime</td><td>EndTime</td><td>Line No</td><td>Error Message</td></tr>'''
     #NewRecord = [index,caseResult,caseline[2][1], errormessage,logdir, LineNo]

@@ -115,6 +115,7 @@ try:
         console=["./cr.py",
                     "./sr.py",
                     './y.py',#"../lib/ia.py",
+                 './runWebServer.py',
                     "../bin/ImportModule.py",#to include tcl things in the distribute package
                 ],
 

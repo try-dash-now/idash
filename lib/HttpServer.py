@@ -8,11 +8,12 @@ from SocketServer import ThreadingMixIn
 from BaseHTTPServer import HTTPServer,BaseHTTPRequestHandler
 import os,sys
 import StringIO, cgi , urllib
+import ConfigParser
 pardir =os.path.dirname(os.path.realpath(os.getcwd()))
 libpath = os.path.sep.join([pardir,'lib'])
 if libpath not in sys.path:
     sys.path.insert(0,libpath)
-
+from common import csvfile2array
 class HttpHandler(BaseHTTPRequestHandler):
     logger=None
     hdrlog =None
@@ -129,9 +130,14 @@ class HttpHandler(BaseHTTPRequestHandler):
         content += ' \n </table><br>'
         return  content
     def do_GET(self):
+        config  = ConfigParser.ConfigParser()
+        conf = config.read('./html/init.cfg')
+
         home= "./html/"
-        root = './'
+        root =  config.get('init','home')#'./'
         response = 200
+        logdir=   config.get('init','logdir')
+        casedir =config.get('init', 'casedir')
         type = 'text/html'
         if self.path=='/':
             indexpage= open(home+ 'index.html', 'r')
@@ -145,8 +151,8 @@ class HttpHandler(BaseHTTPRequestHandler):
             path = os.path.abspath(root)
             encoded =self.list_dir(path, './')
         elif self.path.startswith('/log'):
-            path = os.path.abspath(root)
-            path = path+ self.path.replace('//','/')
+            path = os.path.abspath(logdir)#root
+            path = path+self.path.replace('//','/')
             if  os.path.isfile(path):
                 indexpage= open(path)
                 encoded=indexpage.read()
@@ -157,13 +163,35 @@ class HttpHandler(BaseHTTPRequestHandler):
             else:
                 encoded =self.list_dir(path, self.path)
 
-            #encoded = encoded.encode(encoding='utf_8')
+        elif self.path.startswith('/case'):
+            tmp_path = os.path.abspath(casedir)#root
+            tmp_path = tmp_path+ '/'+ self.path[5:]
+            path = tmp_path
+            if  os.path.isfile(path):
+                if path.lower().endswith('.csv'):
+                    arrary = csvfile2array(path)
+                    encoded = self.array2htmltable(arrary)
+                else:
+                    indexpage= open(path)
+                    encoded=indexpage.read()
+                    html = []
+                    for line in encoded.split('\n'):
+                        html.append('<p>%s</p>'%line.replace('\r', '').replace('\n',''))
+                    encoded= ''.join(html)
+            else:
+                encoded =self.list_dir(path, self.path)
 
+
+        elif self.path.startswith('/html'):
+            encoded= 'not found!'
+            with open(root+ self.path) as htmlfile:
+                data = '\n'.join(htmlfile.readlines())
+                encoded =data
         else:
             path = os.path.abspath(root)
             path = path+ self.path.replace('//','/')
             if  os.path.isfile(path):
-                from common import csvfile2array
+
                 arrary = csvfile2array(path)
                 encoded = self.array2htmltable(arrary)
             else:
