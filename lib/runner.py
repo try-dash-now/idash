@@ -590,7 +590,7 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
     return  returncode, errormessage, benchfile,bench, dut_pool
 
 def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN,Report, suiteStartTime,suiteEndTime):
-    import time
+    import time, datetime
     if CASERUN==0 :#or TOTAL==0:
         CASERUN=1
     if TOTAL==0:

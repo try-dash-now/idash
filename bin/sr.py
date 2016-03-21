@@ -86,83 +86,94 @@ if __name__ == "__main__":
     reportfilename = '../../log/%s.html'%(name)
     with open(reportfilename, 'wb') as f:
         f.write(htmlstring.encode(encoding='utf_8', errors='strict'))
-    for caseline in suite:
-        breakFlag=False
-        caseStartTime = time.time()
-        LineNo,FailAction,[FuncName,cmd ]=caseline
-        logger.info('to run case: index %d, name: %s, failAction: %s'%(LineNo,cmd, FailAction))
-        from runner import concurrent
-        print cmd
-        if FuncName == run_case_in_suite:
-            casename ='%d-%s'%(caseline[0], re.sub('[^\w\-_.]','-',cmd[:80]))#index
+    try:
+        for caseline in suite:
+            breakFlag=False
+            caseStartTime = time.time()
+            LineNo,FailAction,[FuncName,cmd ]=caseline
+            logger.info('to run case: index %d, name: %s, failAction: %s'%(LineNo,cmd, FailAction))
+            from runner import concurrent
+            print cmd
+            if FuncName == run_case_in_suite:
+                casename ='%d-%s'%(caseline[0], re.sub('[^\w\-_.]','-',cmd[:80]))#index
 
-        elif FuncName == concurrent:
-            casename ='%d-%s'%(caseline[0], re.sub('[^\w\-_.]','-',cmd[0][4][:80]))#index
-        casename = re.sub('-+','-',casename)
-        casename = re.sub('^-*','',casename)
-        index+=1
-        import os
-        logpath = suitelogdir#+"/%s"%casename
-        logger.info('creating logdir: %s'%logpath)
-        if not os.path.exists(logpath):
-            os.mkdir(logpath)
+            elif FuncName == concurrent:
+                casename ='%d-%s'%(caseline[0], re.sub('[^\w\-_.]','-',cmd[0][4][:80]))#index
+            casename = re.sub('-+','-',casename)
+            casename = re.sub('^-*','',casename)
+            index+=1
+            import os
+            logpath = suitelogdir#+"/%s"%casename
+            logger.info('creating logdir: %s'%logpath)
+            if not os.path.exists(logpath):
+                os.mkdir(logpath)
 
-        shareData ={}
-        if FuncName == run_case_in_suite:
-            suite_dir_name = os.path.basename(logpath)
-            logdir = '%s/%s'%(logpath,casename)
-            if not os.path.exists(logdir):
-                os.mkdir(logdir)
-            #logdir =createLogDir(casename, logpath)# logpath#
-
-
-            returncode = 0
-            logger.info('running case: %s'%cmd)
-
-            returncode , errormessage ,benchfile, benchinfo, dut_pool = run1case(casename, cmd, benchfile, benchinfo, dut_pool, logdir, logger ,shareData)
-            caseEndTime = time.time()
-            ExecutionDuration = caseEndTime-caseStartTime
-            caseResult = 'PASS'
-
-            if returncode:
-                logger.error('FAIL\t%s'%cmd)
-                logger.error(errormessage)
-                caseResult ='FAIL'
-                lstFailCase.append(caseline)
-                statsFail+=1
-            else:
-                logger.info('PASS\t%s'%cmd)
-                statsPass+=1
-            logdir = '%s/%s'%(suite_dir_name, casename)
-            NewRecord = [index-1,caseResult,caseline[2][1], errormessage,logdir, LineNo,ExecutionDuration,caseStartTime,caseEndTime ]
-            print("RESULT:")
-            pprint(NewRecord)
+            shareData ={}
+            if FuncName == run_case_in_suite:
+                suite_dir_name = os.path.basename(logpath)
+                logdir = '%s/%s'%(logpath,casename)
+                if not os.path.exists(logdir):
+                    os.mkdir(logdir)
+                #logdir =createLogDir(casename, logpath)# logpath#
 
 
-            #reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN, Report,htmllogdir
-            report.append(NewRecord)
-            if returncode:
-                if FailAction.strip().lower()=='break':
-                    breakFlag=True
+                returncode = 0
+                logger.info('running case: %s'%cmd)
 
-        elif FuncName == concurrent:
-            conCaseTotal, conCasePass, conCaseFail, conReport, conLstFailCase , breakFlag=concurrent(index-1, logpath, caseline[2][1],report, logger, shareData)
-            statsPass+=conCasePass
-            statsFail+=conCaseFail
-            for x in conLstFailCase:
-                lstFailCase.append(x)
+                returncode , errormessage ,benchfile, benchinfo, dut_pool = run1case(casename, cmd, benchfile, benchinfo, dut_pool, logdir, logger ,shareData)
+                caseEndTime = time.time()
+                ExecutionDuration = caseEndTime-caseStartTime
+                caseResult = 'PASS'
 
-        print('Pass:',statsPass, 'Fail', statsFail)
-        suiteEndTime = time.time()
-        htmlstring = array2html(suitefile,rangelist,','.join(arglist), statsTotalCase,statsFail+statsPass,statsPass,statsFail, statsTotalCase-statsFail-statsPass,report, suiteStartTime, suiteEndTime)
-        reportfilename = '../../log/%s.html'%(name)
-        with open(reportfilename, 'wb') as f:
-            f.write(htmlstring.encode(encoding='utf_8', errors='strict'))
+                if returncode:
+                    logger.error('FAIL\t%s'%cmd)
+                    logger.error(errormessage)
+                    caseResult ='FAIL'
+                    lstFailCase.append(caseline)
+                    statsFail+=1
+                else:
+                    logger.info('PASS\t%s'%cmd)
+                    statsPass+=1
+                logdir = '%s/%s'%(suite_dir_name, casename)
+                NewRecord = [index-1,caseResult,caseline[2][1], errormessage,logdir, LineNo,ExecutionDuration,caseStartTime,caseEndTime ]
+                print("RESULT:")
+                pprint(NewRecord)
 
-        if breakFlag:
-            break
-        casename='%d'%index
-        logdir ='../../log/'+suitefile+'/'+casename
+
+                #reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN, Report,htmllogdir
+                report.append(NewRecord)
+                if returncode:
+                    if FailAction.strip().lower()=='break':
+                        breakFlag=True
+
+            elif FuncName == concurrent:
+                conCaseTotal, conCasePass, conCaseFail, conReport, conLstFailCase , breakFlag=concurrent(index-1, logpath, caseline[2][1],report, logger, shareData)
+                statsPass+=conCasePass
+                statsFail+=conCaseFail
+                for x in conLstFailCase:
+                    lstFailCase.append(x)
+
+            print('Pass:',statsPass, 'Fail', statsFail)
+            suiteEndTime = time.time()
+            htmlstring = array2html(suitefile,rangelist,','.join(arglist), statsTotalCase,statsFail+statsPass,statsPass,statsFail, statsTotalCase-statsFail-statsPass,report, suiteStartTime, suiteEndTime)
+            reportfilename = '../../log/%s.html'%(name)
+            with open(reportfilename, 'wb') as f:
+                f.write(htmlstring.encode(encoding='utf_8', errors='strict'))
+
+            if breakFlag:
+                break
+            casename='%d'%index
+            logdir ='../../log/'+suitefile+'/'+casename
+    except KeyboardInterrupt:
+        try:
+            print('Pass:',statsPass, 'Fail', statsFail)
+            suiteEndTime = time.time()
+            htmlstring = array2html(suitefile,rangelist,','.join(arglist), statsTotalCase,statsFail+statsPass,statsPass,statsFail, statsTotalCase-statsFail-statsPass,report, suiteStartTime, suiteEndTime)
+            reportfilename = '../../log/%s.html'%(name)
+        except:
+            pass
+        
+
 
 
 

@@ -336,18 +336,18 @@ class HttpHandler(BaseHTTPRequestHandler):
             arg = req['arg'][0]
 
             if self.path.endswith('/RunCase'):
-                executefile = 't.py'
+                executefile = 'cr.py'
                 print(os.getcwd())
-                if os.path.exists('t.exe') and not os.path.exists(executefile):
-                    executefile='t.exe'
+                if os.path.exists('cr.exe') and not os.path.exists(executefile):
+                    executefile='cr.exe'
 
             elif self.path.endswith('/RunSuite'):
                 print(os.getcwd())
-                executefile = 'runTask.py'
+                executefile = 'sr.py'
                 print(os.getcwd())
-                if os.path.exists('runTask.exe') and not os.path.exists(executefile):
-                    executefile='runTask.exe'
-            script ='..'+script
+                if os.path.exists('sr.exe') and not os.path.exists(executefile):
+                    executefile='sr.exe'
+            script ='../..'+script
             args = script+ ' '+ arg
             encoded=self.RunScript(executefile, args)
 
