@@ -152,7 +152,7 @@ class HttpHandler(BaseHTTPRequestHandler):
             encoded =self.list_dir(path, './')
         elif self.path.startswith('/log'):
             path = os.path.abspath(logdir)#root
-            path = path+self.path.replace('//','/')
+            path = path+self.path.replace('//','/').replace('%20', ' ')
             if  os.path.isfile(path):
                 indexpage= open(path)
                 encoded=indexpage.read()
