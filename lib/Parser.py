@@ -160,7 +160,10 @@ class caseParser(object):
                 index = 0
                 tmpline = linestring
                 for gv in global_vars:
-                    tmpline = re.sub('\$\s*\{\s*%d\s*\}'%index, re.escape(gv), tmpline)
+                    try:
+                        tmpline = re.sub('\$\s*\{\s*%d\s*\}'%index, gv, tmpline)#re.escape(gv)
+                    except:
+                        tmpline = re.sub('\$\s*\{\s*%d\s*\}'%index, re,escape(gv), tmpline)#re.escape(gv)
                     index+=1
                 for ln, lv, no in local_vars:
                     tmpline = re.sub('\$\s*\{\s*%s\s*\}'%(ln), lv, tmpline)
