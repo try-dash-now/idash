@@ -166,7 +166,16 @@ class powershell(dut):
             mdy = mdy.split('/')
             ymd = '%s/%s/%s'%(mdy[2], mdy[0],mdy[1])
         self.send('time /t')
-        hm = self.find('(\d{2}:\d{2})', 30)
+        hm = self.find('(\d{2}:\d{2})\s+(P|A)M', 30)
+        import re
+        m = re.search('(\d{2}):(\d{2})\s+(P|A)M',hm) 
+        if m:
+            hh = m.group(1)
+            mm = m.group(2)
+            ap = m.group(3)
+            if ap =='P':
+                hour = str(int(hh)+12)
+            hm = '%s:%s'%(hh, mm)
         self.setValue(str(tmName), format%(ymd,hm))
         print(self.getValue(tmName))
 
