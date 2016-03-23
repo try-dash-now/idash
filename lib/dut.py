@@ -502,6 +502,7 @@ call function(%s)
                     errormessage=e.__str__()#+'\n'+traceback.format_exc()
                     continue
             if last_dump is not None:
+                self.error(last_dump)
                 print(last_dump)
             if IsFail:
                 raise last_execption#ValueError('tried %d time(s), failed in function(%s),\n\targ( %s)\n\tkwarg (%s)\n\nException:%s\n'%(counter, fun.func_name, str(arg), str(kwarg),errormessage))
