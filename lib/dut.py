@@ -59,6 +59,8 @@ class dut(object):
     lockSearch = None
     remain_in_update_buffer=None
     max_session_read_error_counter= 50
+    __args = None
+    __kwargs = None
     def closeSession(self):
         self.SessionAlive= False
         if self.logfile:
@@ -417,10 +419,14 @@ call function(%s)
             wait = 30
 
         return  self.stepCheck('tc',0,cmd,expect,str(int(wait)))
+    def convert_args(self, *args, **kwargs):
+        self.__args = args
+        self.__kwargs = kwargs
+        return self.__args, self.__kwargs
     def stepCheck(self, CaseName, lineNo, cmd, expect, wait):
         if type(wait)!=type(''):
             wait = str(wait)
-        def analyzeStep(casename, command, expect, wait):
+        def analyzeStep(self, casename, command, expect, wait):
             reRetry         = re.compile("^\s*try\s+([0-9]+)\s*:(.*)", re.I)
             reFunction      = re.compile('\s*FUN\s*:\s*(.+?)\s*\(\s*(.*)\s*\)|\s*(.+?)\s*\(\s*(.*)\s*\)\s*$',re.IGNORECASE)
             reCtrl          = re.compile("^\s*ctrl\s*:(.*)", re.I)
@@ -453,10 +459,14 @@ call function(%s)
 
                 if mFun.group(1) !=None:
                     FunName = mFun.group(1)
-                    ListArg, DicArg = FunctionArgParser(mFun.group(2))
+                    cmd  = 'self.convert_args(%s)'%(mFun.group(2))
+                    ListArg, DicArg = eval(cmd, globals(),locals())
+                    #ListArg, DicArg = FunctionArgParser(mFun.group(2))
                 else:
                     FunName = mFun.group(3)
-                    ListArg, DicArg = FunctionArgParser(mFun.group(4))
+                    cmd  = 'self.convert_args(%s)'%(mFun.group(4))
+                    ListArg, DicArg = eval(cmd, globals(),locals())
+                    #ListArg, DicArg = FunctionArgParser(mFun.group(4))
             else:
 
                 mCtrl = re.match(reCtrl, NewCommand)
@@ -507,7 +517,7 @@ call function(%s)
             if IsFail:
                 raise last_execption#ValueError('tried %d time(s), failed in function(%s),\n\targ( %s)\n\tkwarg (%s)\n\nException:%s\n'%(counter, fun.func_name, str(arg), str(kwarg),errormessage))
             return  response
-        MaxTry, FunName, ListArg, DicArg = analyzeStep(CaseName,cmd, expect, wait)
+        MaxTry, FunName, ListArg, DicArg = analyzeStep(self, CaseName,cmd, expect, wait)
 
         return retry(CaseName, int(MaxTry), FunName, ListArg, DicArg)
     def run(self,*arglist):#name, strFormat='%s'):
