@@ -163,7 +163,7 @@ class caseParser(object):
                     try:
                         tmpline = re.sub('\$\s*\{\s*%d\s*\}'%index, gv, tmpline)#re.escape(gv)
                     except:
-                        tmpline = re.sub('\$\s*\{\s*%d\s*\}'%index, re,escape(gv), tmpline)#re.escape(gv)
+                        tmpline = re.sub('\$\s*\{\s*%d\s*\}'%index, re.escape(gv), tmpline)#re.escape(gv)
                     index+=1
                 for ln, lv, no in local_vars:
                     tmpline = re.sub('\$\s*\{\s*%s\s*\}'%(ln), lv, tmpline)

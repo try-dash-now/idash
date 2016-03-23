@@ -411,6 +411,16 @@ class winTelnet(dut, object):#, spawn
                         print(msg)
                         self.error(msg)
             self.lockStreamOut.release()
+        self.on_case_end()
+    def on_case_end(self):
+        print('quit %s'%self.name)
+        for i in xrange(1,3,1):
+            self.send('exit')
+            self.sleep(0.5)
+            self.send(']',Ctrl=True)
+            self.send('quit')
+
+
 
 
 

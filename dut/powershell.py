@@ -50,6 +50,8 @@ class powershell(dut):
         while self.SessionAlive:
             for line in iter(self.shellsession.stderr.readline, b''):
                 self.q_err.put(line)
+    def on_case_end(self):
+        print('quit %s'%self.name)
     def ReadOutput(self):
         import time, os
         maxInterval = 60

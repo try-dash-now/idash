@@ -76,6 +76,7 @@ class dut(object):
                 print(e.__str__()+'\n'+traceback.format_exc())
             return False
     def ReadOutput(self):
+        print('quit %s'%self.name)
         raise NotImplementedError
 
 
@@ -573,7 +574,7 @@ call function(%s)
         if pattern=='.+CalixE7>':
             flag=True
 
-
+        response = ''
         pat = re.compile(pattern,flags)
         if timeout<0.1:
             timeout =0.1
@@ -589,6 +590,7 @@ call function(%s)
             buffer = self.streamOut[tmp_idx_search:]
             try:
                 match = re.search(pat ,buffer )
+                response = buffer
             except RuntimeError as e :
                 match = None
 
@@ -624,10 +626,11 @@ call function(%s)
         else:
             if noPattern:
                 self.move_search_window(buffer.__len__())
-                return ''
+                return buffer
             else:
                 msg = '%s:pattern(%s) doesn\'t find with %f, buffer is:\n--buffer start--\n%s\n--buffer end here--\n'%(self.name,pattern,timeout, buffer)
                 raise RuntimeError(msg)
+        return response
 
     def login(self):
         print('loginDone', self.loginDone)
