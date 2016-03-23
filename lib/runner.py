@@ -485,7 +485,7 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
                 gPathLocker.release()
                 benchfile = case_benchfile
                 caselogger.info('releasing duts in old dut_pool')
-                releaseDUTs(dut_pool, logger)
+                releaseDUTs(dut_pool, caselogger)
                 dut_pool ={}
             from Parser import  caseParser
             caselogger.info('loading case: %s'% casename)
@@ -509,7 +509,7 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
                     dut_pool[od].closeSession()
                     newduts.append(od)
             errormessage =[]
-            duts= initDUT(errormessage,bench,newduts,logger, logdir)
+            duts= initDUT(errormessage,bench,newduts,caselogger, logdir)
 
             for k in duts.keys():
                 dut_pool[k]=duts[k]
