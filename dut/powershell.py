@@ -52,6 +52,7 @@ class powershell(dut):
                 self.q_err.put(line)
     def on_case_end(self):
         print('quit %s'%self.name)
+        self.logfile.flush()
     def ReadOutput(self):
         import time, os
         maxInterval = 60
@@ -109,6 +110,7 @@ class powershell(dut):
                 print(msg)
                 self.error(msg)
             self.lockStreamOut.release()
+        self.on_case_end()
 
     def show(self):
         newIndex = self.streamOut.rfind('\n')#self.streamOut.__len__()

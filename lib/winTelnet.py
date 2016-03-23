@@ -419,7 +419,7 @@ class winTelnet(dut, object):#, spawn
             self.sleep(0.5)
             self.send(']',Ctrl=True)
             self.send('quit')
-
+        self.logfile.flush()
 
 
 

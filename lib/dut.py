@@ -90,6 +90,22 @@ class dut(object):
             self.autoReloginFlag =True
         else:
             self.autoReloginFlag=False
+    def info(self, *msg):
+        msg_new = '%s:\t%s'%(self.name, ','.join([pprint.pprint(x) for x in msg]))
+        print(msg_new)
+        if self.logger:
+            self.logger.info(msg_new)
+    def debug(self, msg):
+        msg_new = '%s:\t%s'%(self.name, ','.join([pprint.pprint(x) for x in msg]))
+        print(msg_new)
+        if self.logger:
+            self.logger.debug(msg_new)
+    def error(self, msg):
+        msg_new = '%s:\t%s'%(self.name, ','.join([pprint.pprint(x) for x in msg]))
+        print(msg_new)
+        if self.logger:
+            self.logger.error(msg_new)
+
     def __init__(self, name, attr =None,logger=None, logpath= None, shareData=None):
         '''
         initializing the term
