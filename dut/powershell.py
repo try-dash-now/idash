@@ -52,7 +52,10 @@ class powershell(dut):
                 self.q_err.put(line)
     def on_case_end(self):
         print('quit %s'%self.name)
-        self.logfile.flush()
+        try:
+            self.logfile.flush()
+        except:
+            pass
     def ReadOutput(self):
         import time, os
         maxInterval = 60

@@ -90,21 +90,6 @@ class dut(object):
             self.autoReloginFlag =True
         else:
             self.autoReloginFlag=False
-    def info(self, *msg):
-        msg_new = '%s:\t%s'%(self.name, ','.join([pprint.pprint(x) for x in msg]))
-        print(msg_new)
-        if self.logger:
-            self.logger.info(msg_new)
-    def debug(self, msg):
-        msg_new = '%s:\t%s'%(self.name, ','.join([pprint.pprint(x) for x in msg]))
-        print(msg_new)
-        if self.logger:
-            self.logger.debug(msg_new)
-    def error(self, msg):
-        msg_new = '%s:\t%s'%(self.name, ','.join([pprint.pprint(x) for x in msg]))
-        print(msg_new)
-        if self.logger:
-            self.logger.error(msg_new)
 
     def __init__(self, name, attr =None,logger=None, logpath= None, shareData=None):
         '''
@@ -335,12 +320,13 @@ class dut(object):
         else:
             self.info(data)
 
-    def formatMsg(self, msg):
+    def formatMsg(self, *msg):
         now =datetime.datetime.now()
-        msg = '%s\t%s\t%s'%(now.isoformat().replace("T", ' '), self.name, msg)
+        new_msg = ','.join([pprint.pformat(x) for x in msg])
+        msg = '%s\t%s\t%s'%(now.isoformat().replace("T", ' '), self.name, new_msg)
         print(msg)
         return msg
-    def info(self, msg):
+    def info(self, *msg):
         '''
         add info message to logger
         '''
@@ -348,14 +334,14 @@ class dut(object):
         if self.logger:
             self.logger.info(msg)
 
-    def error(self, msg):
+    def error(self, *msg):
         '''
         add error message to logger
         '''
         msg = self.formatMsg(msg)
         if self.logger:
             self.logger.error(msg)
-    def debug(self, msg):
+    def debug(self, *msg):
         '''
         add error message to logger
         '''
