@@ -53,7 +53,7 @@ if __name__ == "__main__":
     if not os.path.exists(suitelogdir):
         os.mkdir(suitelogdir)
 
-    suitelogdir = createLogDir(name, suitelogdir)
+    suitelogdir = createLogDir(name, suitelogdir, add_time=False)
     st = suiteParser(name, suitelogdir)
     lstRange = GetRange(rangelist )
     statsTotalCase, suite= st.load(suitefile, arglist, lstRange)

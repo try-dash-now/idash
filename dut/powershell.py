@@ -131,6 +131,8 @@ class powershell(dut):
 
     def send(self,cmd, Ctrl=False, noWait=False):
         import os
+        if self.dry_run:
+            return
         tmp =[]
         stdin = self.shellsession.stdin
         if Ctrl:

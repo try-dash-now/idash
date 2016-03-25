@@ -66,7 +66,7 @@ gPathLocker = threading.Lock()
 gShareDataLock= threading.Lock()
 gShareData={}
 #@logAction
-def createLogDir(name,logpath='./'):
+def createLogDir(name,logpath='./', add_time=True):
     global  gPathLocker
     gPathLocker.acquire()
     import os
@@ -93,8 +93,11 @@ def createLogDir(name,logpath='./'):
     removelist = '\-_.'
     pat = r'[^\w'+removelist+']'
     name = re.sub(pat, '', fullname)
-    tm = datetime.datetime.now().isoformat('_')
-    tm =  re.sub(pat, '', tm)
+    if add_time:
+        tm = datetime.datetime.now().isoformat('_')
+        tm =  re.sub(pat, '', tm)
+    else:
+        tm =''
     fullname = name+'-'+tm
     for dir in logpath:
         #print(os.getcwd())
