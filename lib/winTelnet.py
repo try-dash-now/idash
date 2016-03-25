@@ -354,7 +354,6 @@ class winTelnet(dut, object):#, spawn
 
         self.sock = socket.create_connection((host, port), timeout)
     def ReadOutput(self):
-
         maxInterval = 60*5
         if self.timestampCmd ==None:
             self.timestampCmd= time.time()
@@ -411,8 +410,8 @@ class winTelnet(dut, object):#, spawn
                         print(msg)
                         self.error(msg)
             self.lockStreamOut.release()
-        self.on_case_end()
-    def on_case_end(self):
+        self.closeSession()
+    def closeSession(self):
         print('quit %s'%self.name)
         for i in xrange(1,3,1):
             self.send('exit')

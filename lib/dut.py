@@ -61,6 +61,7 @@ class dut(object):
     max_session_read_error_counter= 50
     __args = None
     __kwargs = None
+    dry_run =False
     def closeSession(self):
         self.SessionAlive= False
         if self.logfile:
@@ -424,6 +425,8 @@ call function(%s)
         self.__kwargs = kwargs
         return self.__args, self.__kwargs
     def stepCheck(self, CaseName, lineNo, cmd, expect, wait):
+        if self.dry_run:
+            return 'cmd %s, expect %s'%(str(cmd), str(expect))
         if type(wait)!=type(''):
             wait = str(wait)
         def analyzeStep(self, casename, command, expect, wait):
@@ -544,7 +547,10 @@ call function(%s)
         Ctrl, bool, default is False, if it's True, then send a key combination: Ctrl+first_char_of_cmd
         noWait, bool, defualt is False, means move searching index, otherwise doesn't move the searching index
         '''
+        if self.dry_run:
+            return
         tmp =[]
+
         if self.loginDone:
             linesep=self.attribute['LINESEP']
         else:
@@ -583,6 +589,8 @@ call function(%s)
         flags: number, same as RE flags, default is re.MULTILINE|re.DOTALL 0x18
         noPattern: don't want to find the given pattern
         '''
+        if self.dry_run:
+            return 'fount it:%s'%(pattern)
         flag =False
         if pattern=='.+CalixE7>':
             flag=True

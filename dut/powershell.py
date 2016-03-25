@@ -50,7 +50,8 @@ class powershell(dut):
         while self.SessionAlive:
             for line in iter(self.shellsession.stderr.readline, b''):
                 self.q_err.put(line)
-    def on_case_end(self):
+    def closeSession(self):
+        super(dut,self).closeSession()
         print('quit %s'%self.name)
         try:
             self.logfile.flush()
@@ -113,7 +114,7 @@ class powershell(dut):
                 print(msg)
                 self.error(msg)
             self.lockStreamOut.release()
-        self.on_case_end()
+        self.closeSession()
 
     def show(self):
         newIndex = self.streamOut.rfind('\n')#self.streamOut.__len__()

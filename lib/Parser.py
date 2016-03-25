@@ -273,7 +273,7 @@ class suiteParser(object):
     def __init__(self, name, logpath ='./'):
         self.name = name
         self.logpath= logpath
-    @logAction
+    #@logAction
     def load(self, suitfile, arglist=[], rangelist=[]):
         arrSuite =[]
         def parseFailAction(lineNo, failAction):

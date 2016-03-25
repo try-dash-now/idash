@@ -20,10 +20,13 @@ if __name__ == "__main__":
     import re,datetime
     from Parser import suiteParser
     from runner import createLogDir
-
+    dry_run= False
+    if sys.argv[1].lower()=='dryrun':
+        sys.argv.pop(1)
+        dry_run=True
     suitefile =sys.argv[1]
-    name = '-'.join(sys.argv[1:])
-    name = re.sub('[^\w\-_]','-',name)[:60]+' '+datetime.datetime.now().isoformat(':').replace(':','')
+    name = os.path.basename(suitefile)+ '-'.join(sys.argv[2:])
+    name = re.sub('[^\w\-_]','-',name)[:60]+'-'+datetime.datetime.now().isoformat('-').replace(':','-')
     name = re.sub('-+', '-', name)
     name = re.sub('^-*', '', name)
     def  GetRange(caserange='all'):
@@ -43,6 +46,7 @@ if __name__ == "__main__":
             caserange= sorted(drange)
         CaseRange=caserange
         return CaseRange
+
     suitelogdir = '../../log'
     rangelist = sys.argv[2]
     arglist = sys.argv[3:]
@@ -71,7 +75,7 @@ if __name__ == "__main__":
 #	9, concurrent, loop, 2 ,no_stop ,rc.py5 home_case.csv home.csv full
 #	9, concurren,FailAction,FuncName,cmd =case, run_case_in_suite, rc.py7 home_case.csv home.csv full
     index = 1
-    from runner import run_case_in_suite , releaseDUTs , initDUT,case_runner, createLogDir, array2html, run1case
+    from runner import run_case_in_suite , releaseDUTs , createLogDir, array2html, run1case
 
     import time, re
     returncode =1
@@ -120,7 +124,7 @@ if __name__ == "__main__":
                 returncode = 0
                 logger.info('running case: %s'%cmd)
 
-                returncode , errormessage ,benchfile, benchinfo, dut_pool = run1case(casename, cmd, benchfile, benchinfo, dut_pool, logdir, logger ,shareData)
+                returncode , errormessage ,benchfile, benchinfo, dut_pool = run1case(casename, cmd, benchfile, benchinfo, dut_pool, logdir, logger ,shareData, dry_run)
                 caseEndTime = time.time()
                 ExecutionDuration = caseEndTime-caseStartTime
                 caseResult = 'PASS'

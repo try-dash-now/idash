@@ -49,7 +49,7 @@ def logAction(fun):
             raise e
         return inner
     return inner
-@logAction
+#@logAction
 def createLogger(name, logpath='./'):
     #create  a unique folder for case, and logfile for case
     if not os.path.exists(logpath):
@@ -65,7 +65,7 @@ import threading
 gPathLocker = threading.Lock()
 gShareDataLock= threading.Lock()
 gShareData={}
-@logAction
+#@logAction
 def createLogDir(name,logpath='./'):
     global  gPathLocker
     gPathLocker.acquire()
@@ -124,17 +124,17 @@ def createLogDir(name,logpath='./'):
     gPathLocker.release()
     return old_logpath+'/'+fullname
 
-@logAction
+#@logAction
 def openDutLogfile(duts, logpath, logger):
     for dut_name in duts.keys():
         duts[dut_name].openLogfile(logpath)
         logger.info("DUT %s redirected to case folder"%dut_name)
 
-@logAction
-def initDUT(errormessage ,bench, dutnames, logger=None, casepath='./', shareData=None):
+#@logAction
+def initDUT(errormessage ,bench, dutnames, logger=None, casepath='./', shareData=None, dry_run =False):
     dictDUTs={}
 
-    def connect2dut(InitErrorMessage , dutname, dut_attr, logger=None,path='./', shareData=None):
+    def connect2dut(InitErrorMessage , dutname, dut_attr, logger=None,path='./', shareData=None, dry_run =False):
         msg = ''
         try:
             import os
@@ -150,6 +150,14 @@ def initDUT(errormessage ,bench, dutnames, logger=None, casepath='./', shareData
             ClassName = ModuleName.__getattribute__(classname)
 
             ses= ClassName(dutname, dut_attr,logger=logger ,logpath = path, shareData = shareData)
+            try:
+                ses.dry_run = dry_run
+            except Exception as e:
+                msg ='%s not support dry_run'%(dutname)
+                if logger is not None:
+                    logger.error(msg)
+                else:
+                    print(msg)
             #ses.login()
             dictDUTs[dutname]=ses
             return  ses
@@ -169,7 +177,7 @@ def initDUT(errormessage ,bench, dutnames, logger=None, casepath='./', shareData
     dutobjs=[]
 
     for dutname in dutnames:
-        th = threading.Thread(target= connect2dut, args =[errormessage, dutname, bench[dutname],logger, casepath, shareData])
+        th = threading.Thread(target= connect2dut, args =[errormessage, dutname, bench[dutname],logger, casepath, shareData, dry_run])
         dutobjs.append(th)
     for th in dutobjs:
         th.start()
@@ -268,7 +276,7 @@ def case_runner(casename, dictDUTs, case_seq, mode='full', logger =None, shareda
     #print(response)
     return  caseFail, errorMessage
 
-def run_case_in_suite(casename, currentBenchfile, currentBenchinfo,logger, stop_at_fail,logdir, cmd):
+def run_case_in_suite(casename, currentBenchfile, currentBenchinfo,logger, stop_at_fail,logdir, cmd, dry_run):
 
     patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s* cr.py\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
     m =  re.match(patDash, cmd)
@@ -295,7 +303,7 @@ def run_case_in_suite(casename, currentBenchfile, currentBenchinfo,logger, stop_
         sdut, lvar, lsetup, lrun, ltear =cs.load(casefile)
         ldut = list(sdut)
         errormessage =[]
-        duts= initDUT(errormessage,bench,ldut,logger, logdir)
+        duts= initDUT(errormessage,bench,ldut,logger, logdir, dry_run)
         seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
         returncode, caseErrorMessage= case_runner(casename,duts,seq, mode)
     else:
@@ -451,7 +459,7 @@ def concurrent(startIndex, logpath, cmdConcurrent, report, suiteLogger, shareDat
 
     return caseTotal, casePass, caseFail, report, lstFailCase, breakFlag
 
-def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, sharedata ):
+def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, sharedata, dry_run =False):
     errormessage = ''
     caselogger = createLogger('caselog.txt', logdir)
     bench = benchinfo
@@ -507,18 +515,16 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
                     dut_pool[od].openLogfile(logdir)
                 else:
                     dut_pool[od].closeSession()
+                    dut_pool.pop(od)
                     newduts.append(od)
             errormessage =[]
-            duts= initDUT(errormessage,bench,newduts,caselogger, logdir)
+            duts= initDUT(errormessage,bench,newduts,caselogger, logdir,sharedata, dry_run=dry_run)
 
             for k in duts.keys():
                 dut_pool[k]=duts[k]
 
             for key in duts.keys():
-                if dut_pool.has_key(key):
-                    continue
-                else:
-                    dut_pool[key]= duts[key]
+                dut_pool[key]= duts[key]
 
             seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
             caselogger.info('starting to run case: %s'%cmd)
@@ -544,22 +550,19 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
                 exe_cmd ='python '+ cmd+" "+logdir
                 caselogger.info('running case: %s'%exe_cmd)
                 pp = subprocess.Popen(args = exe_cmd ,shell =True,stderr=subprocess.PIPE)
+                import time
+                ChildRuning = True
+                first =True
+                while ChildRuning:
+                    if pp.poll() is None:
+                        interval = 1
+                        if first:
+                            first=False
+                        time.sleep(interval)
+                    else:
+                        ChildRuning = False
 
-                    #errormessage += stderr
-
-            import time
-            ChildRuning = True
-            first =True
-            while ChildRuning:
-                if pp.poll() is None:
-                    interval = 1
-                    if first:
-                        first=False
-                    time.sleep(interval)
-                else:
-                    ChildRuning = False
-
-            returncode = pp.returncode
+                returncode = pp.returncode
             if returncode:
                 try:
                     stdout, stderr =pp.communicate()
