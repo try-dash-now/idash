@@ -354,7 +354,7 @@ class winTelnet(dut, object):#, spawn
 
         self.sock = socket.create_connection((host, port), timeout)
     def ReadOutput(self):
-        maxInterval = 60*5
+        maxInterval = 60
         if self.timestampCmd ==None:
             self.timestampCmd= time.time()
         fail_counter = 0
@@ -364,9 +364,11 @@ class winTelnet(dut, object):#, spawn
                 #if not self.sock:
                 #    self.relogin()
                 if self.sock:
+                    #self.info('time in ReadOutput',time.time(), 'timestampCmd', self.timestampCmd, 'max interval', maxInterval, 'delta',  time.time()-self.timestampCmd)
                     if (time.time()-self.timestampCmd)>maxInterval:
                         self.write('\r\n')
                         self.timestampCmd = time.time()
+                        self.info('anti-idle', fail_counter )
                 else:
                     raise Exception('[Errno 10053] An established connection was aborted by the software in your host machine')
                 self.fill_rawq()
@@ -377,38 +379,35 @@ class winTelnet(dut, object):#, spawn
                 if self.logfile and self.cookedq.__len__()!=0:
                     self.logfile.write(self.cookedq)
                     self.logfile.flush()
+                if fail_counter:
+                    self.info(fail_counter, 'time out error cleared')
                 fail_counter = 0
+            except KeyboardInterrupt:
+                break
             except Exception as e:
-                fail_counter+=1
-                if self.debuglevel:
+
+                if self.loginDone:
+                    fail_counter+=1
+                if self.debuglevel and fail_counter%10==0:
                     print('\n%s Exception %d:'%(self.name, fail_counter)+e.__str__()+'\n')
-                #self.lockStreamOut.release()
-                if str(e)!='timed out':
-                    if str(e) =='[Errno 10053] An established connection was aborted by the software in your host machine' or '[Errno 9] Bad file descriptor'==str(e) or str(e) =='[Errno 10054] An existing connection was forcibly closed by the remote host':
-                        #self.lockStreamOut.acquire()
+                if str(e).find('timed out')==-1:
+                    self.error('fail_counter', fail_counter, 'max_output_time_out',self.max_output_time_out, e)
+                    try:
+                        if self.sock:
+                            self.sock = 0
+                            self.eof = 1
+                            self.iacseq = ''
+                            self.sb = 0
+                        self.open(self.host,self.port,self.timeout)
+                        if self.autoReloginFlag:
+                            fail_counter = 0
+                            th =threading.Thread(target=self.relogin)
+                            th.start()
+                    except Exception as e:
+                        self.error('\n%s Exception: %d:'%(self.name, fail_counter)+e.__str__()+'\n')
+                    #if str(e) =='[Errno 10053] An established connection was aborted by the software in your host machine' or '[Errno 9] Bad file descriptor'==str(e) or str(e) =='[Errno 10054] An existing connection was forcibly closed by the remote host':
+                time.sleep(0.2)
 
-                        try:
-                            if self.sock:
-                                #self.write('quit\r\n')
-                                #self.sock.close()
-                                self.sock = 0
-                                self.eof = 1
-                                self.iacseq = ''
-                                self.sb = 0
-                            self.open(self.host,self.port,self.timeout)
-                            if self.autoReloginFlag:
-                                th =threading.Thread(target=self.relogin)
-                                th.start()
-
-
-                        except Exception as e:
-                            print('\n%s Exception: %d:'%(self.name, fail_counter)+e.__str__()+'\n')
-                    else:
-                        print("\n%s Exception: %s"%(self.name, str(e)))
-                        import traceback
-                        msg = traceback.format_exc()
-                        print(msg)
-                        self.error(msg)
             self.lockStreamOut.release()
         self.closeSession()
     def closeSession(self):

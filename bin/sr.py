@@ -21,8 +21,10 @@ if __name__ == "__main__":
     from Parser import suiteParser
     from runner import createLogDir
     dry_run= False
-    if sys.argv[1].lower()=='dryrun':
+    print(sys.argv)
+    if sys.argv[1].strip().lower()=='dryrun':
         sys.argv.pop(1)
+        print(sys.argv)
         dry_run=True
     suitefile =sys.argv[1]
     name = os.path.basename(suitefile)+ '-'.join(sys.argv[2:])
@@ -33,6 +35,7 @@ if __name__ == "__main__":
         if str(caserange).strip().lower()=='all':
             caserange = 'all'
         else:
+            print(caserange)
             caserange = str(caserange).strip()
             caserange = str(caserange).split(',')
             drange = []
@@ -168,6 +171,11 @@ if __name__ == "__main__":
                 break
             casename='%d'%index
             logdir ='../../log/'+suitefile+'/'+casename
+        suiteEndTime = time.time()
+        htmlstring = array2html(suitefile,rangelist,','.join(arglist), statsTotalCase,statsFail+statsPass,statsPass,statsFail, statsTotalCase-statsFail-statsPass,report, suiteStartTime, suiteEndTime, finish=True)
+        reportfilename = '../../log/%s.html'%(name)
+        with open(reportfilename, 'wb') as f:
+            f.write(htmlstring.encode(encoding='utf_8', errors='strict'))
     except KeyboardInterrupt:
         try:
             print('Pass:',statsPass, 'Fail', statsFail)

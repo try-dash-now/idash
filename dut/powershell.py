@@ -51,7 +51,7 @@ class powershell(dut):
             for line in iter(self.shellsession.stderr.readline, b''):
                 self.q_err.put(line)
     def closeSession(self):
-        super(dut,self).closeSession()
+        super(powershell,self).closeSession()
         print('quit %s'%self.name)
         try:
             self.logfile.flush()

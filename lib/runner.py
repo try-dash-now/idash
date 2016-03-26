@@ -204,6 +204,7 @@ CASE_MODE = set(['full', 'f',
                  ])
 #@logAction
 def run(casename,duts, seqs ,mode, logger, sharedata):
+        print('inited duts 5')
         global  CASE_MODE
         import datetime
         def analyzeStep(casename, dut, commnad, expect, wait):
@@ -512,23 +513,27 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
                     dut_pool[nd].ErrorMessage=None # to store the error message
                 else:
                     newduts.append(nd)
-
-            for od in oldduts:
-                if dut_pool[od].isAlive():
-                    dut_pool[od].openLogfile(logdir)
-                else:
-                    dut_pool[od].closeSession()
-                    dut_pool.pop(od)
-                    newduts.append(od)
+            if dry_run is not True:
+                for od in oldduts :
+                    if dut_pool[od].isAlive() :
+                        dut_pool[od].openLogfile(logdir)
+                    else:
+                        dut_pool[od].closeSession()
+                        dut_pool.pop(od)
+                        newduts.append(od)
             errormessage =[]
             duts= initDUT(errormessage,bench,newduts,caselogger, logdir,sharedata, dry_run=dry_run)
 
+
+            #duts['cfa84'].isAlive()
+            #duts['sba94'].isAlive()
+            print('inited duts')
             for k in duts.keys():
                 dut_pool[k]=duts[k]
-
+            print('inited duts 2')
             for key in duts.keys():
                 dut_pool[key]= duts[key]
-
+            print('inited duts 3 ' )
             seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
             caselogger.info('starting to run case: %s'%cmd)
             returncode, STRerrormessage= case_runner(casename,dut_pool,seq, case_mode, caselogger)
@@ -595,7 +600,7 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
 
     return  returncode, errormessage, benchfile,bench, dut_pool
 
-def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN,Report, suiteStartTime,suiteEndTime):
+def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN,Report, suiteStartTime,suiteEndTime, finish=False):
     import time, datetime
     if CASERUN==0 :#or TOTAL==0:
         CASERUN=1
@@ -610,12 +615,16 @@ def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAI
     days = 0 if duration_in_second<(3600*24) else str(duration_in_second/(3600*24))
     suit_duration_str = str(datetime.timedelta(days= days, seconds=duration_in_second))
     import datetime
+    finish_status= 'running'
+    if finish:
+        finish_status = 'done'
     response ="""
 <HTML>
 <HEAD>
-<TITLE>Suite Test Report</TITLE>
+<TITLE>Suite Test Report %s</TITLE>
 </HEAD>
 <BODY>
+%s
 <table cellspacing="1" cellpadding="2" border="1">
 <tr><td>Start Time</td><td>End Time</td><td>Duration(H:M:S)</td></tr>
 <tr><td>%s</td><td>%s</td><td>%s</td></tr>
@@ -642,7 +651,7 @@ def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAI
 <BR>
 <BR>
 <table cellspacing="1" cellpadding="2" border="1">
-"""%(time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(suiteStartTime)), time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(suiteEndTime)),suit_duration_str,reportname, CaseRangeStr, ArgStr ,TOTAL, CASEPASS, CASEFAIL, CASENOTRUN, PPASS,PFAIL,PNOTRUN)
+"""%(finish_status,finish_status, time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(suiteStartTime)), time.strftime('%Y-%m-%d:%H:%M:%S', time.localtime(suiteEndTime)),suit_duration_str,reportname, CaseRangeStr, ArgStr ,TOTAL, CASEPASS, CASEFAIL, CASENOTRUN, PPASS,PFAIL,PNOTRUN)
 
     response = response+ '''<tr><td>No.</td><td>Result</td><td>Case Name</td><td>Duration(s)</td><td>StartTime</td><td>EndTime</td><td>Line No</td><td>Error Message</td></tr>'''
     #NewRecord = [index,caseResult,caseline[2][1], errormessage,logdir, LineNo]

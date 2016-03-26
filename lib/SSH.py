@@ -2,7 +2,7 @@ __author__ = 'Sean Yu'
 '''created @2015/12/4''' 
 
 
-import os, sys,time
+import os, sys,time , traceback
 pardir =os.path.dirname(os.path.realpath(os.getcwd()))
 subfolder = ['lib', 'dut']
 for sub in subfolder:
@@ -48,17 +48,18 @@ class SSH(dut):
             raise e
 
     def ReadOutput(self):
-        import time, os
         maxInterval = 60
         if self.timestampCmd ==None:
             self.timestampCmd= time.time()
-        counter = 0
+        fail_counter = 0
         while self.SessionAlive:
             self.lockStreamOut.acquire()
             try:
+                self.info('time in ReadOutput',time.time(), 'timestampCmd', self.timestampCmd, 'max interval', maxInterval, 'delta',  time.time()-self.timestampCmd)
                 if (time.time()-self.timestampCmd)>maxInterval:
                     self.write('\r\n')
                     self.timestampCmd = time.time()
+                    self.info('anti-idle', fail_counter)
                 if self.client and self.chan:
                     out = self.chan.recv(64)
                     if len(out):
@@ -66,19 +67,27 @@ class SSH(dut):
                     if self.logfile and len(out)!=0:
                         self.logfile.write(out)
                         self.logfile.flush()
-                counter = 0
+                fail_counter = 0
+            except KeyboardInterrupt:
+                break
             except Exception as e:
-                counter+=1
+                fail_counter+=1
                 if self.debuglevel:
-                    print('\nReadOutput Exception %d:'%(counter)+e.__str__()+'\n')
+                    print('\nReadOutput Exception %d:'%(fail_counter)+e.__str__()+'\n')
                 #self.lockStreamOut.release()
+                if self.autoReloginFlag and self.max_output_time_out< fail_counter:
+                    import threading
+                    fail_counter = 0
+                    th =threading.Thread(target=self.relogin)
+                    th.start()
                 print("ReadOutput Exception: %s"%(str(e)))
-                import traceback
+
                 msg = traceback.format_exc()
                 print(msg)
                 self.error(msg)
             self.lockStreamOut.release()
             time.sleep(0.001)
+        self.closeSession()
 
     def login(self):
         #self.loginDone=False
@@ -113,4 +122,7 @@ class SSH(dut):
     def write(self, data):
         self.timestampCmd= time.time()        #super(SSH, self).write(data)
         if self.chan :
-            self.chan.send(data)
+            if self.dry_run:
+                self.chan.send('')
+            else:
+                self.chan.send(data)

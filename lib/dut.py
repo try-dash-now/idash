@@ -58,26 +58,46 @@ class dut(object):
     lockStreamOut = None
     lockSearch = None
     remain_in_update_buffer=None
-    max_session_read_error_counter= 50
+    max_session_read_error_counter= 1000
     __args = None
     __kwargs = None
     dry_run =False
+    max_output_time_out= 10
+    disconnected =False
+    def set_max_time_out(self, max_counter=10):
+        if int(max_counter)>0:
+            self.max_output_time_out =int(max_counter)
+        else:
+            self.max_output_time_out = 0
+
     def closeSession(self):
         self.SessionAlive= False
-        if self.logfile:
-            self.logfile.flush()
-        #self.__del__()
     def isAlive(self, cmd='\r\n'):
-        try:
-            self.singleStep(cmd,'.+',60)
+
+        if self.dry_run:
             return True
-        except Exception as e:
-            emsg = e.__str__()+'\n'+traceback.format_exc()
-            if self.logger:
-                self.logger.error(emsg)
+        else:
+            isAlive = False
+            self.info('try to test session is ok')
+            tmpIndex = self.streamOut.__len__()
+            for c in xrange(1, 120, 1):
+                tmpIndex1= self.streamOut.__len__()
+                if tmpIndex==tmpIndex1:
+                    self.write(cmd)
+                    self.sleep(1)
+                else:
+                    isAlive = True
+                    break
+            if isAlive:
+                self.disconnected =False
+                self.info('still alive')
             else:
-                print(e.__str__()+'\n'+traceback.format_exc())
-            return False
+                self.error('session disconnected')
+                self.disconnected = True
+            return  isAlive
+
+
+
     def ReadOutput(self):
         print('quit %s'%self.name)
         raise NotImplementedError
@@ -384,14 +404,16 @@ call function(%s)
             raise ValueError(msg)
     def sleep(self, wait):
         wait = float(wait)
-
+        if self.dry_run:
+            return
         if wait>10:
-            counter = wait
-            interval =1.0
-            while counter>0.01:
+            interval =0.1
+            counter = int(wait/interval)
+
+            while counter:
                 time.sleep(interval)
                 counter-=interval
-                if int(counter)%10==0:
+                if int(counter)%(int(10/interval))==0:
                     sys.stdout.write('.')
         else:
             time.sleep(float(wait))
