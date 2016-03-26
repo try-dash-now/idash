@@ -20,9 +20,10 @@ from socket import *
 try:
     hostip=''
     s = socket(AF_INET, SOCK_DGRAM)
-    s.bind(("", 1234))
+    port_b= 4321
+    s.bind(("", port_b))
     #sq = socket(AF_INET, SOCK_DGRAM)
-    s.connect(("10.0.0.4", 1234))
+    s.connect(("10.0.0.4", port_b))
 
     domain = getfqdn()
     hostip = s.getsockname()[0]

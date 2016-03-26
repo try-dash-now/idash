@@ -359,7 +359,7 @@ class winTelnet(dut, object):#, spawn
             self.timestampCmd= time.time()
         fail_counter = 0
         while self.SessionAlive:
-            self.lockStreamOut.acquire()
+
             try:
                 #if not self.sock:
                 #    self.relogin()
@@ -375,7 +375,9 @@ class winTelnet(dut, object):#, spawn
                 self.cookedq=''
                 self.process_rawq()
                 self.checkLine(self.cookedq)
+                self.lockStreamOut.acquire()
                 self.streamOut+=self.cookedq
+                self.lockStreamOut.release()
                 if self.logfile and self.cookedq.__len__()!=0:
                     self.logfile.write(self.cookedq)
                     self.logfile.flush()
@@ -408,7 +410,7 @@ class winTelnet(dut, object):#, spawn
                     #if str(e) =='[Errno 10053] An established connection was aborted by the software in your host machine' or '[Errno 9] Bad file descriptor'==str(e) or str(e) =='[Errno 10054] An existing connection was forcibly closed by the remote host':
                 time.sleep(0.2)
 
-            self.lockStreamOut.release()
+
         self.closeSession()
     def closeSession(self):
         print('quit %s'%self.name)

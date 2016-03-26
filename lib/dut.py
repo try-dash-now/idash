@@ -291,9 +291,10 @@ class dut(object):
                     time.sleep(1)
                     pass
             self.logger.info('%s streamOut size is %d, to be reset to 0'%(self.name, len(self.streamOut)))
-            self.lockStreamOut.acquire()
+            #self.lockStreamOut.release()
+            #self.lockStreamOut.acquire()
             self.streamOut   =  ''
-            self.lockStreamOut.release()
+            #self.lockStreamOut.release()
             self.logger.info('%s is reset to 0'%(self.name))
             self.move_search_window() #self.idxSearch   =   0
             self.idxUpdate   =   0
@@ -409,10 +410,9 @@ call function(%s)
         if wait>10:
             interval =0.1
             counter = int(wait/interval)
-
-            while counter:
+            while counter>0.1 :
                 time.sleep(interval)
-                counter-=interval
+                counter-=1
                 if int(counter)%(int(10/interval))==0:
                     sys.stdout.write('.')
         else:
