@@ -33,11 +33,17 @@ class HttpHandler(BaseHTTPRequestHandler):
         """
         content =""
         try:
-            list = os.listdir(path)
+            mtime = lambda f: os.stat(os.path.join(path, f)).st_mtime
+            dir_list =  list(sorted(os.listdir(path), key=mtime, reverse=True))
+
         except os.error:
             self.send_error(404, "No permission to list directory")
             return ""
-        list.sort(key=lambda a: a.lower())
+
+
+
+
+        #dir_list.sort(key=lambda a: a.lower(), reverse=reversed_list)
         #f = StringIO()
         displaypath = cgi.escape(urllib.unquote(self.path))
         content='<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">'
@@ -86,7 +92,7 @@ class HttpHandler(BaseHTTPRequestHandler):
         </SCRIPT>
         '''
 
-        for name in list:
+        for name in dir_list:
             fullname = os.path.join(path, name)
             displayname = linkname = name
             # Append / for directories or @ for symbolic links
