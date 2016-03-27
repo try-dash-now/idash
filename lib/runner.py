@@ -95,10 +95,10 @@ def createLogDir(name,logpath='./', add_time=True):
     name = re.sub(pat, '', fullname)
     if add_time:
         tm = datetime.datetime.now().isoformat('_')
-        tm =  re.sub(pat, '', tm)
+        tm = '-'+ re.sub(pat, '', tm)
     else:
         tm =''
-    fullname = name+'-'+tm
+    fullname = name+tm
     for dir in logpath:
         #print(os.getcwd())
         if os.path.exists(dir):
