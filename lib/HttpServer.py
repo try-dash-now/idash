@@ -6,6 +6,7 @@ created 2015/5/22 
 '''
 from SocketServer import ThreadingMixIn
 from BaseHTTPServer import HTTPServer,BaseHTTPRequestHandler
+import  SocketServer
 import os,sys
 import StringIO, cgi , urllib
 import ConfigParser
@@ -21,14 +22,6 @@ class HttpHandler(BaseHTTPRequestHandler):
     fDBReseting=False
     httpserver =None
     rootdir = None
-    def __del__(self):
-        #self.hdrlog.close()
-        #print('end http server')
-        pass
-
-
-
-
 
     def list_dir(self, path, related_path):
         """Helper to produce a directory listing (absent index.html).
@@ -130,6 +123,7 @@ class HttpHandler(BaseHTTPRequestHandler):
         content += ' \n </table><br>'
         return  content
     def do_GET(self):
+        print('do_Get....')
         config  = ConfigParser.ConfigParser()
         conf = config.read('./html/init.cfg')
 
@@ -203,13 +197,6 @@ class HttpHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(encoded)
 
-
-
-
-
-
-
-
     def LoadHTMLPage(self, filename, replace=[], Pattern4ESCAPE1='#NOTEXISTPATTERN_HERE_FOR_STRING_FORMAT1#',Pattern4ESCAPE2='#NOTEXISTPATTERN_HERE_FOR_STRING_FORMAT2#'):
 
         indexpage= open(filename, 'r')
@@ -262,17 +249,6 @@ class HttpHandler(BaseHTTPRequestHandler):
             return 'PID: %d runcase(%s) ended with returncode(%d)'%(pp.pid,exe_cmd, returncode) #non-zero means failed
 
 
-
-
-
-
-
-
-
-
-
-
-
     def ParseFormData(self, s):
         import re
         reP = re.compile('^(-+[\d\w]+)\r\n(.+)-+[\d\w]+-*', re.M|re.DOTALL)
@@ -313,15 +289,6 @@ class HttpHandler(BaseHTTPRequestHandler):
             print('not match')
             return None
 
-
-
-
-
-
-
-
-
-
     def do_POST(self):
         content_len = int(self.headers['Content-Length'])
         #self.queryString
@@ -353,9 +320,6 @@ class HttpHandler(BaseHTTPRequestHandler):
 
             print('result of '+ executefile+ ' ' + arg+ ' '+str(encoded))
 
-
-
-
         except Exception as e:
             print(e)
 
@@ -386,4 +350,5 @@ class HttpHandler(BaseHTTPRequestHandler):
 
 
 class ThreadingHttpServer(ThreadingMixIn, HTTPServer):
-    pass
+    def __init__(self, server_address, RequestHandlerClass):
+        SocketServer.TCPServer.__init__(self, server_address, RequestHandlerClass)

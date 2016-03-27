@@ -12,7 +12,6 @@ from HttpServer import  ThreadingHttpServer, HttpHandler
 port =9999
 if len(sys.argv)>1:
     port =int(sys.argv[1])
-httpd=ThreadingHttpServer(('',port), HttpHandler)
 
 from socket import *
 
@@ -27,20 +26,22 @@ try:
 
     domain = getfqdn()
     hostip = s.getsockname()[0]
+    httpd=ThreadingHttpServer((hostip,port), HttpHandler)
+
     s.close()
 except Exception as e:
     import traceback
     msg = traceback.format_exc()
     print(msg)
 hostname =gethostname()
-
-print("Server started on %s (%s),port %d....."%(hostname,hostip,port))
-#print('Process ID:%d'%os.geteuid())
-httpd.serve_forever()
-
 try:
     s.close()
 except:
     pass
+print("Server started on %s (%s),port %d....."%(hostname,hostip,port))
+#print('Process ID:%d'%os.geteuid())
+httpd.serve_forever()
+
+
 
 
