@@ -204,7 +204,7 @@ CASE_MODE = set(['full', 'f',
                  ])
 #@logAction
 def run(casename,duts, seqs ,mode, logger, sharedata):
-        print('inited duts 5')
+        #print('initedduts 5')
         global  CASE_MODE
         import datetime
         def analyzeStep(casename, dut, commnad, expect, wait):
@@ -515,6 +515,8 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
                     newduts.append(nd)
             if dry_run is not True:
                 for od in oldduts :
+                    dut_pool[od].FailFlag    =False # the flag means in Session's perspective view, case failed
+                    dut_pool[od].ErrorMessage=None
                     if dut_pool[od].isAlive() :
                         dut_pool[od].openLogfile(logdir)
                     else:
@@ -527,13 +529,13 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
 
             #duts['cfa84'].isAlive()
             #duts['sba94'].isAlive()
-            print('inited duts')
+            #print('initedduts')
             for k in duts.keys():
                 dut_pool[k]=duts[k]
-            print('inited duts 2')
+            #print('initedduts 2')
             for key in duts.keys():
                 dut_pool[key]= duts[key]
-            print('inited duts 3 ' )
+            #print('initedduts 3 ' )
             seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
             caselogger.info('starting to run case: %s'%cmd)
             returncode, STRerrormessage= case_runner(casename,dut_pool,seq, case_mode, caselogger)
@@ -541,7 +543,8 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
             if returncode:
                 import pprint
                 STRerrormessage = pprint.pformat(STRerrormessage)
-                caselogger.error('Case Failed:%s'%(STRerrormessage))
+                caselogger.error('Case Failed:')
+                caselogger.error(STRerrormessage)
                 errormessage.append(STRerrormessage)
 
             else:
