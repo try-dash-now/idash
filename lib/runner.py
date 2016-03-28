@@ -511,6 +511,7 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
                     oldduts.append(nd)
                     dut_pool[nd].FailFlag    =False # the flag means in Session's perspective view, case failed
                     dut_pool[nd].ErrorMessage=None # to store the error message
+                    caselogger.info(dut_pool[nd].name, 'cleared FailFlag and ErrorMessage')
                 else:
                     newduts.append(nd)
             if dry_run is not True:
