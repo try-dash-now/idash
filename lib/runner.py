@@ -543,7 +543,7 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
 
             if returncode:
                 import pprint
-                STRerrormessage = pprint.pformat(STRerrormessage)
+                #STRerrormessage = pprint.pformat(STRerrormessage)
                 caselogger.error('Case Failed:')
                 caselogger.error(STRerrormessage)
                 errormessage.append(STRerrormessage)
