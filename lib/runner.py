@@ -473,6 +473,10 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
         for dut_name in dut_pool:
             try:
                 dut_pool[dut_name].logger = caselogger
+                dut_pool[dut_name].openLogfile(logdir)
+                dut_pool[dut_name].FailFlag    =False # the flag means in Session's perspective view, case failed
+                dut_pool[dut_name].ErrorMessage=None # to store the error message
+                caselogger.info(dut_pool[dut_name].name, 'session info reseted')
             except Exception as e:
                 caselogger.error('failed to update logger for dut:', dut_name)
 
