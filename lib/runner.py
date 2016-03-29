@@ -228,12 +228,13 @@ def run(casename,duts, seqs ,mode, logger, sharedata):
 ###############################################################################
 """%(datetime.datetime.now().isoformat('_'),casename,lineno,segment, stepindex,
                          dut,cmd, expect, due)
-                    loginfo = '''%s
-Case: %s, LineNo:%d, %s.%d
-DUT(%s) Action(%s),Exp(%s),Wait(%s)'''%(datetime.datetime.now().isoformat('_'),casename,lineno,segment, stepindex,
-                         dut,cmd, expect, due)
-                    for line in loginfo.replace('\r\n','\n').split('\n'):
-                        logger.info(line)
+                    logger.info('segment', segment)
+                    logger.info('LineNo', lineno)
+                    logger.info('step Index', stepindex)
+                    logger.info('dut', dut)
+                    logger.info('action', cmd)
+                    logger.info('EXPECT', expect)
+                    logger.info('due', due)
                     print(stepinfo)
 
                     session.stepCheck(casename, lineno, cmd, expect, due)
@@ -602,7 +603,6 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
         errormessage = '%s\n%s'%(e.__str__(),traceback.format_exc())
         caselogger.error('Case FAIL')
         caselogger.error(errormessage)
-
     return  returncode, errormessage, benchfile,bench, dut_pool
 
 def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN,Report, suiteStartTime,suiteEndTime, finish=False):

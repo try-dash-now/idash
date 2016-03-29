@@ -523,12 +523,16 @@ call function(%s)
             last_dump =None
             last_execption =None
             while(counter<maxtry+1):
-                print('\ntry %d/%d:%s'%(counter,maxtry, str(funName)))
+                self.logger.info('try %d/%d:%s'%(counter,maxtry, str(funName)))
                 counter +=1
                 try:
                     if not fun:
-                        print('FunName(%s) is NOT defined'%FunName)
+                        self.error('FunName(%s) is NOT defined'%FunName)
+                    self.info('function name:', fun)
+                    self.info('args:', arg)
+                    self.info('kwarg', kwarg)
                     response = fun(*arg, **kwarg)
+
                     IsFail=False
                     break
                 except Exception as e:
@@ -713,6 +717,7 @@ call function(%s)
         #self.lockRelogin.release()
     def setFail(self, msg):
         self.FailFlag=True
+        self.error(msg)
         if self.ErrorMessage:
             self.ErrorMessage+=msg+'\n'
         else:
