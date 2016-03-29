@@ -308,6 +308,7 @@ def run_case_in_suite(casename, currentBenchfile, currentBenchinfo,logger, stop_
         sdut, lvar, lsetup, lrun, ltear =cs.load(casefile)
         ldut = list(sdut)
         errormessage =[]
+
         duts= initDUT(errormessage,bench,ldut,logger, logdir, dry_run)
         seq = [cs.seqSetup, cs.seqRun, cs.seqTeardown]
         returncode, caseErrorMessage= case_runner(casename,duts,seq, mode)
@@ -469,6 +470,11 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
     caselogger = createLogger('caselog.txt', logdir)
     bench = benchinfo
     try:
+        for dut_name in dut_pool:
+            try:
+                dut_pool[dut_name].logger = caselogger
+            except Exception as e:
+                caselogger.error('failed to update logger for dut:', dut_name)
 
         patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*(cr.py|cr.exe)\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
         m =  re.match(patDash, cmd)
@@ -488,6 +494,7 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
             case_mode       = lstArg[2]
             case_args= lstArg
             case_args.insert(0,'cr.py')
+
 
             if case_benchfile!=benchfile:
                 from common import bench2dict
