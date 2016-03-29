@@ -519,6 +519,7 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
                     dut_pool[od].FailFlag    =False # the flag means in Session's perspective view, case failed
                     dut_pool[od].ErrorMessage=None
                     if dut_pool[od].isAlive() :
+                        dut_pool[od].logger = caselogger
                         dut_pool[od].openLogfile(logdir)
                     else:
                         dut_pool[od].closeSession()

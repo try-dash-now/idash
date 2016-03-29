@@ -55,7 +55,7 @@ class SSH(dut):
         while self.SessionAlive:
             self.lockStreamOut.acquire()
             try:
-                self.info('time in ReadOutput',time.time(), 'timestampCmd', self.timestampCmd, 'max interval', maxInterval, 'delta',  time.time()-self.timestampCmd)
+                #self.info('time in ReadOutput',time.time(), 'timestampCmd', self.timestampCmd, 'max interval', maxInterval, 'delta',  time.time()-self.timestampCmd)
                 if (time.time()-self.timestampCmd)>maxInterval:
                     self.write('\r\n')
                     self.timestampCmd = time.time()

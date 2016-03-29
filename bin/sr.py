@@ -64,13 +64,13 @@ if __name__ == "__main__":
     benchfile =''
     benchinfo ={}
     from runner import createLogger
-    logger = createLogger('suite.txt', suitelogdir)
-    logger.info('suite name\t%s'%(sys.argv[1]))
-    logger.info('suite range\t%s'%(sys.argv[2]))
+    suite_logger = createLogger('suite.txt', suitelogdir)
+    suite_logger.info('suite name\t%s' % (sys.argv[1]))
+    suite_logger.info('suite range\t%s' % (sys.argv[2]))
 
     index = 1
     for i in sys.argv[3:]:
-        logger.info('arg%d\t%s'%(index, i))
+        suite_logger.info('arg%d\t%s' % (index, i))
         index+=1
     report = []
     dut_pool={}
@@ -98,7 +98,7 @@ if __name__ == "__main__":
             breakFlag=False
             caseStartTime = time.time()
             LineNo,FailAction,[FuncName,cmd ]=caseline
-            logger.info('to run case: index %d, name: %s, failAction: %s'%(LineNo,cmd, FailAction))
+            suite_logger.info('to run case: index %d, name: %s, failAction: %s' % (LineNo, cmd, FailAction))
             from runner import concurrent
             print cmd
             if FuncName == run_case_in_suite:
@@ -111,7 +111,7 @@ if __name__ == "__main__":
             index+=1
             import os
             logpath = suitelogdir#+"/%s"%casename
-            logger.info('creating logdir: %s'%logpath)
+            suite_logger.info('creating logdir: %s' % logpath)
             if not os.path.exists(logpath):
                 os.mkdir(logpath)
 
@@ -125,21 +125,21 @@ if __name__ == "__main__":
 
 
                 returncode = 0
-                logger.info('running case: %s'%cmd)
+                suite_logger.info('running case: %s' % cmd)
 
-                returncode , errormessage ,benchfile, benchinfo, dut_pool = run1case(casename, cmd, benchfile, benchinfo, dut_pool, logdir, logger ,shareData, dry_run)
+                returncode , errormessage ,benchfile, benchinfo, dut_pool = run1case(casename, cmd, benchfile, benchinfo, dut_pool, logdir, suite_logger, shareData, dry_run)
                 caseEndTime = time.time()
                 ExecutionDuration = caseEndTime-caseStartTime
                 caseResult = 'PASS'
 
                 if returncode:
-                    logger.error('FAIL\t%s'%cmd)
-                    logger.error(errormessage)
+                    suite_logger.error('FAIL\t%s' % cmd)
+                    suite_logger.error(errormessage)
                     caseResult ='FAIL'
                     lstFailCase.append(caseline)
                     statsFail+=1
                 else:
-                    logger.info('PASS\t%s'%cmd)
+                    suite_logger.info('PASS\t%s' % cmd)
                     statsPass+=1
                 logdir = '%s/%s'%(suite_dir_name, casename)
                 NewRecord = [index-1,caseResult,caseline[2][1], errormessage,logdir, LineNo,ExecutionDuration,caseStartTime,caseEndTime ]
@@ -154,7 +154,7 @@ if __name__ == "__main__":
                         breakFlag=True
 
             elif FuncName == concurrent:
-                conCaseTotal, conCasePass, conCaseFail, conReport, conLstFailCase , breakFlag=concurrent(index-1, logpath, caseline[2][1],report, logger, shareData)
+                conCaseTotal, conCasePass, conCaseFail, conReport, conLstFailCase , breakFlag=concurrent(index - 1, logpath, caseline[2][1], report, suite_logger, shareData)
                 statsPass+=conCasePass
                 statsFail+=conCaseFail
                 for x in conLstFailCase:
@@ -190,7 +190,7 @@ if __name__ == "__main__":
 
 
     #if dut_pool.__len__()!={}:
-    releaseDUTs(dut_pool, logger)
+    releaseDUTs(dut_pool, suite_logger)
 
     print('#'*80)
     print('Pass:',statsPass, 'Fail', statsFail)

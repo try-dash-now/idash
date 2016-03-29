@@ -381,8 +381,8 @@ class winTelnet(dut, object):#, spawn
                 if self.logfile and self.cookedq.__len__()!=0:
                     self.logfile.write(self.cookedq)
                     self.logfile.flush()
-                if fail_counter:
-                    self.info(fail_counter, 'time out error cleared')
+                #if fail_counter:
+                #    self.info(fail_counter, 'time out error cleared')
                 fail_counter = 0
             except KeyboardInterrupt:
                 break
@@ -413,7 +413,7 @@ class winTelnet(dut, object):#, spawn
 
         self.closeSession()
     def closeSession(self):
-        print('quit %s'%self.name)
+        print('\nquit %s'%self.name)
         for i in xrange(1,3,1):
             self.send('exit')
             self.sleep(0.5)
