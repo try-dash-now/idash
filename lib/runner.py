@@ -228,13 +228,13 @@ def run(casename,duts, seqs ,mode, logger, sharedata):
 ###############################################################################
 """%(datetime.datetime.now().isoformat('_'),casename,lineno,segment, stepindex,
                          dut,cmd, expect, due)
-                    logger.info('segment', segment)
-                    logger.info('LineNo', lineno)
-                    logger.info('step Index', stepindex)
-                    logger.info('dut', dut)
-                    logger.info('action', cmd)
-                    logger.info('EXPECT', expect)
-                    logger.info('due', due)
+                    session.info('segment', segment)
+                    session.info('LineNo', lineno)
+                    session.info('step Index', stepindex)
+                    session.info('dut', dut)
+                    session.info('action', cmd)
+                    session.info('EXPECT', expect)
+                    session.info('due', due)
                     print(stepinfo)
 
                     session.stepCheck(casename, lineno, cmd, expect, due)
@@ -476,9 +476,9 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
                 dut_pool[dut_name].openLogfile(logdir)
                 dut_pool[dut_name].FailFlag    =False # the flag means in Session's perspective view, case failed
                 dut_pool[dut_name].ErrorMessage=None # to store the error message
-                caselogger.info(dut_pool[dut_name].name, 'session info reseted')
+                dut_pool[dut_name].info(dut_pool[dut_name].name, 'session info reseted')
             except Exception as e:
-                caselogger.error('failed to update logger for dut:', dut_name)
+                caselogger.error('failed to update logger for dut:%s'%dut_name)
 
         patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*(cr.py|cr.exe)\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
         m =  re.match(patDash, cmd)
@@ -523,7 +523,7 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
                     oldduts.append(nd)
                     dut_pool[nd].FailFlag    =False # the flag means in Session's perspective view, case failed
                     dut_pool[nd].ErrorMessage=None # to store the error message
-                    caselogger.info(dut_pool[nd].name, 'cleared FailFlag and ErrorMessage')
+                    caselogger.info(dut_pool[nd].name+ ' cleared FailFlag and ErrorMessage')
                 else:
                     newduts.append(nd)
             if dry_run is not True:
@@ -556,9 +556,10 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
 
             if returncode:
                 import pprint
-                #STRerrormessage = pprint.pformat(STRerrormessage)
+                STRerrormessage = pprint.pformat(STRerrormessage)
                 caselogger.error('Case Failed:')
-                caselogger.error(STRerrormessage)
+                for line in STRerrormessage.replace('\\r', '\r').replace('\\n', '\n').replace('\r\n', '\n').split('\n'):
+                    caselogger.error(line)
                 errormessage.append(STRerrormessage)
 
             else:
@@ -604,7 +605,8 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
 
                 except Exception as e:
                     print(e)
-
+    except KeyboardInterrupt :
+        sys.exit(1)
     except Exception as e:
 
         if returncode ==0:
@@ -613,7 +615,8 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
         #import traceback
         errormessage = '%s\n%s'%(e.__str__(),traceback.format_exc())
         caselogger.error('Case FAIL')
-        caselogger.error(errormessage)
+        for line in errormessage.split('\n'):
+            caselogger.error(line)
     return  returncode, errormessage, benchfile,bench, dut_pool
 
 def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAIL, CASENOTRUN,Report, suiteStartTime,suiteEndTime, finish=False):

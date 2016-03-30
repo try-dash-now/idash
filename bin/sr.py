@@ -88,11 +88,12 @@ if __name__ == "__main__":
     statsPass =0
     statsFail =0
     lstFailCase = []
-
-    htmlstring = array2html(suitefile,rangelist,','.join(arglist), statsTotalCase,statsFail+statsPass,statsPass,statsFail, statsTotalCase-statsFail-statsPass,report, suiteStartTime, suiteEndTime)
-    reportfilename = '../../log/%s.html'%(name)
-    with open(reportfilename, 'wb') as f:
-        f.write(htmlstring.encode(encoding='utf_8', errors='strict'))
+    def write_report(name, suitefile,rangelist, arglist, statsTotalCase,statsFail,statsPass,report, suiteStartTime, suiteEndTime):
+        htmlstring = array2html(suitefile,rangelist,','.join(arglist), statsTotalCase,statsFail+statsPass,statsPass,statsFail, statsTotalCase-statsFail-statsPass,report, suiteStartTime, suiteEndTime)
+        reportfilename = '../../log/%s.html'%(name)
+        with open(reportfilename, 'wb') as f:
+            f.write(htmlstring.encode(encoding='utf_8', errors='strict'))
+    write_report(name, suitefile,rangelist, arglist, statsTotalCase,statsFail,statsPass,report, suiteStartTime, suiteEndTime)
     try:
         for caseline in suite:
             breakFlag=False
@@ -126,8 +127,12 @@ if __name__ == "__main__":
 
                 returncode = 0
                 suite_logger.info('running case: %s' % cmd)
-
+                caseResult ='in progress'
+                NewRecord = [index-1,caseResult,caseline[2][1], 'running','%s/%s'%(suite_dir_name, casename), LineNo,caseStartTime-caseStartTime,caseStartTime,caseStartTime ]
+                report.append(NewRecord)
+                write_report(name,  suitefile,rangelist, arglist, statsTotalCase,statsFail,statsPass,report, suiteStartTime, suiteEndTime)
                 returncode , errormessage ,benchfile, benchinfo, dut_pool = run1case(casename, cmd, benchfile, benchinfo, dut_pool, logdir, suite_logger, shareData, dry_run)
+                report.pop(-1)
                 caseEndTime = time.time()
                 ExecutionDuration = caseEndTime-caseStartTime
                 caseResult = 'PASS'
@@ -162,20 +167,22 @@ if __name__ == "__main__":
 
             print('Pass:',statsPass, 'Fail', statsFail)
             suiteEndTime = time.time()
-            htmlstring = array2html(suitefile,rangelist,','.join(arglist), statsTotalCase,statsFail+statsPass,statsPass,statsFail, statsTotalCase-statsFail-statsPass,report, suiteStartTime, suiteEndTime)
-            reportfilename = '../../log/%s.html'%(name)
-            with open(reportfilename, 'wb') as f:
-                f.write(htmlstring.encode(encoding='utf_8', errors='strict'))
+            write_report(name,  suitefile,rangelist, arglist, statsTotalCase,statsFail,statsPass,report, suiteStartTime, suiteEndTime)
+            #htmlstring = array2html(suitefile,rangelist,','.join(arglist), statsTotalCase,statsFail+statsPass,statsPass,statsFail, statsTotalCase-statsFail-statsPass,report, suiteStartTime, suiteEndTime)
+            #reportfilename = '../../log/%s.html'%(name)
+            #with open(reportfilename, 'wb') as f:
+            #    f.write(htmlstring.encode(encoding='utf_8', errors='strict'))
 
             if breakFlag:
                 break
             casename='%d'%index
             logdir ='../../log/'+suitefile+'/'+casename
         suiteEndTime = time.time()
-        htmlstring = array2html(suitefile,rangelist,','.join(arglist), statsTotalCase,statsFail+statsPass,statsPass,statsFail, statsTotalCase-statsFail-statsPass,report, suiteStartTime, suiteEndTime, finish=True)
-        reportfilename = '../../log/%s.html'%(name)
-        with open(reportfilename, 'wb') as f:
-            f.write(htmlstring.encode(encoding='utf_8', errors='strict'))
+        write_report(name,  suitefile,rangelist, arglist, statsTotalCase,statsFail,statsPass,report, suiteStartTime, suiteEndTime)
+        #htmlstring = array2html(suitefile,rangelist,','.join(arglist), statsTotalCase,statsFail+statsPass,statsPass,statsFail, statsTotalCase-statsFail-statsPass,report, suiteStartTime, suiteEndTime, finish=True)
+        #reportfilename = '../../log/%s.html'%(name)
+        #with open(reportfilename, 'wb') as f:
+        #    f.write(htmlstring.encode(encoding='utf_8', errors='strict'))
     except KeyboardInterrupt:
         try:
             print('Pass:',statsPass, 'Fail', statsFail)

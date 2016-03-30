@@ -346,7 +346,7 @@ class dut(object):
 
     def formatMsg(self, *msg):
         now =datetime.datetime.now()
-        new_msg = ','.join([pprint.pformat(x) for x in msg])
+        new_msg = ','.join([pprint.pformat(x,indent=2,width=256) for x in msg])
         msg = '%s\t%s\t%s'%(now.isoformat().replace("T", ' '), self.name, new_msg)
         print(msg)
         return msg
