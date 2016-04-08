@@ -631,7 +631,7 @@ def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAI
     CASENOTRUN  = TOTAL - CASEPASS-CASEFAIL
     PNOTRUN = '%.0f'%((CASENOTRUN*100.0) /TOTAL*1.0)+'''%'''
     duration_in_second = suiteEndTime-suiteStartTime
-    days = 0 if duration_in_second<(3600*24) else str(duration_in_second/(3600*24))
+    days = 0 if duration_in_second<(3600*24) else int(duration_in_second/(3600*24))
     suit_duration_str = str(datetime.timedelta(days= days, seconds=duration_in_second))
     import datetime
     finish_status= 'running'
