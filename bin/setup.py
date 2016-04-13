@@ -126,7 +126,7 @@ try:
                         ('dut/IxTclNetwork', [ f for f in copy_dir('../dut/IxTclNetwork')]),
                         ('dut/IxTclNetwork/Generic', [ f for f in copy_dir('../dut/IxTclNetwork/Generic')]),
                        ('bin',[]),
-                       ('bin', [f for f in copy_dir('../test')]),
+                       #('bin', [f for f in copy_dir('../test')]),
                        ('selenium', []),
                        #('dut', [ f for f in copy_dir('../dut')]),
 

@@ -445,7 +445,7 @@ class winTelnet(dut, object):#, spawn
         return result
 
 
-    def relogin(self):
+    def relogin(self, retry=1):
         #time.sleep(3)
         self.lockRelogin.acquire()
         try:
