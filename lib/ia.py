@@ -30,6 +30,42 @@ flag_tab_down = False
 line_buffer = ''
 ia_instance =None
 from common import bench2dict
+
+py_file_start = '''
+if __name__ == "__main__":
+    returncode = 0
+    try:
+        import os
+        from runner import case
+        basename_casename = os.path.basename(__file__)
+        cs = case(basename_casename)
+        casefolder = cs.log_dir
+'''
+
+'''
+        cs.load_bench(benchfile)
+        cs.init_duts(*sut_names)
+
+'''
+py_file_end ='''
+
+    if cs.fail_flag:
+            with open('%s/case_error.txt'%casefolder, 'a+') as ef:
+                ef.write(CaseErrorMessage)
+            print(CaseErrorMessage)
+            raise Exception(CaseErrorMessage)
+        else:
+            print('log: "@%s"'%os.path.abspath(casefolder))
+            print ("""\r\n---------------------------------- CASE PASS ----------------------------------""")
+            os._exit(0)
+    except Exception as e:
+        import traceback
+        print(traceback.format_exc())
+        print('log: <@%s>'%os.path.abspath(casefolder))
+        print ("""\r\n---------------------------------- CASE FAIL ----------------------------------""")
+        os._exit(1)
+
+'''
 def check_keyboard_tab_down(event):
     try:
         global flag_tab_down, ia_instance
@@ -91,10 +127,11 @@ class ia(Cmd, object):
     output = None
     __args=None
     __kwargs=None
-    script_file_name =None
+    script_csv_file_name =None
     update =True # show output of sut immediately
     bench=None
     share_data = {}
+    script_py_file_name = None
     def convert_args(self, *args, **kwargs):
         self.__args = args
         self.__kwargs = kwargs
@@ -152,7 +189,7 @@ class ia(Cmd, object):
                 print('no function match!!!')
                 try:
                     self.sut[sutname].send(command)
-                    self.__add_new_command__(sutname,'send',command)
+                    self.__add_new_command__(sutname,'send','"%s"'%command)
                 except:
                     pass
             else:
@@ -333,7 +370,8 @@ class ia(Cmd, object):
             self.case_path = '../../test'
         if not os.path.exists(self.case_path):
             os.mkdir(self.case_path)
-        self.script_file_name = '%s/%s.csv' % (self.case_path, self.tcName)
+        self.script_csv_file_name = '%s/%s.csv' % (self.case_path, self.tcName)
+        self.script_py_file_name = '%s/%s.py' % (self.case_path, self.tcName)
         ###########
 
         fullname = 'tc'
@@ -358,6 +396,7 @@ class ia(Cmd, object):
                        ]
         for record in self.record:
             self.save2file(None,[record])
+        self.save2py(py_file_start)
         # self.save2file(self.record[0])
 
         logpath = '../../log'
@@ -367,23 +406,31 @@ class ia(Cmd, object):
             os.mkdir(logpath)
         logpath = createLogDir('ia', logpath)
         self.logger = createLogger('ia', logpath)
-
-
-
-
         # benchfile = './bench.csv'
 
         if os.path.exists(benchfile):
             bench = bench2dict(benchfile)
+            py_code = '''
+        cs.load_bench("%s")
+            '''%(benchfile)
+            self.save2py(py_code=py_code)
             self.bench_file= benchfile
             self.bench= bench
             self.log_path= logpath
-            # dutname = ['N6', 'ix-syu']
+
             errormessage = ''
             duts = initDUT(errormessage, bench, dutname, self.logger, logpath, self.share_data)
+            py_code = '''
+        cs.init_duts("%s")
+            '''%('","'.join(dutname))
+            self.save2py(py_code=py_code)
             self.sut = duts
             self.sut['tc']=self
 
+            assgin_sut = ''
+            for tmp_sut_name in duts.keys():
+                assgin_sut+="        %s = cs.duts['%s']\n"%(tmp_sut_name,tmp_sut_name)
+            self.save2py(assgin_sut)
             th = threading.Thread(target=self.show)
             th.start()
             th = threading.Thread(target=self.checkQuestionMarkEnd)
@@ -690,6 +737,7 @@ class ia(Cmd, object):
                                      now - self.tmTimeStampOfLastCmd]
                         self.record.append(newRecord)
                         self.save2file(record = [newRecord])
+                        self.save2py(py_code='        %s.step(%s,%s,%s)\t#\t%s'%(self.sutname, cmd, expectPat, strTimeout, now.isoformat('_')))
 
                         self.tmTimeStampOfLastCmd = now
                     else:
@@ -721,16 +769,25 @@ class ia(Cmd, object):
         self.tmTimeStampOfLastCmd = now
         self.record.append(new_record)
         self.save2file(None, [new_record])
+        self.save2py('        %s.%s\t# %s\t%s\t%s\n'%(sutname, '%s(%s)'%(function_name, arg_string), '.*', strTimeout, now.isoformat('_')))
+    def save2py(self,py_code):
+        csvfile= self.script_csv_file_name
+        with open(csvfile.replace('.csv','.py'), 'a+') as py_file:
+            py_file.write(py_code+'\n')
 
     def save2file(self, name=None, record=None):
-        csvfile= self.script_file_name
+        csvfile= self.script_csv_file_name
         from common import array2csvfile
         if not record:
             record = self.record[-1]
         array2csvfile(record, csvfile)
 
+
     def do_eof(self, name=None):
         self.flagEndCase = False
+
+        with open(self.script_py_file_name, 'a+') as py_file:
+            py_file.write(py_file_end+'\n')
         if name:
             fullname = name[:60]
             removelist = '\-_.'
@@ -740,13 +797,16 @@ class ia(Cmd, object):
                 pass
             else:
                 name+='.csv'
-            new_file_name = os.path.dirname(self.script_file_name)+'/'+name
-            os.rename(self.script_file_name,new_file_name )
-            self.script_file_name= new_file_name
-        print('saved to file %s '%(os.path.abspath(self.script_file_name)))
+            new_file_name = os.path.dirname(self.script_csv_file_name)+'/'+name
+
+            os.rename(self.script_csv_file_name,new_file_name )
+            os.rename(self.script_py_file_name,new_file_name.replace('.csv', '.py') )
+            self.script_csv_file_name= new_file_name
+            self.script_py_file_name = new_file_name.replace('.csv', '.py')
+        print('saved to files:\n\t%s\n\t%s'%(os.path.abspath(self.script_csv_file_name ), os.path.abspath(self.script_py_file_name)))
         if self.bench_file:
-            print('cr.py %s %s full '%(os.path.abspath(self.script_file_name), os.path.abspath(self.bench_file)))
-        from runner import releaseDUTs
+            print('cr.py %s %s full '%(os.path.abspath(self.script_csv_file_name), os.path.abspath(self.bench_file)))
+
         releaseDUTs(self.sut, self.logger)
         self.flagEndCase = True
 
@@ -823,6 +883,11 @@ class ia(Cmd, object):
 
             bench = bench2dict(self.bench_file)
             duts = initDUT(errormessage, bench, sut_name_list, self.logger, self.log_path, self.share_data)
+            py_code = '''
+        cs.init_duts("%s")
+            '''%('","'.join(sut_name_list))
+            self.save2py(py_code=py_code)
+
             last_sut='tc'
             for name in sut_name_list:
                 if name in duts:
@@ -830,4 +895,8 @@ class ia(Cmd, object):
                     last_sut=name
                 else:
                     print('failed to init %s'%name)
+            assgin_sut = ''
+            for tmp_sut_name in duts.keys():
+                assgin_sut+="        %s = cs.duts['%s']\n"%(tmp_sut_name,tmp_sut_name)
+            self.save2py(py_code=assgin_sut)
             self.do_setsut(last_sut)

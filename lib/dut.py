@@ -732,5 +732,9 @@ call function(%s)
             msg= re.sub('\\\\t','\t', msg)
 
             self.ErrorMessage=msg
+        log_dir= os.path.dirname(self.logfile.name)
+        with open('%s/case_error.txt'%log_dir, 'a+') as ef:
+            msg = self.formatMsg(msg)
+            ef.write(msg+'\n')
     def relogin(self):
          self.loginDone=False
