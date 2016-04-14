@@ -152,6 +152,7 @@ class ia(Cmd, object):
                 print('no function match!!!')
                 try:
                     self.sut[sutname].send(command)
+                    self.__add_new_command__(sutname,'send',command)
                 except:
                     pass
             else:
