@@ -8,21 +8,25 @@ created 2015/11/10
 ##################################
 #http://www.py2exe.org/index.cgi/ExeWithEggs, install ssh by command 'python setup.py install_scripts to ExeWithEggs
 ##################################
+from py2exe.build_exe import py2exe as build_exe
 import os,sys
 pardir =os.path.dirname(os.path.realpath(__file__))
 pardir= os.path.sep.join(pardir.split(os.path.sep)[:-1])
 sys.path.append(os.path.sep.join([pardir,'lib']))
 sys.path.append(os.path.sep.join([pardir,'test']))
 sys.path.append(os.path.sep.join([pardir,'dut']))
+
+#from abc import ABCMeta, abstractmethod
+import traceback
 print('\n'.join(sys.path))
 import wx
 import Tkinter
 from colorama import *
 import os
 import glob
-from py2exe.build_exe import py2exe as build_exe
-import zipfile
 
+import zipfile
+import shutil
 
 
 class tcltk(Tkinter.Tk):
@@ -51,7 +55,6 @@ def compressFile(infile,outfile):
     try:
         zf.write(infile,outfile, compress_type=compression)
     except :
-        import traceback
         print(traceback.format_exc())
         print 'closing'
         zf.close()
@@ -81,7 +84,6 @@ class MediaCollector(build_exe):
                 self.copy_file(f, os.path.join(full, name))
                 self.compiled_files.append(os.path.join(media, name))
             except Exception as e:
-                import traceback
                 print(traceback.format_exc())
 
 from distutils.core import setup
@@ -110,6 +112,17 @@ def copy_dir(dir_path):
                 continue
             yield os.path.join(dirpath.split(os.path.sep, 1)[1], f)
 try:
+    folder = os.path.abspath('../../dist')
+    for op in sys.argv:
+        indexOfd = op.find('-d')
+        if indexOfd !=-1:
+            folder = os.path.abspath(sys.argv[sys.argv.index(op)+1])
+            try:
+                shutil.rmtree(folder)
+            except Exception as e:
+                print(traceback.format_exc())
+            break
+
     dist = setup(
         windows = [],#'../bin/dash.py'
         console=["./cr.py",
@@ -138,12 +151,12 @@ try:
 
                           #"compressed": 2,
                           "optimize": 2,
-                          "includes":[],# includes,
+                          "includes":[],# includes,'abc', 'atexit'
                           "excludes":[],# excludes,
                           "packages": [],#packages,
                           "dll_excludes": dll_excludes,
                           #"bundle_files": 1,
-                          "dist_dir": "dist",
+                          "dist_dir": folder,#"dist",
                           "xref": False,
                           "skip_archive": True,
                           "ascii": False,
@@ -154,22 +167,9 @@ try:
         **py2exe_options
     )
 except:
-    import traceback
     print(traceback.format_exc())
 
 
-folder = '../../dist'
-for op in sys.argv:
-
-    indexOfd = op.find('-d')
-    if indexOfd !=-1:
-        folder = sys.argv[sys.argv.index(op)+1]
-        break
-
-
-
-
-import shutil
 targetDir = os.sep.join([folder, 'bin'])
 excludedFolder =['bin',
                  'lib',
@@ -184,7 +184,6 @@ try:
 except Exception as e:
     print(e)
     pass
-
 for file in os.listdir(folder):
     sourceFile = os.path.join(folder,  file)
     targetFile = os.path.join(targetDir,  file)
@@ -197,14 +196,18 @@ for file in os.listdir(folder):
             if filename not in ['ImportModule.exe']:
                 open(targetFile, "wb").write(open(sourceFile, "rb").read())
             os.remove(sourceFile)
-            pass
-        except:
-            pass
-    elif os.path.isdir(sourceFile) and os.path.basename(sourceFile) not in excludedFolder:
+        except Exception as e:
+            print(traceback.format_exc())
+    elif os.path.isdir(sourceFile):
         try:
-            shutil.rmtree(targetFile)
-        except:
-            pass
+            if os.path.exists(targetFile):
+                if os.path.basename(sourceFile) not in excludedFolder:
+                    shutil.rmtree(targetFile)
+        except Exception as e:
+            print(traceback.format_exc())
         shutil.copytree(sourceFile, targetFile)
-        shutil.rmtree(sourceFile)
+        if os.path.basename(sourceFile) not in excludedFolder:
+            shutil.rmtree(sourceFile)
 
+
+print('done')

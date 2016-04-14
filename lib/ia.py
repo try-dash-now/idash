@@ -13,7 +13,7 @@ import threading
 from cmd import Cmd
 import inspect
 import pyHook, sys, pythoncom
-from pykeyboard import PyKeyboard
+#from pykeyboard import PyKeyboard
 import pprint
 import sys, time
 import shlex

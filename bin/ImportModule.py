@@ -9,7 +9,10 @@ sys.path.append(os.path.sep.join([pardir,'dut']))
 print('\n'.join(sys.path))
 
 from  Tkinter import Tk,Tcl
-import os
+import abc
+import UserDict
+import _abcoll
+import traceback
 import colorama
 colorama.init()
 class tcltk(Tk):
@@ -23,22 +26,23 @@ logpath= '../../log'
 a =dut('base', {}, logpath=logpath)
 try:
     wt = winTelnet('a',{'CMD':'telnet 127.0.0.1'}, logpath=logpath)
-except:
-    pass
+except Exception as e:
+    print(traceback.format_exc())
 
 from TclInter import TclInter
 try:
     ti = TclInter('a',{}, logpath=logpath)
     ti.closeSession()
-except:
-    pass
+except Exception as e:
+    print(traceback.format_exc())
 
 from IxNetwork import IxNetwork
 try:
     ix = IxNetwork('a',{}, logpath=logpath)
     ix.closeSession()
-except:
-    pass
+except Exception as e:
+    print(traceback.format_exc())
+
 try:
     import  ssh
     client = ssh.SSHClient()
@@ -47,20 +51,29 @@ try:
     #client.connect('localhost',22, 'user', '1234')
     chan = client.invoke_shell()
 
-except:
-    pass
+except Exception as e:
+    print(traceback.format_exc())
 from powershell import powershell
 try:
     ps = powershell('a', {}, logpath=logpath)
     ps.SessionAlive=False
-except:
+except Exception as e:
+    print(traceback.format_exc())
     ps.SessionAlive=False
-    pass
+
 
 from SSH import SSH
 try:
     ps = SSH('a', {}, logpath=logpath)
     ps.SessionAlive=False
-except:
+except Exception as e:
     ps.SessionAlive=False
-    pass
+    print(traceback.format_exc())
+
+os._exit(0)
+
+
+
+
+
+
