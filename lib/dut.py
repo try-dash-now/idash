@@ -213,8 +213,10 @@ class dut(object):
         try:
             if gShareData.has_key(name):
                 tmpvalue = gShareData[name]
+                print(pprint.pformat(tmpvalue))
                 return  tmpvalue
             else:
+                print(pprint.pformat(None))
                 return  None
         except Exception as e:
             print('dump of ShareData')

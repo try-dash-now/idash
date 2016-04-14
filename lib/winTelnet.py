@@ -368,7 +368,7 @@ class winTelnet(dut, object):#, spawn
                     if (time.time()-self.timestampCmd)>maxInterval:
                         self.write('\r\n')
                         self.timestampCmd = time.time()
-                        self.info('anti-idle', fail_counter )
+                        #self.info('anti-idle', fail_counter )
                 else:
                     raise Exception('[Errno 10053] An established connection was aborted by the software in your host machine')
                 self.fill_rawq()

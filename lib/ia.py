@@ -150,6 +150,10 @@ class ia(Cmd, object):
                     print('\t'+k)
             elif len_candidate_fun==0:
                 print('no function match!!!')
+                try:
+                    self.sut[sutname].send(command)
+                except:
+                    pass
             else:
                 arg,kwargs=[],{}
                 if len_option>1:
