@@ -241,7 +241,7 @@ class ia(Cmd, object):
 
 
 
-    def do_show(self, line):
+    def do_display(self, line):
         cmd = self.__parseline__(line)
         if len(cmd)==0:
             for var in dir(self):
@@ -762,7 +762,7 @@ class ia(Cmd, object):
         self.tmTimeStampOfLastCmd = now
         self.record.append(new_record)
         self.save2file(None, [new_record])
-        self.save2py('        %s.%s\t# %s\t%s\t%s\n'%(sutname, '%s(%s)'%(function_name, arg_string), '.*', strTimeout, now.isoformat('_')))
+        self.save2py('        %s.%s\t# %s\t%s\t%s'%(sutname, '%s(%s)'%(function_name, arg_string), '.*', strTimeout, now.isoformat('_')))
     def save2py(self,py_code):
         csvfile= self.script_csv_file_name
         with open(csvfile.replace('.csv','.py'), 'a+') as py_file:
