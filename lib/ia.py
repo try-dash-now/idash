@@ -42,16 +42,9 @@ if __name__ == "__main__":
         casefolder = cs.log_dir
 '''
 
-'''
-        cs.load_bench(benchfile)
-        cs.init_duts(*sut_names)
-
-'''
 py_file_end ='''
-
-    if cs.fail_flag:
-            with open('%s/case_error.txt'%casefolder, 'a+') as ef:
-                ef.write(CaseErrorMessage)
+        cs.check_sut_fail_flag()
+        if cs.fail_flag:
             print(CaseErrorMessage)
             raise Exception(CaseErrorMessage)
         else:
@@ -60,7 +53,10 @@ py_file_end ='''
             os._exit(0)
     except Exception as e:
         import traceback
-        print(traceback.format_exc())
+        CaseErrorMessage = traceback.format_exc()
+        print(CaseErrorMessage)
+        with open('%s/case_error.txt'%casefolder, 'a+') as ef:
+                ef.write(CaseErrorMessage)
         print('log: <@%s>'%os.path.abspath(casefolder))
         print ("""\r\n---------------------------------- CASE FAIL ----------------------------------""")
         os._exit(1)
@@ -410,10 +406,6 @@ class ia(Cmd, object):
 
         if os.path.exists(benchfile):
             bench = bench2dict(benchfile)
-            py_code = '''
-        cs.load_bench("%s")
-            '''%(benchfile)
-            self.save2py(py_code=py_code)
             self.bench_file= benchfile
             self.bench= bench
             self.log_path= logpath
@@ -421,15 +413,16 @@ class ia(Cmd, object):
             errormessage = ''
             duts = initDUT(errormessage, bench, dutname, self.logger, logpath, self.share_data)
             py_code = '''
-        cs.init_duts("%s")
-            '''%('","'.join(dutname))
+        cs.load_bench("%s")
+        cs.init_duts("%s")'''%(self.bench_file, '","'.join(dutname))
             self.save2py(py_code=py_code)
             self.sut = duts
             self.sut['tc']=self
 
             assgin_sut = ''
             for tmp_sut_name in duts.keys():
-                assgin_sut+="        %s = cs.duts['%s']\n"%(tmp_sut_name,tmp_sut_name)
+                if tmp_sut_name!='tc':
+                    assgin_sut+="        %s = cs.duts['%s']\n"%(tmp_sut_name,tmp_sut_name)
             self.save2py(assgin_sut)
             th = threading.Thread(target=self.show)
             th.start()
@@ -811,8 +804,8 @@ class ia(Cmd, object):
         self.flagEndCase = True
 
     def do_bench(self, file_name):
-
         self.bench_file = file_name
+        self.save2py('      cs.load_bench(%s)'%self.bench_file)
 
     def do_reload(self,function_name, sutname=None):
         if not sutname:
@@ -883,9 +876,8 @@ class ia(Cmd, object):
 
             bench = bench2dict(self.bench_file)
             duts = initDUT(errormessage, bench, sut_name_list, self.logger, self.log_path, self.share_data)
-            py_code = '''
-        cs.init_duts("%s")
-            '''%('","'.join(sut_name_list))
+            py_code = '''       cs.load_bench(%s)
+        cs.init_duts("%s")'''%(self.bench_file, '","'.join(sut_name_list))
             self.save2py(py_code=py_code)
 
             last_sut='tc'
@@ -897,6 +889,7 @@ class ia(Cmd, object):
                     print('failed to init %s'%name)
             assgin_sut = ''
             for tmp_sut_name in duts.keys():
-                assgin_sut+="        %s = cs.duts['%s']\n"%(tmp_sut_name,tmp_sut_name)
+                if tmp_sut_name!='tc':
+                    assgin_sut+="        %s = cs.duts['%s']\n"%(tmp_sut_name,tmp_sut_name)
             self.save2py(py_code=assgin_sut)
             self.do_setsut(last_sut)

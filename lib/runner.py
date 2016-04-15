@@ -825,6 +825,15 @@ class case(object):
             self.bench_file = os.path.abspath(bench_file)
         else:
             self.error('bench file  is not existed: %s'%bench_file)
+    def check_sut_fail_flag(self):
+        for sut in self.duts.keys():
+            if sut is not 'tc':
+                dut_inst = self.duts[sut]
+                from dut import dut
+                if isinstance(dut_inst,dut):
+                    if sut.FailFlag:
+                        self.error(self.duts[sut].ErrorMessage)
+
 
 
 
