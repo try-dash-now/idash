@@ -413,7 +413,7 @@ class ia(Cmd, object):
             errormessage = ''
             duts = initDUT(errormessage, bench, dutname, self.logger, logpath, self.share_data)
             py_code = '''
-        cs.load_bench("%s")
+        cs.load_bench(r"%s")
         cs.init_duts("%s")'''%(self.bench_file, '","'.join(dutname))
             self.save2py(py_code=py_code)
             self.sut = duts
@@ -805,7 +805,7 @@ class ia(Cmd, object):
 
     def do_bench(self, file_name):
         self.bench_file = file_name
-        self.save2py('      cs.load_bench(%s)'%self.bench_file)
+        self.save2py('      cs.load_bench(r"%s")'%self.bench_file)
 
     def do_reload(self,function_name, sutname=None):
         if not sutname:

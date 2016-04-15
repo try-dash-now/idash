@@ -483,7 +483,7 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
 
         patDash  = re.compile('\s*(python |python[\d.]+ |python.exe |)\s*(cr.py|cr.exe)\s+(.+)\s*', re.DOTALL|re.IGNORECASE)
         m =  re.match(patDash, cmd)
-        returncode = 0
+        returncode = 1
         if m:
 
             argstring = m.group(3)
@@ -570,11 +570,14 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
             import subprocess
             pp =None
 
-            patPython = re.compile('\s*(python\s+|python.exe\s+|)([\w_-]+.py)', re.IGNORECASE)
+            patPython = re.compile(r'\s*(python\s+|python.exe\s+|)([./\w_-]+.py)', re.IGNORECASE)
             m=re.match(patPython, cmd)
             if m :
                 newcmd =m.group(2)
-                exe_cmd ='python '+ cmd+" "+logdir
+                if os.path.exists('y.exe'):
+                    exe_cmd ='python -O'+ cmd+" "+logdir
+                else:
+                    exe_cmd ='python '+ cmd+" "+logdir
                 caselogger.info('running case: %s'%exe_cmd)
                 pp = subprocess.Popen(args = exe_cmd ,shell =True,stderr=subprocess.PIPE)
                 import time
@@ -831,8 +834,8 @@ class case(object):
                 dut_inst = self.duts[sut]
                 from dut import dut
                 if isinstance(dut_inst,dut):
-                    if sut.FailFlag:
-                        self.error(self.duts[sut].ErrorMessage)
+                    if dut_inst.FailFlag:
+                        self.error(dut_inst.ErrorMessage)
 
 
 
