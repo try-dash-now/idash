@@ -37,6 +37,7 @@ if __name__ == "__main__":
     try:
         import os
         from runner import case
+        CaseErrorMessage =''
         basename_casename = os.path.basename(__file__)
         cs = case(basename_casename)
         casefolder = cs.log_dir
@@ -44,6 +45,7 @@ if __name__ == "__main__":
 
 py_file_end ='''
         cs.check_sut_fail_flag()
+        CaseErrorMessage =cs.error_message
         if cs.fail_flag:
             print(CaseErrorMessage)
             raise Exception(CaseErrorMessage)
