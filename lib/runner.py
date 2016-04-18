@@ -575,9 +575,9 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
             if m :
                 newcmd =m.group(2)
                 if os.path.exists('y.exe'):
-                    exe_cmd ='python -O'+ cmd+" "+logdir
+                    exe_cmd ='python -O'+ cmd+" -l "+logdir
                 else:
-                    exe_cmd ='python '+ cmd+" "+logdir
+                    exe_cmd ='python '+ cmd+" -l "+logdir
                 caselogger.info('running case: %s'%exe_cmd)
                 pp = subprocess.Popen(args = exe_cmd ,shell =True,stderr=subprocess.PIPE)
                 import time

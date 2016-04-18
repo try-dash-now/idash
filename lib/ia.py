@@ -35,11 +35,14 @@ py_file_start = '''
 if __name__ == "__main__":
     returncode = 0
     try:
-        import os
+        import os, sys
         from runner import case
-        CaseErrorMessage =''
+        CaseErrorMessage = ''
+        casefolder = None
+        if '-l' in sys.argv:
+            casefolder = sys.argv[sys.argv.index('-l')+1]
         basename_casename = os.path.basename(__file__)
-        cs = case(basename_casename)
+        cs = case(basename_casename, log_folder = casefolder)
         casefolder = cs.log_dir
 '''
 
