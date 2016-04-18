@@ -205,7 +205,8 @@ for file in os.listdir(folder):
                     shutil.rmtree(targetFile)
         except Exception as e:
             print(traceback.format_exc())
-        shutil.copytree(sourceFile, targetFile)
+        if os.path.basename(sourceFile) not in ['lib', 'bin', 'bench', 'dut']:
+            shutil.copytree(sourceFile, targetFile)
         if os.path.basename(sourceFile) not in excludedFolder:
             shutil.rmtree(sourceFile)
 
