@@ -6,7 +6,7 @@ created 2015/11/10
 '''
 
 ##################################
-#http://www.py2exe.org/index.cgi/ExeWithEggs, install ssh by command 'python setup.py install_scripts to ExeWithEggs
+#http://www.py2exe.org/index.cgi/ExeWithEggs, install ssh by command 'python setup.py install_lib to ExeWithEggs
 ##################################
 from py2exe.build_exe import py2exe as build_exe
 import os,sys
