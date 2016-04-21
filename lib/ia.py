@@ -44,6 +44,7 @@ if __name__ == "__main__":
         basename_casename = os.path.basename(__file__)
         cs = case(basename_casename, log_folder = casefolder)
         casefolder = cs.log_dir
+        bench_file = sys.argv[1]
 '''
 
 py_file_end =r'''
@@ -434,7 +435,7 @@ class ia(Cmd, object):
             errormessage = ''
             duts = initDUT(errormessage, bench, dutname, self.logger, logpath, self.share_data)
             py_code = '''
-        cs.load_bench(r"%s")
+        cs.load_bench(bench_file)
         cs.init_duts("%s")'''%(self.bench_file, '","'.join(dutname))
             self.save2py(py_code=py_code)
             self.sut = duts
@@ -899,7 +900,7 @@ class ia(Cmd, object):
 
             bench = bench2dict(self.bench_file)
             duts = initDUT(errormessage, bench, sut_name_list, self.logger, self.log_path, self.share_data)
-            py_code = '''        cs.load_bench(r"%s")
+            py_code = '''
         cs.init_duts("%s")'''%(self.bench_file, '","'.join(sut_name_list))
             self.save2py(py_code=py_code)
 
