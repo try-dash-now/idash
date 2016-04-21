@@ -58,12 +58,28 @@ py_file_end ='''
             os._exit(0)
     except Exception as e:
         import traceback
+        if 'cs' in locals() :
+            if cs is not None:
+                if CaseErrorMessage.find(cs.error_message) !=-1:
+                    pass
+                else:
+                    CaseErrorMessage+='\n'+cs.error_message
+
         CaseErrorMessage = traceback.format_exc()
         print(CaseErrorMessage)
+
+        if 'casefolder' in locals():
+            pass
+        else:
+            casefolder
         with open('%s/case_error.txt'%casefolder, 'a+') as ef:
-                ef.write(CaseErrorMessage)
+            if not os.path.exists(casefolder):
+                os.mkdir(casefolder)
+            ef.write(CaseErrorMessage)
         print('log: <@%s>'%os.path.abspath(casefolder))
-        print ("""\r\n---------------------------------- CASE FAIL ----------------------------------""")
+        print ("""
+
+---------------------------------- CASE FAIL ----------------------------------""")
         os._exit(1)
 
 '''
@@ -881,7 +897,7 @@ class ia(Cmd, object):
 
             bench = bench2dict(self.bench_file)
             duts = initDUT(errormessage, bench, sut_name_list, self.logger, self.log_path, self.share_data)
-            py_code = '''       cs.load_bench(%s)
+            py_code = '''        cs.load_bench(r"%s")
         cs.init_duts("%s")'''%(self.bench_file, '","'.join(sut_name_list))
             self.save2py(py_code=py_code)
 

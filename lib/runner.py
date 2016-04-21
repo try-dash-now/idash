@@ -759,14 +759,17 @@ class case(object):
             self.dry_run = False
 
     def init_duts(self, *dut_names):
+        tmp =[]
         for dut_name in dut_names:
             if dut_name not in self.bench.keys():
                 self.error(dut_name, 'is not defined in bench file ', self.bench_file)
-                return None
+                raise Exception('%s is not defined in bench file %s'%(dut_name, self.bench_file))
             elif dut_name in self.dut_names:
-                self.error(dut_name, ' already existed!')
-                return None
-        self.dut_names +=dut_names
+                self.info(dut_name, ' already existed!')
+                #raise Exception('%s already existed! '%(dut_name, self.bench_file))
+            else:
+                tmp.append(dut_name)
+        self.dut_names +=tmp
         self.duts.update(initDUT(self.error_message,self.bench,self.dut_names,self.logger,self.log_dir, self.share_data,self.dry_run))
         return  self.duts
 
