@@ -31,7 +31,7 @@ line_buffer = ''
 ia_instance =None
 from common import bench2dict
 
-py_file_start = '''
+py_file_start = r'''
 if __name__ == "__main__":
     returncode = 0
     try:
@@ -46,7 +46,7 @@ if __name__ == "__main__":
         casefolder = cs.log_dir
 '''
 
-py_file_end ='''
+py_file_end =r'''
         cs.check_sut_fail_flag()
         CaseErrorMessage =cs.error_message
         if cs.fail_flag:
@@ -920,5 +920,8 @@ class ia(Cmd, object):
         for sut_name in sorted(self.sut.keys()):
             sut = self.sut[sut_name]
             if hasattr(sut, 'send'):
-                sut.send(cmd)
-                self.__add_new_command__(sut_name,'send',cmd)
+                self.handle_command('send '+cmd,sut_name)
+
+    def do_2all(self,line):
+        for sut_name in sorted(self.sut.keys()):
+            self.handle_command(line,sut_name)
