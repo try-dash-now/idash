@@ -482,9 +482,11 @@ class ia(Cmd, object):
             for k in match:
                 if re.match(function_name,members[k][0]):
                     members[k][1](*options[2:])
+                    self.__add_new_command__(sutname,function_name,','.join(options[2:]))
                     break
                 elif re.match(function_name,members[k][0],re.IGNORECASE):
                     members[k][1](*options[2:])
+                    self.__add_new_command__(sutname,function_name,','.join(options[2:]))
                     break
                 else :
                     print(members[k][0]+"\n")

@@ -570,12 +570,12 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
             import subprocess
             pp =None
 
-            patPython = re.compile(r'\s*(python\s+|python.exe\s+|)([./\w_-]+.py)', re.IGNORECASE)
+            patPython = re.compile(r'\s*(python\s+|python.exe\s+|)(.*[./\w_-]+.py)', re.IGNORECASE|re.DOTALL)
             m=re.match(patPython, cmd)
             if m :
                 newcmd =m.group(2)
                 if os.path.exists('y.exe'):
-                    exe_cmd ='python -O'+ cmd+" -l "+logdir
+                    exe_cmd ='python -O '+ cmd+" -l "+logdir
                 else:
                     exe_cmd ='python '+ cmd+" -l "+logdir
                 caselogger.info('running case: %s'%exe_cmd)
