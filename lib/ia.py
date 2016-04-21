@@ -914,3 +914,9 @@ class ia(Cmd, object):
                     assgin_sut+="        %s = cs.duts['%s']\n"%(tmp_sut_name,tmp_sut_name)
             self.save2py(py_code=assgin_sut)
             self.do_setsut(last_sut)
+    def do_send2all(self,cmd):
+        for sut_name in sorted(self.sut.keys()):
+            sut = self.sut[sut_name]
+            if hasattr(sut, 'send'):
+                sut.send(cmd)
+                self.__add_new_command__(sut_name,'send',cmd)
