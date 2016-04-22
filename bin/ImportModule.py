@@ -6,6 +6,7 @@ pardir= os.path.sep.join(pardir.split(os.path.sep)[:-1])
 sys.path.append(os.path.sep.join([pardir,'lib']))
 sys.path.append(os.path.sep.join([pardir,'test']))
 sys.path.append(os.path.sep.join([pardir,'dut']))
+sys.path.append(os.path.sep.join([pardir,'install']))
 print('\n'.join(sys.path))
 
 from  Tkinter import Tk,Tcl
@@ -15,6 +16,14 @@ import _abcoll
 import traceback
 import colorama
 colorama.init()
+logpath= '../../log'
+from webgui import webgui
+try:
+    ps = webgui('a', {}, logpath=logpath)
+    ps.SessionAlive=False
+except Exception as e:
+    print(traceback.format_exc())
+    ps.SessionAlive=False
 class tcltk(Tk):
     def __init__(self):
         Tk.__init__(self, None, None, 'Tk', 0)
@@ -22,7 +31,7 @@ tcltk()
 from dut import dut
 
 from winTelnet import winTelnet
-logpath= '../../log'
+
 a =dut('base', {}, logpath=logpath)
 try:
     wt = winTelnet('a',{'CMD':'telnet 127.0.0.1'}, logpath=logpath)
@@ -69,6 +78,8 @@ try:
 except Exception as e:
     ps.SessionAlive=False
     print(traceback.format_exc())
+
+
 
 os._exit(0)
 

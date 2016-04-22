@@ -74,7 +74,8 @@ class MediaCollector(build_exe):
         # Also add the copied file to the list of compiled
         # files so it will be included in zipfile.
         files = [
-                '''C:\\Python27\\Lib\\site-packages\\selenium\\webdriver\\firefox\\webdriver.xpi'''
+                '''C:\\Python27\\Lib\\site-packages\\selenium\\webdriver\\firefox\\webdriver.xpi''',
+                '../install/chromedriver.exe',
                  #   '''C:/Python27/Lib/site-packages/selenium-2.46.0-py2.7.egg/selenium/webdriver/firefox/webdriver.xpi''',
                  # '''C:\\Python27\\Lib\\site-packages\\selenium\\webdriver\\firefox\\webdriver_prefs.json'''
                  ]
@@ -210,5 +211,5 @@ for file in os.listdir(folder):
         if os.path.basename(sourceFile) not in excludedFolder:
             shutil.rmtree(sourceFile)
 
-
+shutil.copy('./chromedriver.exe', folder+'/bin')
 print('done')

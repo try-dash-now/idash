@@ -124,7 +124,10 @@ class dut(object):
         '''
         try:
             self.errorLines =   ''
-            self.name       =   name
+            try:
+                self.name       =   name
+            except Exception as e:
+                pass
             self.logger     =   logger
             if attr:
                 self.attribute =attr

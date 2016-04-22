@@ -158,7 +158,9 @@ class ia(Cmd, object):
         if not sutname:
             sutname= self.sutname
         #class_obj =self.do_reload(function_name, sutname)
+
         members = inspect.getmembers(self.sut[sutname],inspect.ismethod)
+
         match =[]
         match_pair=[]
         index =0
@@ -194,8 +196,11 @@ class ia(Cmd, object):
             sutname = self.sutname
 
         len_option = len(options)
-
-        if len_option>0:
+        from webgui import webgui
+        if isinstance(self.sut[sutname], webgui):
+            eval('self.sut[sutname].%s(%s)'%(options[0], ', '.join(options[1:])))
+            self.__add_new_command__(sutname,options[0],', '.join(options[1:]) )
+        elif len_option>0:
             function_name = options[0]
             candidate_function_pair = self.match_functions(function_name, sutname)
             len_candidate_fun = len(candidate_function_pair)
@@ -436,7 +441,7 @@ class ia(Cmd, object):
             duts = initDUT(errormessage, bench, dutname, self.logger, logpath, self.share_data)
             py_code = '''
         cs.load_bench(bench_file)
-        cs.init_duts("%s")'''%(self.bench_file, '","'.join(dutname))
+        cs.init_duts("%s")'''%( '","'.join(dutname))
             self.save2py(py_code=py_code)
             self.sut = duts
             self.sut['tc']=self
@@ -901,7 +906,7 @@ class ia(Cmd, object):
             bench = bench2dict(self.bench_file)
             duts = initDUT(errormessage, bench, sut_name_list, self.logger, self.log_path, self.share_data)
             py_code = '''
-        cs.init_duts("%s")'''%(self.bench_file, '","'.join(sut_name_list))
+        cs.init_duts("%s")'''%('","'.join(sut_name_list))
             self.save2py(py_code=py_code)
 
             last_sut='tc'

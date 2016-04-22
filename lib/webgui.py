@@ -1,0 +1,108 @@
+__author__ = 'Sean Yu'
+'''created @2016/4/22'''
+from dut import dut
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
+from pprint import pformat as pp
+g_retry_counter = 10
+def retry(fun):
+    def inner(*arg, **kwargs):
+
+        retry_counter = 1
+        tmp_g_retry_counter= g_retry_counter
+            #g_retry_counter
+        while (retry_counter-1)<tmp_g_retry_counter:
+            retry_counter+=1
+            try:
+                print('retry %d/%d %s'%(retry_counter,tmp_g_retry_counter, fun.__name__))
+                response = fun(*arg, **kwargs)
+                break
+            except Exception as e:
+                if  retry_counter>=tmp_g_retry_counter:
+                    raise e
+                else:
+
+                    print(pp(arg))
+                    print(pp(kwargs))
+                    continue
+        return  response
+
+    return inner
+
+class webgui(dut,webdriver.Chrome,  object):
+    driver = None
+    obj     = None
+    path = None
+    common_wait_interval = 1
+    old_retry = 5
+    def __init__(self, name, attr =None,logger=None, logpath= None, shareData=None):
+
+        webdriver.Chrome.__init__(self)
+        dut.__init__(self, 'web',attr,logger,logpath,shareData)
+        if self.attribute.has_key('INTERVAL'):
+            self.common_wait_interval = self.attribute['INTERVAL']
+        else:
+            self.common_wait_interval = 1
+    @retry
+    def set_retry(self, retry_max):
+        global g_retry_counter
+        self.old_retry = g_retry_counter
+        g_retry_counter = retry_max
+    @retry
+    def restore_retry(self):
+        global g_retry_counter
+        g_retry_counter =self.old_retry
+    @retry
+    def xfind(self, path, type):
+        if path is not None:
+            self.path = path
+        if str(type).lower() == 'xpath':
+            function = self.find_element_by_xpath
+        elif str(type).lower() == 'name':
+            function = self.find_element_by_name
+        elif str(type).lower() == 'text':
+            function = self.find_element_by_link_text
+        self.obj = function(self.path)
+        return  self.obj
+    @retry
+    def xsend(self, cmd, path=None, type_by= 'xpath'):
+        element = self.xfind(path, type_by)
+        element.send_keys(cmd)
+        #time.sleep(1)
+    @retry
+    def xclick( self, xpath=None, type_by='xpath'):
+        element = self.xfind(xpath, type_by)
+        element.click()
+        self.sleep(1)
+    @retry
+    def xclear( self, xpath=None, type_by='xpath'):
+        element = self.xfind(xpath, type_by)
+        element.clear()
+        #time.sleep(1)
+    @retry
+    def xrefill(self, data, xpath, type_by = 'xpath'):
+        element = self.xfind(xpath, type_by)
+        element.clear()
+        element.send_keys(data)
+    @retry
+    def xselect(self, value, xpath=None, type_by='xpath'):
+        self.obj = Select(self.xfind(xpath, type_by))
+        self.obj.select_by_visible_text(value)
+        self.sleep(1)
+    @retry
+    def xget(self,url=None):
+        if url is not None:
+            self.curr_url = url
+        self.get(self.curr_url)
+        self.sleep(1)
+    @retry
+    def have_text(self, exp_txt, path, type_by = 'xpath'):
+        try:
+            elem = self.xfind(path, type_by)
+            if elem.text.find(exp_txt)!=-1:
+                return True
+            else:
+                return False
+        except Exception as e:
+            return False
