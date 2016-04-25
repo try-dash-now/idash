@@ -77,6 +77,8 @@ py_file_end =r'''
             if not os.path.exists(casefolder):
                 os.mkdir(casefolder)
             ef.write(CaseErrorMessage)
+        with open(casefolder+'/../case_error.txt', 'a+') as ce:
+            ce.write(CaseErrorMessage)
         print('log: <@%s>'%os.path.abspath(casefolder))
         print ("""
 
