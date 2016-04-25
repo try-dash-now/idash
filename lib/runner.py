@@ -598,7 +598,7 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
                     stdout, stderr =pp.communicate()
                     try:
                         with open('%s/case_error.txt'%logdir,'r') as f:
-                            errormessage +='\n'.join(f.readall()[:10])
+                            errormessage +='\n'.join(f.readlines()[:10])
                     except Exception as e:
                         pass
 
@@ -738,6 +738,7 @@ class case(object):
     def __init__(self, name=None, bench=None, log_folder=None, dry_run =False):
         self.name = name if name else 'case'
         self.log_dir = '../../log' if log_folder is None else log_folder
+
         if not os.path.exists(self.log_dir ):
             os.mkdir(self.log_dir )
         self.log_dir = createLogDir(self.name, self.log_dir)
@@ -748,6 +749,7 @@ class case(object):
         self.dut_names =[]
         self.share_data = {}
         self.set_dry_run(dry_run)
+
     def end_case(self):
         self.info('releasing duts', self.duts)
         releaseDUTs(self.duts)
@@ -839,6 +841,7 @@ class case(object):
                 if isinstance(dut_inst,dut):
                     if dut_inst.FailFlag:
                         self.error(dut_inst.ErrorMessage)
+
 
 
 
