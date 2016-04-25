@@ -152,6 +152,9 @@ class winTelnet(dut, object):#, spawn
 
             th =threading.Thread(target=self.ReadOutput)
             th.start()
+            time.sleep(1)
+            if self.attribute.has_key('LOGIN'):
+                self.login()
             self.debuglevel=0
         except Exception as e:
             self.closeSession()
