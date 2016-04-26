@@ -843,7 +843,13 @@ class case(object):
                         self.error(dut_inst.ErrorMessage)
 
 
-
+    def __del__(self):
+        for sut in self.duts.keys():
+            if sut is not 'tc':
+                dut_inst = self.duts[sut]
+                from dut import dut
+                if isinstance(dut_inst,dut):
+                    dut_inst.SessionAlive =False
 
 
 

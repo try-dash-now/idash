@@ -28,7 +28,6 @@ import glob
 import zipfile
 import shutil
 
-
 class tcltk(Tkinter.Tk):
     def __init__(self):
         Tkinter.Tk.__init__(self, None, None, 'Tk', 0)
@@ -140,6 +139,7 @@ try:
                         ('dut/IxTclNetwork', [ f for f in copy_dir('../dut/IxTclNetwork')]),
                         ('dut/IxTclNetwork/Generic', [ f for f in copy_dir('../dut/IxTclNetwork/Generic')]),
                        ('bin',[]),
+                        ('bin/html', [ f for f in copy_dir('./html')]),
                        #('bin', [f for f in copy_dir('../test')]),
                        ('selenium', []),
                        #('dut', [ f for f in copy_dir('../dut')]),
@@ -212,4 +212,6 @@ for file in os.listdir(folder):
             shutil.rmtree(sourceFile)
 
 shutil.copy('./chromedriver.exe', folder+'/bin')
+#shutil.rmtree(folder+'/bin/html')
+
 print('done')

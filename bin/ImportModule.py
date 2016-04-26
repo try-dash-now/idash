@@ -16,7 +16,12 @@ import _abcoll
 import traceback
 import colorama
 colorama.init()
+from runner import case
 logpath= '../../log'
+try:
+    cs = case('case', log_folder = logpath)
+except Exception as e:
+    pass
 from webgui import webgui
 try:
     ps = webgui('a', {}, logpath=logpath)
