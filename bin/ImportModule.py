@@ -16,7 +16,7 @@ import _abcoll
 import traceback
 import colorama
 colorama.init()
-from runner import case
+from case import case
 logpath= '../../log'
 try:
     cs = case('case', log_folder = logpath)

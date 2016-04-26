@@ -15,6 +15,7 @@ for sub in subfolder:
     libpath = os.path.sep.join([pardir,sub])
     if libpath not in sys.path:
         sys.path.insert(0,libpath)
+sys.path.insert(0,pardir )
 if __name__ == "__main__":
     #sr.py suite_file range [arg1 arg2 ...]
     import re,datetime

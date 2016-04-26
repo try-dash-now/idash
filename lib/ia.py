@@ -36,7 +36,8 @@ if __name__ == "__main__":
     returncode = 0
     try:
         import os, sys
-        from runner import case
+        sys.path.append('./')
+        from case import case
         CaseErrorMessage = ''
         casefolder = None
         if '-l' in sys.argv:
