@@ -158,6 +158,8 @@ class winTelnet(dut, object):#, spawn
             self.debuglevel=0
         except Exception as e:
             self.closeSession()
+            import traceback
+            print(traceback.format_exc())
             raise e
 
     def rawq_getchar(self):

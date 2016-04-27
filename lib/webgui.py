@@ -31,11 +31,12 @@ def retry(fun):
     return inner
 
 class webgui(dut,webdriver.Chrome,  object):
-    driver = None
     obj     = None
     path = None
     common_wait_interval = 1
     old_retry = 5
+    def __del__(self):
+        self.quit()
     def __init__(self, name, attr =None,logger=None, logpath= None, shareData=None):
 
         webdriver.Chrome.__init__(self)
