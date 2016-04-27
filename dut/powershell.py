@@ -127,7 +127,9 @@ class powershell(dut):
         return result
 
 
-
+    def write(self, cmd):
+        stdin = self.shellsession.stdin
+        stdin.write(cmd)
 
     def send(self,cmd, Ctrl=False, noWait=False):
         import os
