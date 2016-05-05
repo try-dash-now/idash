@@ -359,16 +359,22 @@ def loop(counter, casename, currentBenchfile, currentBenchinfo,logger,stop_at_fa
 def releaseDUTs(duts, logger):
     if duts==None or duts.keys()==None:
         return
+    FailureFlag = None
     for name in duts.keys() :
-        if name is 'tc':
-            continue
-        dut = duts[name]
-        logger.info('releasing dut: %s'%name)
-        if dut :
-            dut.SessionAlive=False
-            if dut.logfile:
-                dut.logfile.flush()
-                dut.logfile.close()
+        try:
+            if name is 'tc':
+                continue
+            dut_obj = duts[name]
+            logger.info('releasing dut: %s'%name)
+            import dut,webgui
+            if isinstance(dut_obj, dut.dut) :
+                dut_obj.closeSession()
+            #elif isinstance(dut_obj, webgui.webgui):
+            #    webgui.quit()
+        except Exception as e:
+            FailureFlag=e
+    if FailureFlag:
+        raise FailureFlag
 errorlogger = None
 def concurrent(startIndex, logpath, cmdConcurrent, report, suiteLogger, shareData):
     import Queue,threading
@@ -602,8 +608,10 @@ def run1case(casename, cmd,benchfile, benchinfo, dut_pool, logdir, logger, share
                     except Exception as e:
                         pass
 
-                    if stderr!='':
-                        errormessage +=stderr
+                        if stderr!='':
+                            errormessage +=stderr
+                        else:
+                            errormessage = stderr
                         with open('%s/case_error.txt'%logdir,'a+') as f:
                             f.write(stderr)
 
@@ -699,7 +707,13 @@ def array2html(reportname, ArgStr, CaseRangeStr, TOTAL,CASERUN, CASEPASS,CASEFAI
         errormessage= re.sub('\\\\t','    ', errormessage)
         errormessage= re.sub('\r\n','&#10;',errormessage)
         errormessage= re.sub('\n|\r','&#10;',errormessage)
-
+        import unicodedata
+        try:
+            errormessage = unicode(errormessage, errors='ignore')
+            errormessage =unicodedata.normalize('NFKD',errormessage ).encode('ascii','ignore')
+        except TypeError:
+            pass
+        #errormessage= errormessage.decode().decode()
         max_length_of_error_message=100
         short_error= errormessage[:max_length_of_error_message]+'...' if len(errormessage)>max_length_of_error_message else errormessage[:max_length_of_error_message]
         bgcolor="#00FF00"

@@ -56,6 +56,7 @@ py_file_end =r'''
             raise Exception(CaseErrorMessage)
         else:
             print('log: "@%s"'%os.path.abspath(casefolder))
+            cs.end_case()
             print ("""\r\n---------------------------------- CASE PASS ----------------------------------""")
             os._exit(0)
     except Exception as e:
@@ -84,6 +85,7 @@ py_file_end =r'''
         print ("""
 
 ---------------------------------- CASE FAIL ----------------------------------""")
+        cs.end_case()
         os._exit(1)
 
 '''

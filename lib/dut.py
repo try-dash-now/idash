@@ -72,6 +72,9 @@ class dut(object):
 
     def closeSession(self):
         self.SessionAlive= False
+        if self.logfile:
+            self.logfile.flush()
+            self.logfile.close()
     def isAlive(self, cmd='\r\n'):
 
         if self.dry_run:

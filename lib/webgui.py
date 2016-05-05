@@ -17,6 +17,7 @@ def retry(fun):
             try:
                 print('retry %d/%d %s'%(retry_counter,tmp_g_retry_counter, fun.__name__))
                 response = fun(*arg, **kwargs)
+
                 break
             except Exception as e:
                 if  retry_counter>=tmp_g_retry_counter:
@@ -29,22 +30,45 @@ def retry(fun):
         return  response
 
     return inner
-
-class webgui(dut,webdriver.Chrome,  object):
+import time
+FireFox =True
+#binary = FirefoxBinary(firefox_path='./')
+from selenium import webdriver
+import os
+class webgui(dut, object):
     obj     = None
     path = None
     common_wait_interval = 1
     old_retry = 5
-    def __del__(self):
-        self.quit()
+    driver = None
+    def quit(self):
+        if self.driver:
+            self.driver.quit()
     def __init__(self, name, attr =None,logger=None, logpath= None, shareData=None):
+        #try:
+        dut.__init__(self, name,attr,logger,logpath,shareData)
+        self.log_file =self.logfile
 
-        webdriver.Chrome.__init__(self)
-        dut.__init__(self, 'web',attr,logger,logpath,shareData)
+
+        if FireFox:
+            self.driver= webdriver.Firefox()
+
+            self.driver.log_file= self.logfile
+        else:
+            self.driver = webdriver.Chrome()
+            #webdriver.Chrome.__init__(self)
+        #webdriver.Firefox.__init__(self,firefox_profile=profile)#, firefox_profile=profile, firefox_binary=)#
+
+        #except:
+        #    webdriver.Chrome.__init__(self)
+            #webdriver.Firefox.__init__(self)
+
         if self.attribute.has_key('INTERVAL'):
             self.common_wait_interval = self.attribute['INTERVAL']
+            time.sleep(0.5)
         else:
             self.common_wait_interval = 1
+
     @retry
     def set_retry(self, retry_max):
         global g_retry_counter
@@ -59,9 +83,9 @@ class webgui(dut,webdriver.Chrome,  object):
         if path is not None:
             self.path = path
         if str(type).lower() == 'xpath':
-            function = self.find_element_by_xpath
+            function = self.driver.find_element_by_xpath
         elif str(type).lower() == 'name':
-            function = self.find_element_by_name
+            function = self.driver.find_element_by_name
         elif str(type).lower() == 'text':
             function = self.find_element_by_link_text
         self.obj = function(self.path)
@@ -95,7 +119,7 @@ class webgui(dut,webdriver.Chrome,  object):
     def xget(self,url=None):
         if url is not None:
             self.curr_url = url
-        self.get(self.curr_url)
+        self.driver.get(self.curr_url)
         self.sleep(1)
     @retry
     def have_text(self, exp_txt, path, type_by = 'xpath'):
@@ -107,3 +131,6 @@ class webgui(dut,webdriver.Chrome,  object):
                 return False
         except Exception as e:
             return False
+    def closeSession(self):
+        super(webgui,self).closeSession()
+        self.quit()

@@ -33,7 +33,7 @@ class case(object):
 
     def end_case(self):
         self.info('releasing duts', self.duts)
-        releaseDUTs(self.duts)
+        releaseDUTs(self.duts, self.logger)
         self.info('case ended')
     def set_dry_run(self,flag):
         if flag:

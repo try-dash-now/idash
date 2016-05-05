@@ -1,2 +1,3 @@
 PS,SUT=powershell,CMD=,LINESEP=\r\n,LOGIN_LINESEP=\r\n,
 ps,SUT=powershell,CMD=,LINESEP=\r\n,LOGIN_LINESEP=\r\n,
+web,SUT=webgui,,,,

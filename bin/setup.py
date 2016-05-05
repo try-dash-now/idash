@@ -212,6 +212,8 @@ for file in os.listdir(folder):
             shutil.rmtree(sourceFile)
 
 shutil.copy('./chromedriver.exe', folder+'/bin')
+shutil.copy('./webdriver_prefs.json', folder+'/bin/selenium/webdriver/firefox/')
+shutil.copy('./webdriver.xpi', folder+'/bin/selenium/webdriver/firefox/')
 #shutil.rmtree(folder+'/bin/html')
 
 print('done')
