@@ -34,6 +34,7 @@ import time
 FireFox =True
 #binary = FirefoxBinary(firefox_path='./')
 from selenium import webdriver
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 import os
 class webgui(dut, object):
     obj     = None
@@ -50,8 +51,13 @@ class webgui(dut, object):
         self.log_file =self.logfile
 
 
+        binary = None
         if FireFox:
-            self.driver= webdriver.Firefox()
+            binary_path = './selenium/webdriver/firefox'
+            if os.path.exists(binary_path):
+                binary = FirefoxBinary(binary_path)
+
+            self.driver= webdriver.Firefox(firefox_binary=binary)
 
             self.driver.log_file= self.logfile
         else:
@@ -134,3 +140,13 @@ class webgui(dut, object):
     def closeSession(self):
         super(webgui,self).closeSession()
         self.quit()
+    def xcheck(self, xpath=None, type_by='xpath'):
+        self.obj = self.xfind(xpath, type_by)
+        if not self.obj.is_selected():
+            self.obj.click()
+            self.sleep(1)
+    def xuncheck(self, xpath=None, type_by='xpath'):
+        self.obj = self.xfind(xpath, type_by)
+        if self.obj.is_selected():
+            self.obj.click()
+            self.sleep(1)

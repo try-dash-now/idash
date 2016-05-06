@@ -10,7 +10,7 @@ created 2015/10/7 
 import os, sys
 from pprint import pprint
 pardir =os.path.dirname(os.path.realpath(os.getcwd()))
-subfolder = ['lib', 'dut']
+subfolder = ['lib', 'dut','bin']
 for sub in subfolder:
     libpath = os.path.sep.join([pardir,sub])
     if libpath not in sys.path:
