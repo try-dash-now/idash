@@ -84,8 +84,11 @@ except Exception as e:
     ps.SessionAlive=False
     print(traceback.format_exc())
 
-
-
+import Tkinter
+class tcltk(Tkinter.Tk):
+    def __init__(self):
+        Tkinter.Tk.__init__(self, None, None, 'Tk', 0)
+tcltk()
 os._exit(0)
 
 

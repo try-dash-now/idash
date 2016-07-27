@@ -744,3 +744,23 @@ call function(%s)
             ef.write(msg+'\n')
     def relogin(self):
          self.loginDone=False
+
+    def save(self, obj, file_name='tmp.txt', path =None):
+        import json
+        if path:
+            file_name = path+'/'+file_name
+        else:
+            file_name = os.path.dirname(self.logfile.name)+'/'+file_name
+
+        with open(file_name, 'w+') as data_file:
+            json.dump(self.dict_bond_members, data_file)
+    def load(self, file_name='tmp.txt', path = None):
+        import json
+        if path:
+            file_name = path+'/'+file_name
+        else:
+            file_name = os.path.dirname(self.logfile.name)+'/'+file_name
+
+        with open(file_name, 'r') as data_file:
+            data = json.load(self.dict_bond_members)
+        return  data

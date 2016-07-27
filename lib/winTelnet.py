@@ -419,12 +419,13 @@ class winTelnet(dut, object):#, spawn
         self.closeSession()
     def closeSession(self):
         print('\nquit %s'%self.name)
-        for i in xrange(1,3,1):
-            self.send('exit')
-            self.sleep(0.5)
-            self.send(']',Ctrl=True)
-            self.send('quit')
+        self.SessionAlive = False
         try:
+            for i in xrange(1,3,1):
+                self.send('exit')
+                self.sleep(0.5)
+                self.send(']',Ctrl=True)
+                self.send('quit')
             self.logfile.flush()
         except:
             pass

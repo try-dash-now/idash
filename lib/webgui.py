@@ -42,6 +42,7 @@ class webgui(dut, object):
     common_wait_interval = 1
     old_retry = 5
     driver = None
+
     def quit(self):
         if self.driver:
             self.driver.quit()
@@ -53,11 +54,18 @@ class webgui(dut, object):
 
         binary = None
         if FireFox:
-            binary_path = './selenium/webdriver/firefox'
-            if os.path.exists(binary_path):
-                binary = FirefoxBinary(binary_path)
+            binary_path = './selenium/webdriver/firefox/'
 
-            self.driver= webdriver.Firefox(firefox_binary=binary)
+            profile_path =None
+            profile =None# webdriver.FirefoxProfile(profile_path)
+            #profile = webdriver.FirefoxProfile()
+            a = FirefoxBinary()._get_firefox_start_cmd()
+            #print(a, 'firefox file!!!!!!!!!!!!!!!!!!')
+            if os.path.exists(binary_path):
+                binary = FirefoxBinary(a)
+                profile = webdriver.FirefoxProfile(binary_path)
+
+            self.driver= webdriver.Firefox(firefox_binary=binary,firefox_profile=profile)
 
             self.driver.log_file= self.logfile
         else:
@@ -93,7 +101,9 @@ class webgui(dut, object):
         elif str(type).lower() == 'name':
             function = self.driver.find_element_by_name
         elif str(type).lower() == 'text':
-            function = self.find_element_by_link_text
+            function = self.driver.find_element_by_link_text
+        elif str(type).lower() == 'id':
+            function = self.driver.find_element_by_id
         self.obj = function(self.path)
         return  self.obj
     @retry
@@ -150,3 +160,13 @@ class webgui(dut, object):
         if self.obj.is_selected():
             self.obj.click()
             self.sleep(1)
+    def xswitch_2_pop(self,):
+        browser = self.driver
+        parent_h = browser.current_window_handle
+        # click on the link that opens a new window
+        handles = browser.window_handles # before the pop-up window closes
+        handles.remove(parent_h)
+        browser.switch_to.window(handles.pop())
+        # do stuff in the popup
+        # popup window closes
+        browser.switch_to.window(parent_h)

@@ -117,6 +117,7 @@ try:
         indexOfd = op.find('-d')
         if indexOfd !=-1:
             folder = os.path.abspath(sys.argv[sys.argv.index(op)+1])
+            #folder = folder+'/bin'
             try:
                 shutil.rmtree(folder)
             except Exception as e:
@@ -195,6 +196,14 @@ for file in os.listdir(folder):
         try:
             filename = os.path.basename(sourceFile)
             if filename not in ['ImportModule.exe']:
+                if os.path.exists(targetFile):
+                    try:
+                        os.chmod(os.path.dirname(targetFile),0o777)
+                        os.chmod(targetFile, 0o777)
+                        os.remove(targetFile)#(targetFile)
+                    except Exception as e:
+                        print(targetFile,e)
+                        pass
                 open(targetFile, "wb").write(open(sourceFile, "rb").read())
             os.remove(sourceFile)
         except Exception as e:
