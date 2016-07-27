@@ -3,6 +3,8 @@ __author__ = 'Sean Yu'
 __mail__ = 'try.dash.now@gmail.com'
 '''
 created 2015/11/10
+to create a build
+    setup.py py2exe -d ../../
 '''
 
 ##################################
