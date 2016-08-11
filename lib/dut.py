@@ -30,6 +30,9 @@ class dut(object):
                 dict, initial is None, and assigned in __init__ as {} or set to the given variable attr
     SessionAlive:
                 bool, initial is True, when session is closing, set it to False
+
+    fake_in:
+                None/string of file name, is the flag to point out the file where the fake ouotput of this dut(the input of instance), default is None
     '''
 
     streamOut   =   None
@@ -64,6 +67,7 @@ class dut(object):
     dry_run =False
     max_output_time_out= 10
     disconnected =False
+    fake_in = None #fake_in is the flag to point out the file where the fake ouotput of this dut(the input of instance), default is None
     def set_max_time_out(self, max_counter=10):
         if int(max_counter)>0:
             self.max_output_time_out =int(max_counter)
@@ -73,8 +77,11 @@ class dut(object):
     def closeSession(self):
         self.SessionAlive= False
         if self.logfile:
-            self.logfile.flush()
-            self.logfile.close()
+            try:
+                self.logfile.flush()
+                self.logfile.close()
+            except Exception as e:
+                print(e)
     def isAlive(self, cmd='\r\n'):
 
         if self.dry_run:
@@ -158,6 +165,8 @@ class dut(object):
             else:
                 self.attribute['LOGIN_LINESEP']='\n'
             self.openLogfile(logpath)
+
+
             try:
                 from colorama import Fore, Back, Style, init
                 init()
@@ -174,6 +183,17 @@ class dut(object):
             self.streamOut=''
             self.remain_in_update_buffer=''
             self.loginDone=False
+            if self.attribute.get('FAKE_IN'):
+                self.fake_in = self.attribute['FAKE_IN']
+                if  not os.path.exists(self.fake_in):
+                    pwd = os.getcwd()
+                    raise Exception("FAKE_IN is given, current work dir is %s, but it's not a existed file: %s"%(pwd, self.fake_in))
+                else:
+                    path = os.path.dirname(self.fake_in)
+                    file_name = os.path.basename(self.fake_in)
+                    self.fake_in = self.load(file_name, path)
+                    self.fake_in = self.fake_in[::-1]
+                    print(self.fake_in)
         except Exception as e:
             self.SessionAlive =False
             raise e
@@ -688,7 +708,11 @@ call function(%s)
         return response
 
     def login(self):
+
         print('loginDone', self.loginDone)
+        if self.is_simulation():
+            self.loginDone=True
+            return
         #self.lockRelogin.acquire()
         login = 'login'.upper()
         time.sleep(0.5)
@@ -753,7 +777,7 @@ call function(%s)
             file_name = os.path.dirname(self.logfile.name)+'/'+file_name
 
         with open(file_name, 'w+') as data_file:
-            json.dump(self.dict_bond_members, data_file)
+            json.dump(obj, data_file)
     def load(self, file_name='tmp.txt', path = None):
         import json
         if path:
@@ -762,5 +786,10 @@ call function(%s)
             file_name = os.path.dirname(self.logfile.name)+'/'+file_name
 
         with open(file_name, 'r') as data_file:
-            data = json.load(self.dict_bond_members)
+            data = json.load(data_file)
         return  data
+    def is_simulation(self):
+        is_simulation = False
+        if self.fake_in not in [None]:
+            is_simulation = True
+        return  is_simulation

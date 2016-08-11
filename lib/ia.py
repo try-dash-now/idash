@@ -43,9 +43,9 @@ if __name__ == "__main__":
         if '-l' in sys.argv:
             casefolder = sys.argv[sys.argv.index('-l')+1]
         basename_casename = os.path.basename(__file__)
-        cs = case(basename_casename, log_folder = casefolder)
-        casefolder = cs.log_dir
         bench_file = sys.argv[1]
+        cs = case(basename_casename, log_folder = casefolder, bench = bench_file)
+        casefolder = cs.log_dir
 '''
 
 py_file_end =r'''

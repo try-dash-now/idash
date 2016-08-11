@@ -113,6 +113,7 @@ class winTelnet(dut, object):#, spawn
             #self.sock.close()
     def __init__(self, name, attr =None,logger=None,  logpath= None, shareData=None):
         dut.__init__(self, name,attr,logger, logpath , shareData)
+
         try:
             host=""
             port=23
@@ -147,7 +148,7 @@ class winTelnet(dut, object):#, spawn
             self.sbdataq = ''
             self.option_callback = None
             self._has_poll = hasattr(select, 'poll')
-            if host is not None:
+            if host is not None and self.is_simulation() == False:
                 self.open(str(host), port, timeout)
 
             th =threading.Thread(target=self.ReadOutput)
@@ -356,8 +357,10 @@ class winTelnet(dut, object):#, spawn
         self.host = host
         self.port = port
         self.timeout = timeout
-
-        self.sock = socket.create_connection((host, port), timeout)
+        if self.is_simulation():
+            return
+        else:
+            self.sock = socket.create_connection((host, port), timeout)
     def ReadOutput(self):
         maxInterval = 60
         if self.timestampCmd ==None:
@@ -368,17 +371,22 @@ class winTelnet(dut, object):#, spawn
             try:
                 #if not self.sock:
                 #    self.relogin()
-                if self.sock:
-                    #self.info('time in ReadOutput',time.time(), 'timestampCmd', self.timestampCmd, 'max interval', maxInterval, 'delta',  time.time()-self.timestampCmd)
-                    if (time.time()-self.timestampCmd)>maxInterval:
-                        self.write('\r\n')
-                        self.timestampCmd = time.time()
-                        #self.info('anti-idle', fail_counter )
+
+                if self.is_simulation():
+                    if self.get_search_buffer()=='':
+                        self.cookedq = self.fake_in.pop()
                 else:
-                    raise Exception('[Errno 10053] An established connection was aborted by the software in your host machine')
-                self.fill_rawq()
-                self.cookedq=''
-                self.process_rawq()
+                    if self.sock:
+                        #self.info('time in ReadOutput',time.time(), 'timestampCmd', self.timestampCmd, 'max interval', maxInterval, 'delta',  time.time()-self.timestampCmd)
+                        if (time.time()-self.timestampCmd)>maxInterval:
+                            self.write('\r\n')
+                            self.timestampCmd = time.time()
+                            #self.info('anti-idle', fail_counter )
+                    else:
+                        raise Exception('[Errno 10053] An established connection was aborted by the software in your host machine')
+                    self.fill_rawq()
+                    self.cookedq=''
+                    self.process_rawq()
                 self.checkLine(self.cookedq)
                 self.lockStreamOut.acquire()
                 self.streamOut+=self.cookedq
