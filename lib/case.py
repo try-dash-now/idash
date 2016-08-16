@@ -65,7 +65,7 @@ class case(object):
                 self.bench =  bench2dict(bench_file)
                 self.set_bench_file(bench_file)
             else:
-                self.info('%s is not exist or not a valid bench file'%bench_file)
+                self.info('%s is not exist or not a valid bench file, current work dir %s'%(bench_file,os.getcwd()))
         else:
             self.info('bench file is None!')
 

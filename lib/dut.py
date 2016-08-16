@@ -776,7 +776,7 @@ call function(%s)
         else:
             file_name = os.path.dirname(self.logfile.name)+'/'+file_name
 
-        with open(file_name, 'w+') as data_file:
+        with open(file_name, 'a+') as data_file:
             json.dump(obj, data_file)
     def load(self, file_name='tmp.txt', path = None):
         import json

@@ -761,7 +761,8 @@ class ia(Cmd, object):
                             self.record[-1][1] = "try %d:%s" % (self.repeatCounter + 1, self.record[-1][1])
                             self.repeatCounter = 0
                         newRecord = [self.sutname, cmd, expectPat, strTimeout, now.isoformat('_'),
-                                     now - self.tmTimeStampOfLastCmd]
+                                     now - self.tmTimeStampOfLastCmd,
+                                     self.sut[self.sutname].get_search_buffer()]
                         self.record.append(newRecord)
                         self.save2file(record = [newRecord])
                         self.save2py(py_code='        %s.step(%s,%s,%s)\t#\t%s'%(self.sutname, cmd, expectPat, strTimeout, now.isoformat('_')))
@@ -792,7 +793,7 @@ class ia(Cmd, object):
         now = datetime.datetime.now()
         strTimeout = '${defaultTime}'
         new_record =  [sutname, '%s(%s)'%(function_name, arg_string), '.*', strTimeout, now.isoformat('_'),
-                                     now - self.tmTimeStampOfLastCmd]
+                                     now - self.tmTimeStampOfLastCmd, self.sut[sutname].get_search_buffer()]
         self.tmTimeStampOfLastCmd = now
         self.record.append(new_record)
         self.save2file(None, [new_record])
@@ -808,6 +809,8 @@ class ia(Cmd, object):
         if not record:
             record = self.record[-1]
         array2csvfile(record, csvfile)
+        if len(record[0])>6:
+            array2csvfile([record[0][6]], re.sub('.csv$','_fake.csv',csvfile))
 
 
     def do_eof(self, name=None):
@@ -828,9 +831,10 @@ class ia(Cmd, object):
 
             os.rename(self.script_csv_file_name,new_file_name )
             os.rename(self.script_py_file_name,new_file_name.replace('.csv', '.py') )
+            os.rename(re.sub('.csv$','_fake.csv',self.script_csv_file_name),re.sub('.csv$','_fake.csv',new_file_name)  )
+
             self.script_csv_file_name= new_file_name
             self.script_py_file_name = new_file_name.replace('.csv', '.py')
-        print('saved to files:\n\t%s\n\t%s'%(os.path.abspath(self.script_csv_file_name ), os.path.abspath(self.script_py_file_name)))
         if self.bench_file:
             print('cr.py %s %s full '%(os.path.abspath(self.script_csv_file_name), os.path.abspath(self.bench_file)))
 
@@ -936,3 +940,5 @@ class ia(Cmd, object):
     def do_2all(self,line):
         for sut_name in sorted(self.sut.keys()):
             self.handle_command(line,sut_name)
+
+        print('saved to files:\n\t%s\n\t%s'%(os.path.abspath(self.script_csv_file_name ), os.path.abspath(self.script_py_file_name)))

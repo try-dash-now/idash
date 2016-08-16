@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys, time, os, traceback
 pardir =os.path.dirname(os.path.realpath(os.getcwd()))
-subfolder = ['lib', 'dut', '../../workspace/tr249/dlv', '../../workspace/tr249/product']
+subfolder = ['lib', 'dut']
 for sub in subfolder:
     libpath = os.path.sep.join([pardir,sub])
     libpath = os.path.abspath(libpath)
@@ -37,6 +37,7 @@ if __name__ =='__main__':
         benchfile = './bench.csv'
         dutNames = ['PS']
     sys.stdout = tmpout
+    sys.path.insert(0,os.path.abspath(os.path.dirname(benchfile)))
     i=ia(benchfile, dutNames)
 
     #print('#'*80)
