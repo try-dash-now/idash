@@ -9,7 +9,7 @@ for sub in subfolder:
     libpath = os.path.sep.join([pardir,sub])
     if libpath not in sys.path:
         sys.path.insert(0,libpath)
-import ssh
+import paramiko as ssh
 from dut import dut
 class SSH(dut):
     chan=None
@@ -91,6 +91,9 @@ class SSH(dut):
 
     def login(self):
         #self.loginDone=False
+        if self.is_simulation():
+            self.loginDone=True
+            return
         if self.client:
                 self.client.close()
                 self.chan=None
