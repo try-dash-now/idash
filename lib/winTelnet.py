@@ -453,36 +453,46 @@ class winTelnet(dut, object):#, spawn
 
     def relogin(self, retry=1):
         #time.sleep(3)
-        self.lockRelogin.acquire()
-        try:
-            if self.counterRelogin>0:
+        tmp_retry = 0
+        while tmp_retry< retry:
+            tmp_retry+=1
+
+            self.lockRelogin.acquire()
+            try:
+                if self.counterRelogin>0:
+                    self.lockRelogin.release()
+                    return
+                self.counterRelogin+=1
+                self.loginDone=False
+                if self.sock:
+                    self.write('quit\n\r\n')
+                    for i in range(0,3):
+                        self.write('exit')
+                    self.send(']',Ctrl=True)
+                    self.send('quit')
+                    self.send(']',Ctrl=True)
+                    self.send('e')
+                    self.sock.close()
+                    self.sock = 0
+                    self.eof = 1
+                    self.iacseq = ''
+                    self.sb = 0
+                self.info('retry login: %d/%d'%(tmp_retry,retry))
+                self.open(self.host,self.port,self.timeout)
+                import time
+                time.sleep(1)
+                self.login()
+                self.counterRelogin-=1
+                self.loginDone=True
+                break
+            except Exception as e:
+                self.counterRelogin-=1
                 self.lockRelogin.release()
-                return
-            self.counterRelogin+=1
-            self.loginDone=False
-            if self.sock:
-                self.write('quit\n\r\n')
-                for i in range(0,3):
-                    self.write('exit')
-                self.send(']',Ctrl=True)
-                self.send('quit')
-                self.send(']',Ctrl=True)
-                self.send('e')
-                self.sock.close()
-                self.sock = 0
-                self.eof = 1
-                self.iacseq = ''
-                self.sb = 0
-            self.open(self.host,self.port,self.timeout)
-            import time
-            time.sleep(1)
-            self.login()
-            self.counterRelogin-=1
-            self.loginDone=True
-        except Exception as e:
-            self.counterRelogin-=1
-            self.lockRelogin.release()
-            raise  e
+                if tmp_retry>retry:
+                    raise  e
+                else:
+                    self.sleep(5)
+
         self.lockRelogin.release()
 
 

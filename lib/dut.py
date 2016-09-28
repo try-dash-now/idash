@@ -753,7 +753,7 @@ call function(%s)
             file_name = os.path.dirname(self.logfile.name)+'/'+file_name
 
         with open(file_name, 'w+') as data_file:
-            json.dump(self.dict_bond_members, data_file)
+            json.dump(obj, data_file)
     def load(self, file_name='tmp.txt', path = None):
         import json
         if path:
@@ -762,5 +762,5 @@ call function(%s)
             file_name = os.path.dirname(self.logfile.name)+'/'+file_name
 
         with open(file_name, 'r') as data_file:
-            data = json.load(self.dict_bond_members)
+            data = json.load(data_file)
         return  data

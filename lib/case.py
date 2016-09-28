@@ -30,6 +30,9 @@ class case(object):
         self.dut_names =[]
         self.share_data = {}
         self.set_dry_run(dry_run)
+    def release_dut(self,*dut_names ):
+        for dut in dut_names:
+            releaseDUTs({dut:self.duts[dut]}, self.logger)
 
     def end_case(self):
         self.info('releasing duts', self.duts)
