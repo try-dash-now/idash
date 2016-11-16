@@ -420,7 +420,8 @@ class winTelnet(dut, object):#, spawn
                             th.start()
                     except Exception as e:
                         self.error('\n%s Exception: %d:'%(self.name, fail_counter)+e.__str__()+'\n')
-                    #if str(e) =='[Errno 10053] An established connection was aborted by the software in your host machine' or '[Errno 9] Bad file descriptor'==str(e) or str(e) =='[Errno 10054] An existing connection was forcibly closed by the remote host':
+                    if str(e) =='[Errno 10053] An established connection was aborted by the software in your host machine' or '[Errno 9] Bad file descriptor'==str(e) or str(e) =='[Errno 10054] An existing connection was forcibly closed by the remote host':
+                        break
                 time.sleep(0.2)
 
 

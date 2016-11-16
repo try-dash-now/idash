@@ -33,6 +33,7 @@ class dut(object):
 
     fake_in:
                 None/string of file name, is the flag to point out the file where the fake ouotput of this dut(the input of instance), default is None
+    log_dir     : the path of log dir
     '''
 
     streamOut   =   None
@@ -68,6 +69,7 @@ class dut(object):
     max_output_time_out= 10
     disconnected =False
     fake_in = None #fake_in is the flag to point out the file where the fake ouotput of this dut(the input of instance), default is None
+    log_dir= None
     def set_max_time_out(self, max_counter=10):
         if int(max_counter)>0:
             self.max_output_time_out =int(max_counter)
@@ -327,6 +329,7 @@ class dut(object):
             self.move_search_window() #self.idxSearch   =   0
             self.idxUpdate   =   0
         self.logfile = open(log, "wb")
+        self.log_dir= os.path.dirname(self.logfile.name)
 
 
     def show(self):
@@ -435,13 +438,16 @@ call function(%s)
         wait = float(wait)
         if self.dry_run:
             return
+        self.info('sleeping %f\n'%wait)
         if wait>10:
             interval =0.1
             counter = int(wait/interval)
+            percent_1 = int(counter/100)
             while counter>0.1 :
                 time.sleep(interval)
                 counter-=1
-                if int(counter)%(int(10/interval))==0:
+
+                if int(counter)%percent_1==0:
                     sys.stdout.write('.')
         else:
             time.sleep(float(wait))
@@ -463,7 +469,7 @@ call function(%s)
 #            self.show()
             #raise RuntimeError('found pattern(%s) within %s'%(expect,wait))
 
-    def step(self, cmd, expect =None,wait=None ):
+    def step(self, cmd, expect =None,wait=None , no_wait =False):
         if expect is None:
             expect ='.*'
         if wait is None:
@@ -645,9 +651,6 @@ call function(%s)
         '''
         if self.dry_run:
             return 'fount it:%s'%(pattern)
-        flag =False
-        if pattern=='.+CalixE7>':
-            flag=True
 
         response = ''
         pat = re.compile(pattern,flags)
@@ -678,14 +681,7 @@ call function(%s)
         if match:
             found = match.group()
             self.move_search_window(buffer.find(found)+found.__len__())
-            if flag and found.find('1/v1 ')==-1:
-                pass
-            tmp = found.replace('\n','\n****')
-            #print('-'*30+'\n')
-            #print('===='+buffer[0:buffer.find(found)].replace('\n','\n===='))
-            #print('****'+tmp)
-            #print('===='+buffer[buffer.find(found)+1+buffer.__len__():].replace('\n','\n===='))
-            #print('\n'+'-'*30)
+
             if noPattern:
                 delta = endtime-time.time()
                 delta = int(delta+0.5)

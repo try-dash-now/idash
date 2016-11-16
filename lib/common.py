@@ -94,6 +94,8 @@ def array2csvfile(array, csvfile, Newline = '\n'):
             for row in array:
                 if type(row)==type([]):
                     writer.writerow(row)
+                elif type(row)==type(()):
+                    writer.writerow(list(row))
                 else:
                     writer.writerow([row])
         else:
