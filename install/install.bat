@@ -1,0 +1,1 @@
+ msiexec  /i  python-2.7.12.msi TARGETDIR=C:\python271 ALLUSERS=1
